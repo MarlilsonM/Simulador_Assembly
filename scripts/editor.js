@@ -1,12 +1,19 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
-        lineNumbers: true,
-        mode: "gas",  // Usar o modo 'gas' para Assembly
-        theme: "default",
-        autoCloseBrackets: true,
-        matchBrackets: true,
-        extraKeys: {"Ctrl-Space": "autocomplete"},
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.editor) {
+        console.log("Editor antigo encontrado, destruindo...");
+        window.editor.toTextArea(); // Destroi o editor antigo
+    }
     
-    window.editor = editor;
+    console.log("Inicializando o novo editor...");
+    window.editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+        mode: 'gas', // Definir como modo assembly
+        lineNumbers: true, // Mostrar números das linhas
+        matchBrackets: true, // Destacar colchetes correspondentes
+        autoCloseBrackets: true, // Fechar colchetes automaticamente
+        extraKeys: {
+            "Ctrl-Space": "autocomplete"
+        }
+    });
+
+    console.log("Editor inicializado", window.editor);
 });

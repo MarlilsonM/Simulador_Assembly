@@ -1,60 +1,74 @@
 import ArithmeticInstructions from './arithmeticInstructions.js';
 import LogicalInstructions from './logicalInstructions.js';
+import DataMovementInstructions from './dataMovementInstructions.js';
+import BitManipulationInstructions from './bitManipulationInstructions.js';
+import StackInstructions from './stackInstructions.js';
 
 class Interpreter {
-    constructor(bitWidth = 8) {
-        this.setBitWidth(bitWidth);
+    constructor() {
+        // Instâncias dos módulos de instruções
+        this.arithmetic = new ArithmeticInstructions(this);
+        this.logical = new LogicalInstructions(this);
+        this.dataMovement = new DataMovementInstructions(this);
+        this.bitManipulation = new BitManipulationInstructions(this);
+        this.stack = new StackInstructions(this);
+
         this.memory = [];
-        this.currentInstruction = 0;
-        this.running = false;
-
-        // Carregar os módulos de instruções
-        this.instructions = {
-            arithmetic: new ArithmeticInstructions(this),
-            logical: new LogicalInstructions(this),
-            // Outros conjuntos de instruções podem ser adicionados aqui no futuro
-        };
-    }
-
-    setBitWidth(bitWidth) {
-        this.bitWidth = bitWidth;
-        this.maxValue = (1 << bitWidth) - 1;  // Valor máximo permitido pela largura de bits
-
-        // Reconfigurar os registradores com base na nova largura de bits
         this.registers = {
             A: 0,
             B: 0,
             C: 0,
-            D: 0,
-            CMP: 0  // Usado para comparações
+            D: 0 
         };
+        this.currentInstruction = 0;
+        this.running = false;
+        this.bitWidth = 8; // Padrão para 8 bits
+    }
+
+    setBitWidth(bitWidth) {
+        this.bitWidth = bitWidth;
+        this.maxValue = (1 << bitWidth) - 1; // Calcula o valor máximo para a largura de bits
     }
 
     loadProgram(program) {
         // Carrega e tokeniza o programa Assembly
-        this.memory = program.split('\n');
+        this.memory = program.split('\n').map(line => line.trim()).filter(line => line !== '');
         this.currentInstruction = 0;
+        if (this.memory.length === 0) {
+            console.warn('Nenhum código carregado. Por favor, carregue um programa antes de executar.');
+        } else {
+            console.log('Programa carregado:', this.memory);
+        }
     }
 
     executeStep() {
-        if (this.currentInstruction >= this.memory.length) {
-            this.running = false;
+        if (!this.memory || this.memory.length === 0) {
+            console.warn('Nenhum código carregado. Por favor, carregue um programa antes de executar.');
             return;
         }
 
+        if (this.currentInstruction >= this.memory.length) {
+            this.running = false;
+            console.warn('Tentativa de acessar uma linha fora dos limites da memória.');
+            return;
+        }
+
+        // Verifica se há um breakpoint na linha atual
         if (window.debugger.shouldPause()) {
             this.running = false;
             console.log(`Breakpoint at line ${this.currentInstruction + 1}`);
-            return;
+            return; // Pausa a execução no breakpoint
         }
     
         const line = this.memory[this.currentInstruction].trim();
 
+        // Verificar se a linha é uma etiqueta e ignorá-la
         if (line.endsWith(':')) {
             this.currentInstruction++;
-            return;
+            return; // Não tenta executar uma etiqueta
         }
         
+        // Separar a instrução dos argumentos
         const instructionParts = line.match(/^(\w+)\s*(.*)$/);
         if (!instructionParts) {
             console.error(`Erro na linha ${this.currentInstruction + 1}: ${line}`);
@@ -63,26 +77,63 @@ class Interpreter {
         }
         
         const instruction = instructionParts[1].toUpperCase();
-        const args = instructionParts[2] ? instructionParts[2].split(',').map(arg => arg.trim()) : [];
+        const args = instructionParts[2].split(',').map(arg => arg.trim());
 
-        // Delegar a execução para o módulo apropriado
-        for (let key in this.instructions) {
-            if (this.instructions[key][instruction.toLowerCase()]) {
-                this.instructions[key][instruction.toLowerCase()](args);
+        switch (instruction) {
+            case 'MOV':
+            case 'LOAD':
+            case 'STORE':
+                this.dataMovement.execute(instruction, args);
                 break;
-            }
+            case 'ADD':
+            case 'SUB':
+            case 'MUL':
+            case 'DIV':
+            case 'AND':
+            case 'OR':
+            case 'XOR':
+            case 'NOT':
+            case 'CMP':
+                this.arithmetic.execute(instruction, args);
+                break;
+            case 'JMP':
+            case 'JE':
+            case 'JNE':
+            case 'JG':
+            case 'JL':
+            case 'CALL':
+            case 'RET':
+                this.logical.execute(instruction, args);
+                break;
+            case 'SHL':
+            case 'SHR':
+            case 'ROL':
+            case 'ROR':
+                this.bitManipulation.execute(instruction, args);
+                break;
+            case 'PUSH':
+            case 'POP':
+                this.stack.execute(instruction, args);
+                break;
+            default:
+                console.error(`Instrução desconhecida: ${instruction}`);
         }
-    
+
         if (!instruction.startsWith('J')) {
             this.currentInstruction++;
         }
-    
-        console.log('Executing:', instruction);
+
+        console.log('Executando linha', this.currentInstruction + 1);
         window.debugger.updatePanel();
         window.visualization.updateVisualization();
     }
 
     run(speed) {
+        if (!this.memory || this.memory.length === 0) {
+            console.warn('Nenhum código carregado. Por favor, carregue um programa antes de executar.');
+            return;
+        }
+
         this.running = true;
         const interval = speed === 'fast' ? 100 : speed === 'medium' ? 500 : 1000;
         const intervalId = setInterval(() => {
@@ -100,12 +151,16 @@ class Interpreter {
 
     reset() {
         this.memory = [];
-        this.setBitWidth(this.bitWidth);  // Reconfigurar os registradores ao resetar
+        this.registers = {
+            A: 0,
+            B: 0,
+            C: 0,
+            D: 0
+        };
         this.currentInstruction = 0;
         this.running = false;
+        console.log('Sistema resetado.');
     }
 }
-
-window.interpreter = new Interpreter();  // Inicializa com a largura de bits padrão (8 bits)
 
 export default Interpreter;

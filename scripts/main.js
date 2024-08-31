@@ -1,4 +1,6 @@
 import Interpreter from './interpreter.js';
+import Debugger from './debugger.js';
+import Visualization from './visualization.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Primeiro, instancie o interpretador
@@ -32,6 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('step-btn').addEventListener('click', () => {
+        if (!window.interpreter.memory || window.interpreter.memory.length === 0) {
+            console.warn('Nenhum código carregado. Por favor, carregue um programa antes de executar.');
+            return;
+        }
         console.log("Executando passo...");
         window.interpreter.executeStep();
     });

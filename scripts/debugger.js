@@ -3,49 +3,25 @@ class Debugger {
         this.interpreter = interpreter;
         this.breakpoints = new Set();
 
-        const addButton = document.getElementById('add-breakpoint-btn');
-        const breakpointInput = document.getElementById('breakpoint-input');
-
-        if (addButton && breakpointInput) {
-            addButton.addEventListener('click', () => {
-                const lineNumber = parseInt(breakpointInput.value, 10);
-                if (!isNaN(lineNumber)) {
-                    this.addBreakpoint(lineNumber);
-                }
-            });
-        } else {
-            console.error('Elementos de breakpoint não encontrados no DOM.');
-        }
+        // Configurar o botão de adicionar breakpoint
+        document.getElementById('add-breakpoint-btn').addEventListener('click', () => {
+            const lineNumber = parseInt(document.getElementById('breakpoint-input').value, 10);
+            if (!isNaN(lineNumber) && lineNumber > 0) {
+                this.addBreakpoint(lineNumber);
+                this.updateBreakpointsList();
+            }
+        });
     }
 
     addBreakpoint(lineNumber) {
         this.breakpoints.add(lineNumber);
-        this.updateBreakpointsList();
+        console.log(`Breakpoint adicionado na linha ${lineNumber}`);
     }
 
     removeBreakpoint(lineNumber) {
         this.breakpoints.delete(lineNumber);
-        this.updateBreakpointsList();  // Atualiza a lista após remover
-    }
-
-    updateBreakpointsList() {
-        const breakpointsList = document.getElementById('breakpoints-list');
-        breakpointsList.innerHTML = '';
-        this.breakpoints.forEach(bp => {
-            const listItem = document.createElement('li');
-            listItem.className = 'breakpoint-item';
-    
-            const textSpan = document.createElement('span');
-            textSpan.textContent = `Breakpoint at line: ${bp}`;
-    
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'Remove';
-            removeButton.addEventListener('click', () => this.removeBreakpoint(bp));
-    
-            listItem.appendChild(textSpan);
-            listItem.appendChild(removeButton);
-            breakpointsList.appendChild(listItem);
-        });
+        console.log(`Breakpoint removido na linha ${lineNumber}`);
+        this.updateBreakpointsList();
     }
 
     shouldPause() {
@@ -53,10 +29,24 @@ class Debugger {
     }
 
     updatePanel() {
-        const registersContent = Object.entries(this.interpreter.registers)
-            .map(([reg, value]) => `${reg}: ${value}`)
-            .join('\n');
+        const registersContent = document.getElementById('registers-content');
+        registersContent.textContent = `A: ${this.interpreter.registers.A}\nB: ${this.interpreter.registers.B}\nC: ${this.interpreter.registers.C}\nD: ${this.interpreter.registers.D}\nCMP: ${this.interpreter.registers.CMP || 0}`;
 
-        document.getElementById('registers-content').textContent = registersContent;
+        const memoryContent = document.getElementById('memory-content');
+        memoryContent.textContent = this.interpreter.memory.map((value, index) => `Endereço ${index}: ${value}`).join('\n');
+    }
+
+    updateBreakpointsList() {
+        const breakpointsList = document.getElementById('breakpoints-list');
+        breakpointsList.innerHTML = ''; // Limpa a lista atual
+
+        this.breakpoints.forEach(lineNumber => {
+            const li = document.createElement('li');
+            li.textContent = `Linha ${lineNumber}`;
+            li.addEventListener('click', () => this.removeBreakpoint(lineNumber));
+            breakpointsList.appendChild(li);
+        });
     }
 }
+
+export default Debugger;

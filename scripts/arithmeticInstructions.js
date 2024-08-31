@@ -3,96 +3,92 @@ class ArithmeticInstructions {
         this.interpreter = interpreter;
     }
 
-    mov(args) {
-        if (args.length < 2) {
-            console.error('MOV falhou: argumentos insuficientes.');
-            return;
+    execute(instruction, args) {
+        switch (instruction) {
+            case 'ADD':
+                this.add(args);
+                break;
+            case 'SUB':
+                this.sub(args);
+                break;
+            case 'MUL':
+                this.mul(args);
+                break;
+            case 'DIV':
+                this.div(args);
+                break;
+            case 'AND':
+                this.and(args);
+                break;
+            case 'OR':
+                this.or(args);
+                break;
+            case 'XOR':
+                this.xor(args);
+                break;
+            case 'NOT':
+                this.not(args);
+                break;
+            case 'CMP':
+                this.cmp(args);
+                break;
+            default:
+                console.error(`Instrução aritmética desconhecida: ${instruction}`);
         }
-    
-        const [dest, src] = args;
-        let value = isNaN(parseInt(src, 10)) ? this.interpreter.registers[src] : parseInt(src, 10);
-
-        if (value > this.interpreter.maxValue) {
-            value = this.interpreter.maxValue;  // Limitar ao valor máximo permitido
-        }
-
-        this.interpreter.registers[dest] = value;
-        console.log(`MOV ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
     add(args) {
         const [dest, src] = args;
-        const value = isNaN(parseInt(src, 10)) ? this.interpreter.registers[src] : parseInt(src, 10);
-        this.interpreter.registers[dest] = (this.interpreter.registers[dest] + value) & this.interpreter.maxValue;  // Garantir que o valor não exceda o limite
+        this.interpreter.registers[dest] += this.interpreter.registers[src];
         console.log(`ADD ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
     sub(args) {
         const [dest, src] = args;
-        const value = isNaN(parseInt(src, 10)) ? this.interpreter.registers[src] : parseInt(src, 10);
-        this.interpreter.registers[dest] = (this.interpreter.registers[dest] - value) & this.interpreter.maxValue;  // Garantir que o valor não exceda o limite
+        this.interpreter.registers[dest] -= this.interpreter.registers[src];
         console.log(`SUB ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
     mul(args) {
         const [dest, src] = args;
-        const value = isNaN(parseInt(src, 10)) ? this.interpreter.registers[src] : parseInt(src, 10);
-        this.interpreter.registers[dest] = (this.interpreter.registers[dest] * value) & this.interpreter.maxValue;  // Garantir que o valor não exceda o limite
+        this.interpreter.registers[dest] *= this.interpreter.registers[src];
         console.log(`MUL ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
     div(args) {
         const [dest, src] = args;
-        const value = isNaN(parseInt(src, 10)) ? this.interpreter.registers[src] : parseInt(src, 10);
-        this.interpreter.registers[dest] = Math.floor(this.interpreter.registers[dest] / value);  // Divisão inteira
+        this.interpreter.registers[dest] /= this.interpreter.registers[src];
         console.log(`DIV ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
-    jmp(args) {
-        const [label] = args;
-    
-        const index = this.interpreter.memory.findIndex(line => {
-            const trimmedLine = line.trim();
-            return trimmedLine === `${label}:`;
-        });
-    
-        if (index !== -1) {
-            this.interpreter.currentInstruction = index;
-        } else {
-            console.error(`Etiqueta ${label} não encontrada`);
-        }
-    }    
-
-    je(args) {
-        if (this.interpreter.registers['CMP'] === 0) {
-            this.jmp(args);
-        } else {
-            this.interpreter.currentInstruction++;
-        }
+    and(args) {
+        const [dest, src] = args;
+        this.interpreter.registers[dest] &= this.interpreter.registers[src];
+        console.log(`AND ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
-    jne(args) {
-        if (this.interpreter.registers['CMP'] !== 0) {
-            this.jmp(args);
-        } else {
-            this.interpreter.currentInstruction++;
-        }
+    or(args) {
+        const [dest, src] = args;
+        this.interpreter.registers[dest] |= this.interpreter.registers[src];
+        console.log(`OR ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
-    jg(args) {
-        if (this.interpreter.registers['CMP'] > 0) {
-            this.jmp(args);
-        } else {
-            this.interpreter.currentInstruction++;
-        }
+    xor(args) {
+        const [dest, src] = args;
+        this.interpreter.registers[dest] ^= this.interpreter.registers[src];
+        console.log(`XOR ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
-    jl(args) {
-        if (this.interpreter.registers['CMP'] < 0) {
-            this.jmp(args);
-        } else {
-            this.interpreter.currentInstruction++;
-        }
+    not(args) {
+        const [dest] = args;
+        this.interpreter.registers[dest] = ~this.interpreter.registers[dest];
+        console.log(`NOT ${dest}: ${this.interpreter.registers[dest]}`);
+    }
+
+    cmp(args) {
+        const [reg1, reg2] = args;
+        this.interpreter.registers['CMP'] = this.interpreter.registers[reg1] - this.interpreter.registers[reg2];
+        console.log(`CMP ${reg1}, ${reg2}: ${this.interpreter.registers['CMP']}`);
     }
 }
 

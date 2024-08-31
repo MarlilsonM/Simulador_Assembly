@@ -4,20 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador de Assembly</title>
-    <!-- Estilos principais -->
+    <!-- Link para o CSS principal -->
     <link rel="stylesheet" href="styles/main.css">
-    <!-- Estilos do CodeMirror -->
+    <!-- Link para CodeMirror -->
     <link rel="stylesheet" href="codemirror/codemirror.css">
-    <!-- Addons do CodeMirror -->
     <link rel="stylesheet" href="codemirror/addon/hint/show-hint.css">
 </head>
 <body>
-    <!-- Container para o editor de código -->
     <div id="editor-container">
         <textarea id="code-editor"></textarea>
     </div>
 
-    <!-- Controles para execução e configuração -->
     <div id="controls">
         <button id="play-btn">Executar</button>
         <button id="pause-btn">Pausar</button>
@@ -37,7 +34,6 @@
         </select>
     </div>
 
-    <!-- Painel de debug -->
     <div id="debug-panel">
         <h3>Painel de Debug</h3>
         <div id="registers">
@@ -56,27 +52,30 @@
         </div>
     </div>
 
-    <!-- Área para saída gráfica -->
     <div id="output">
         <div id="visualization">
             <canvas id="execution-canvas" width="600" height="400"></canvas>
         </div>
     </div>
 
-    <!-- Scripts do CodeMirror -->
+    <!-- Scripts para CodeMirror -->
     <script src="codemirror/codemirror.js"></script>
     <script src="codemirror/mode/assembly/gas.js"></script>
     <script src="codemirror/addon/edit/matchbrackets.js"></script>
     <script src="codemirror/addon/hint/show-hint.js"></script>
 
+    <!-- Importação do Chart.js -->
+    <script type="module">
+        import { Chart, registerables } from 'https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.js';
+        Chart.register(...registerables);
+        window.Chart = Chart;
+    </script>
+
     <!-- Scripts do projeto -->
     <script src="scripts/editor.js"></script>
-    <script type="module" src="scripts/arithmeticInstructions.js"></script>
-    <script type="module" src="scripts/logicalInstructions.js"></script>
     <script type="module" src="scripts/interpreter.js"></script>
-    <script src="scripts/debugger.js"></script>
-    <script src="scripts/visualization.js"></script>
+    <script type="module" src="scripts/debugger.js"></script>
+    <script type="module" src="scripts/visualization.js"></script>
     <script type="module" src="scripts/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
