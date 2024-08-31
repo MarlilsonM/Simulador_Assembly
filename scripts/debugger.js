@@ -3,14 +3,18 @@ class Debugger {
         this.interpreter = interpreter;
         this.breakpoints = new Set();
 
-        // Configurar o botão de adicionar breakpoint
-        document.getElementById('add-breakpoint-btn').addEventListener('click', () => {
-            const lineNumber = parseInt(document.getElementById('breakpoint-input').value, 10);
-            if (!isNaN(lineNumber) && lineNumber > 0) {
-                this.addBreakpoint(lineNumber);
-                this.updateBreakpointsList();
-            }
-        });
+        const addBreakpointBtn = document.getElementById('add-breakpoint-btn');
+        const breakpointInput = document.getElementById('breakpoint-input');
+
+        // Verificar se os elementos existem antes de adicionar event listeners
+        if (addBreakpointBtn && breakpointInput) {
+            addBreakpointBtn.addEventListener('click', () => {
+                const lineNumber = parseInt(breakpointInput.value);
+                if (!isNaN(lineNumber)) {
+                    this.addBreakpoint(lineNumber);
+                }
+            });
+        }
     }
 
     addBreakpoint(lineNumber) {

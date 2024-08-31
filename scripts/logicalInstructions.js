@@ -33,9 +33,14 @@ class LogicalInstructions {
 
     jmp(args) {
         const [label] = args;
-        const index = this.interpreter.memory.findIndex(line => line.trim() === `${label}:`);
+        const index = this.memory.findIndex(line => {
+            const trimmedLine = line.trim();
+            return trimmedLine === `${label}:`;  // Procurar pela etiqueta com ":"
+        });
+    
         if (index !== -1) {
-            this.interpreter.currentInstruction = index;
+            this.currentInstruction = index;
+            console.log(`Jumped to label: ${label} at line ${index + 1}`);
         } else {
             console.error(`Etiqueta ${label} não encontrada`);
         }

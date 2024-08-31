@@ -54,9 +54,9 @@ class Interpreter {
         }
 
         // Verifica se há um breakpoint na linha atual
-        if (window.debugger.shouldPause()) {
+        if (this.debugger && this.debugger.shouldPause()) {
             this.running = false;
-            console.log(`Breakpoint at line ${this.currentInstruction + 1}`);
+            console.log(`Breakpoint na linha: ${this.currentInstruction + 1}`);
             return; // Pausa a execução no breakpoint
         }
     
@@ -124,8 +124,15 @@ class Interpreter {
         }
 
         console.log('Executando linha', this.currentInstruction + 1);
-        window.debugger.updatePanel();
-        window.visualization.updateVisualization();
+
+        if (this.debugger) {
+            this.debugger.updatePanel();  // Chamar updatePanel apenas se o Debugger estiver definido
+        }
+
+        
+        if (window.visualization) {
+            window.visualization.updateVisualization();  // Chamar updateVisualization apenas se visualization estiver definido
+        }
     }
 
     run(speed) {
