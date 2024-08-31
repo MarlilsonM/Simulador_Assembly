@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assembly Simulator</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="codemirror/codemirror.css">
+</head>
+<body>
+    <div id="editor-container">
+        <textarea id="code-editor"></textarea>
+    </div>
+    <div id="controls">
+        <button id="run-btn">Executar</button>
+        <button id="step-btn">Passo a Passo</button>
+        <button id="reset-btn">Resetar</button>
+        <label for="speed-select">Velocidade:</label>
+        <select id="speed-select">
+            <option value="fast">Rápido</option>
+            <option value="medium">Médio</option>
+            <option value="slow">Lento</option>
+        </select>
+        <label for="bit-width-select">Largura de Bits:</label>
+        <select id="bit-width-select">
+            <option value="8">8 bits</option>
+            <option value="16">16 bits</option>
+            <option value="32">32 bits</option>
+        </select>
+    </div>
+    <div id="output">
+        <canvas id="output-canvas"></canvas>
+    </div>
+
+    <script src="codemirror/codemirror.js"></script>
+    <script src="scripts/editor.js"></script>
+    <script src="scripts/interpreter.js"></script>
+    <script src="scripts/debugger.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
