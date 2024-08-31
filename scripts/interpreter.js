@@ -6,13 +6,6 @@ import StackInstructions from './stackInstructions.js';
 
 class Interpreter {
     constructor() {
-        // Instâncias dos módulos de instruções
-        this.arithmetic = new ArithmeticInstructions(this);
-        this.logical = new LogicalInstructions(this);
-        this.dataMovement = new DataMovementInstructions(this);
-        this.bitManipulation = new BitManipulationInstructions(this);
-        this.stack = new StackInstructions(this);
-
         this.memory = [];
         this.registers = {
             A: 0,
@@ -23,6 +16,13 @@ class Interpreter {
         this.currentInstruction = 0;
         this.running = false;
         this.bitWidth = 8; // Padrão para 8 bits
+
+        // Instâncias dos módulos de instruções
+        this.arithmetic = new ArithmeticInstructions(this);
+        this.logical = new LogicalInstructions(this);
+        this.dataMovement = new DataMovementInstructions(this);
+        this.bitManipulation = new BitManipulationInstructions(this);
+        this.stack = new StackInstructions(this);
     }
 
     setBitWidth(bitWidth) {
@@ -133,6 +133,9 @@ class Interpreter {
         if (window.visualization) {
             window.visualization.updateVisualization();  // Chamar updateVisualization apenas se visualization estiver definido
         }
+
+        this.currentInstruction++;
+        console.log(`Executando linha ${this.currentInstruction + 1}`);
     }
 
     run(speed) {

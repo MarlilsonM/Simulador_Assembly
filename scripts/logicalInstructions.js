@@ -33,15 +33,24 @@ class LogicalInstructions {
 
     jmp(args) {
         const [label] = args;
-        const index = this.memory.findIndex(line => {
-            const trimmedLine = line.trim();
-            return trimmedLine === `${label}:`;  // Procurar pela etiqueta com ":"
+
+        // Verifica se a memória está carregada
+        if (!this.interpreter.memory) {
+            console.error('Memória não foi inicializada.');
+            return;
+        }
+
+        // Busca pela etiqueta no programa carregado na memória
+        const index = this.interpreter.memory.findIndex(line => {
+            return line === `${label}:`;  // Procurar pela etiqueta exata com ":"
         });
-    
+
         if (index !== -1) {
-            this.currentInstruction = index;
+            // Se a etiqueta foi encontrada, define a instrução atual para essa linha
+            this.interpreter.currentInstruction = index;
             console.log(`Jumped to label: ${label} at line ${index + 1}`);
         } else {
+            // Se a etiqueta não foi encontrada, exibe um erro
             console.error(`Etiqueta ${label} não encontrada`);
         }
     }
