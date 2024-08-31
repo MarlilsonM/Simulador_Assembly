@@ -1,16 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assembly Simulator</title>
+    <!-- Estilos principais -->
     <link rel="stylesheet" href="styles/main.css">
+    <!-- Estilos do CodeMirror -->
     <link rel="stylesheet" href="codemirror/codemirror.css">
+    <!-- Addons do CodeMirror -->
+    <link rel="stylesheet" href="codemirror/addon/hint/show-hint.css">
 </head>
 <body>
+    <!-- Container para o editor de código -->
     <div id="editor-container">
         <textarea id="code-editor"></textarea>
     </div>
+    <!-- Controles para execução e configuração -->
     <div id="controls">
         <button id="run-btn">Executar</button>
         <button id="step-btn">Passo a Passo</button>
@@ -28,11 +34,18 @@
             <option value="32">32 bits</option>
         </select>
     </div>
+    <!-- Área para saída gráfica -->
     <div id="output">
         <canvas id="output-canvas"></canvas>
     </div>
-
+    <!-- Scripts do CodeMirror -->
     <script src="codemirror/codemirror.js"></script>
+    <!-- Carregar o modo Assembly para CodeMirror -->
+    <script src="codemirror/mode/assembly/gas.js"></script>
+    <!-- Carregar addons conforme necessário -->
+    <script src="codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="codemirror/addon/hint/show-hint.js"></script>
+    <!-- Scripts do projeto -->
     <script src="scripts/editor.js"></script>
     <script src="scripts/interpreter.js"></script>
     <script src="scripts/debugger.js"></script>

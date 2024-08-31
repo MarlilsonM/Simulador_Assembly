@@ -1,38 +1,75 @@
+/* Estilos globais */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif; /* Fonte profissional e legível */
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f5f5f5; /* Fundo neutro e agradável aos olhos */
+    color: #333; /* Cor do texto principal */
 }
 
+/* Container do editor */
 #editor-container {
     margin: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #ccc; /* Borda sutil ao redor do editor */
+    background-color: #fff; /* Fundo branco para destacar o código */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra leve para efeito de elevação */
+    border-radius: 5px; /* Bordas arredondadas para suavizar o visual */
 }
 
+/* Controles */
 #controls {
     margin: 20px;
-    display: flex;
-    align-items: center;
+    display: flex; /* Alinhamento flexível para facilitar a distribuição dos controles */
+    align-items: center; /* Alinhar verticalmente os itens no centro */
+    gap: 10px; /* Espaçamento entre os itens */
+    flex-wrap: wrap; /* Permitir quebra de linha em telas menores */
 }
 
-#controls button, #controls select {
-    margin-right: 10px;
+/* Estilos dos botões */
+#controls button {
+    padding: 10px 15px;
+    background-color: #007BFF; /* Cor de fundo azul */
+    color: #fff; /* Cor do texto dos botões */
+    border: none; /* Remover bordas padrão */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor de mão ao passar sobre o botão */
+    font-size: 16px; /* Tamanho da fonte ajustado para legibilidade */
+    transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
+}
+
+#controls button:hover {
+    background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+}
+
+/* Estilos dos seletores (dropdowns) */
+#controls select {
     padding: 10px;
     font-size: 16px;
+    border: 1px solid #ccc; /* Borda sutil ao redor dos seletores */
+    border-radius: 5px;
+    background-color: #fff; /* Fundo branco */
+    cursor: pointer; /* Cursor de mão ao passar sobre o seletor */
 }
 
+/* Área de saída gráfica */
 #output {
     margin: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 15px;
+    border: 1px solid #ccc; /* Borda ao redor da área de saída */
     background-color: #fff;
-    height: 400px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra leve */
+    border-radius: 5px; /* Bordas arredondadas */
+    height: 400px; /* Altura fixa para o canvas */
+    display: flex; /* Usar flexbox para centralizar o canvas */
+    justify-content: center; /* Centralizar horizontalmente */
+    align-items: center; /* Centralizar verticalmente */
 }
 
+/* Estilos do canvas dentro da área de saída */
 #output-canvas {
-    width: 100%;
-    height: 100%;
+    width: 100%; /* O canvas ocupará 100% da largura disponível */
+    height: 100%; /* O canvas ocupará 100% da altura disponível */
+    border-radius: 5px; /* Bordas arredondadas no canvas */
+    background-color: #e9ecef; /* Fundo claro para o canvas */
 }
