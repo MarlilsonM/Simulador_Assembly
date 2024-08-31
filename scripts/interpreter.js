@@ -102,6 +102,8 @@ class Interpreter {
         }
     
         console.log('Executing:', instruction);
+        window.debugger.updatePanel();
+        window.visualization.updateVisualization();
     }
 
     mov(args) {

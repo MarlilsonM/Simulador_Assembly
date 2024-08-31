@@ -16,11 +16,13 @@
     <div id="editor-container">
         <textarea id="code-editor"></textarea>
     </div>
+
     <!-- Controles para execução e configuração -->
     <div id="controls">
-        <button id="run-btn">Executar</button>
+        <button id="play-btn">Executar</button>
+        <button id="pause-btn">Pausar</button>
         <button id="step-btn">Passo a Passo</button>
-        <button id="reset-btn">Resetar</button>
+        <button id="reset-btn">Reiniciar</button>
         <label for="speed-select">Velocidade:</label>
         <select id="speed-select">
             <option value="fast">Rápido</option>
@@ -34,8 +36,10 @@
             <option value="32">32 bits</option>
         </select>
     </div>
+
+    <!-- Painel de debug -->
     <div id="debug-panel">
-        <h3>Painel de debug</h3>
+        <h3>Painel de Debug</h3>
         <div id="registers">
             <h4>Registradores</h4>
             <pre id="registers-content"></pre>
@@ -48,14 +52,17 @@
             <h4>Breakpoints</h4>
             <ul id="breakpoints-list"></ul>
             <input type="number" id="breakpoint-input" placeholder="Nº da linha" />
-            <button id="add-breakpoint-btn">Add Breakpoint</button>
+            <button id="add-breakpoint-btn">Adicionar Breakpoint</button>
         </div>
     </div>
-    
+
     <!-- Área para saída gráfica -->
     <div id="output">
-        <canvas id="output-canvas"></canvas>
+        <div id="visualization">
+            <canvas id="execution-canvas" width="600" height="400"></canvas>
+        </div>
     </div>
+
     <!-- Scripts do CodeMirror -->
     <script src="codemirror/codemirror.js"></script>
     <!-- Carregar o modo Assembly para CodeMirror -->
@@ -63,10 +70,13 @@
     <!-- Carregar addons conforme necessário -->
     <script src="codemirror/addon/edit/matchbrackets.js"></script>
     <script src="codemirror/addon/hint/show-hint.js"></script>
+
     <!-- Scripts do projeto -->
     <script src="scripts/editor.js"></script>
     <script src="scripts/interpreter.js"></script>
     <script src="scripts/debugger.js"></script>
+    <script src="scripts/visualization.js"></script> <!-- Adicione este script para a visualização -->
     <script src="scripts/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

@@ -1,25 +1,27 @@
-# ADocumentação do Simulador de Assembly
+# Documentação do Simulador de Assembly
 
 ## Visão Geral
-Este documento fornece informações detalhadas sobre como usar e desenvolver o Simulador de Assembly.
+O Simulador de Assembly permite que os usuários escrevam, executem e depurem programas em linguagem assembly. O simulador fornece uma representação gráfica em tempo real dos estados dos registradores e da memória.
 
 ### Funcionalidades
-- Editor de código com destaque de sintaxe e verificação de erros.
-- Execução passo a passo de código Assembly.
-- Ferramentas de depuração, incluindo pontos de interrupção e inspeção de memória.
-- Configurações ajustáveis de velocidade de execução e largura de bits.
+- **Editor de Código**: Escreva e edite código assembly com realce de sintaxe.
+- **Controles de Execução**: Execute, pause, passe passo a passo e reinicie a execução do seu programa.
+- **Depuração**: Defina breakpoints para pausar a execução em linhas específicas.
+- **Visualização Gráfica**: Visualização em tempo real dos estados dos registradores e da memória.
 
-## Começando
-### Instalação
-- Clone o repositório.
-- Abra o arquivo `index.html` no seu navegador.
-
-### Usando o Simulador
-1. **Escrevendo Código**: Use o editor para escrever seu código Assembly.
-2. **Executando Código**: Clique em "Run" para executar seu código.
-3. **Execução Passo a Passo**: Clique em "Step" para executar o código linha por linha.
-4. **Resetar:**: Clique em "Reset" para limpar a sessão atual.
+### Começando
+1. **Escrevendo Código**: Use o editor para escrever seu código em assembly.
+2. **Executando Código**: Clique em "Executar" para executar o código ou em "Passo" para executar uma instrução de cada vez.
+3. **Definindo Breakpoints**: Insira um número de linha e clique em "Adicionar Breakpoint" para pausar a execução nessa linha.
+4. **Reiniciando**: Clique em "Reiniciar" para limpar o programa e reiniciar os registradores e a memória.
 
 ### Funcionalidades Avançadas
-- **Breakpoints**: Defina pontos de interrupção para pausar a execução em linhas específicas.
-- **Inspecionar Memória**: Use as ferramentas de depuração para visualizar o estado dos registradores e da memória.
+- **Acesso à Memória**: Use endereços de memória (por exemplo, `[10]`) em suas instruções para ler ou escrever em locais específicos da memória.
+- **Manipulação de Registradores**: Modifique diretamente os registradores A, B, C, D através do seu código assembly.
+
+### Exemplo de Programa
+```assembly
+MOV A, 5
+MOV B, 3
+ADD A, B
+MOV [10], A
