@@ -1,3 +1,5 @@
+import Interpreter from './interpreter.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     // Primeiro, instancie o interpretador
     window.interpreter = new Interpreter();
@@ -47,6 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('bit-width-select').addEventListener('change', (event) => {
-        console.log('Largura de bits alterada para:', event.target.value);
+        const bitWidth = parseInt(event.target.value, 10);
+        window.interpreter.setBitWidth(bitWidth);
+        console.log('Largura de bits alterada para:', bitWidth);
     });
 });

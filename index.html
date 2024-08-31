@@ -65,18 +65,18 @@
 
     <!-- Scripts do CodeMirror -->
     <script src="codemirror/codemirror.js"></script>
-    <!-- Carregar o modo Assembly para CodeMirror -->
     <script src="codemirror/mode/assembly/gas.js"></script>
-    <!-- Carregar addons conforme necessário -->
     <script src="codemirror/addon/edit/matchbrackets.js"></script>
     <script src="codemirror/addon/hint/show-hint.js"></script>
 
     <!-- Scripts do projeto -->
     <script src="scripts/editor.js"></script>
-    <script src="scripts/interpreter.js"></script>
+    <script type="module" src="scripts/arithmeticInstructions.js"></script>
+    <script type="module" src="scripts/logicalInstructions.js"></script>
+    <script type="module" src="scripts/interpreter.js"></script>
     <script src="scripts/debugger.js"></script>
-    <script src="scripts/visualization.js"></script> <!-- Adicione este script para a visualização -->
-    <script src="scripts/main.js"></script>
+    <script src="scripts/visualization.js"></script>
+    <script type="module" src="scripts/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
