@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assembly Simulator</title>
+    <title>Simulador de Assembly</title>
     <!-- Estilos principais -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- Estilos do CodeMirror -->
@@ -34,6 +34,24 @@
             <option value="32">32 bits</option>
         </select>
     </div>
+    <div id="debug-panel">
+        <h3>Painel de debug</h3>
+        <div id="registers">
+            <h4>Registradores</h4>
+            <pre id="registers-content"></pre>
+        </div>
+        <div id="memory">
+            <h4>Memória</h4>
+            <pre id="memory-content"></pre>
+        </div>
+        <div id="breakpoints">
+            <h4>Breakpoints</h4>
+            <ul id="breakpoints-list"></ul>
+            <input type="number" id="breakpoint-input" placeholder="Nº da linha" />
+            <button id="add-breakpoint-btn">Add Breakpoint</button>
+        </div>
+    </div>
+    
     <!-- Área para saída gráfica -->
     <div id="output">
         <canvas id="output-canvas"></canvas>

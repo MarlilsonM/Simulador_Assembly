@@ -73,3 +73,47 @@ body {
     border-radius: 5px; /* Bordas arredondadas no canvas */
     background-color: #e9ecef; /* Fundo claro para o canvas */
 }
+
+#debug-panel {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+#debug-panel h3 {
+    margin-top: 0;
+}
+
+#registers, #memory, #breakpoints {
+    margin-bottom: 10px;
+}
+
+.breakpoint-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    cursor: pointer;
+}
+
+.breakpoint-item:hover {
+    background-color: #ececec;
+}
+
+.breakpoint-item button {
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 3px 6px;
+    cursor: pointer;
+}
+
+.breakpoint-item button:hover {
+    background-color: #ff1c1c;
+}

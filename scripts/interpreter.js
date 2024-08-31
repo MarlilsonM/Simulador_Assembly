@@ -9,7 +9,7 @@ class Interpreter {
         };
         this.currentInstruction = 0;
         this.running = false;
-    }
+    }  
 
     loadProgram(program) {
         // Carrega e tokeniza o programa Assembly
@@ -21,6 +21,13 @@ class Interpreter {
         if (this.currentInstruction >= this.memory.length) {
             this.running = false;
             return;
+        }
+
+        // Verifica se há um breakpoint na linha atual
+        if (window.debugger.shouldPause()) {
+            this.running = false;
+            console.log(`Breakpoint at line ${this.currentInstruction + 1}`);
+            return; // Pausa a execução no breakpoint
         }
     
         const line = this.memory[this.currentInstruction].trim();
