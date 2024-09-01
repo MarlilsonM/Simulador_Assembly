@@ -38,7 +38,16 @@ class Interpreter {
     loadProgram(program) {
         // Carrega e tokeniza o programa Assembly
         this.memory = program.split('\n').map(line => line.trim()).filter(line => line !== '');
+    
+        // Adiciona um marcador de fim de programa
+        this.memory.push('END_OF_PROGRAM'); 
+    
         this.currentInstruction = 0;
+        if (this.memory.length === 0) {
+            console.warn('Nenhum código carregado. Por favor, carregue um programa antes de executar.');
+        } else {
+            console.log('Programa carregado:', this.memory);
+        }
     }
 
     executeStep() {
@@ -53,48 +62,37 @@ class Interpreter {
             return;
         }
     
-        // Verifica se há um breakpoint na linha atual
-        if (this.debugger && this.debugger.shouldPause()) {
+        let line = this.memory[this.currentInstruction];
+    
+        // Verifica se atingiu o marcador de fim de programa
+        if (line === 'END_OF_PROGRAM') {
+            console.log("Execução finalizada: Fim do programa alcançado.");
             this.running = false;
-            console.log(`Breakpoint na linha: ${this.currentInstruction + 1}`);
-            return; // Pausa a execução no breakpoint
-        }
-    
-        let line = this.memory[this.currentInstruction].trim();
-        
-        if (!line) {
-            this.currentInstruction++;
             return;
         }
     
-        // Verifica se a linha tem uma etiqueta seguida de uma instrução
-        const labelMatch = line.match(/^(\w+):\s*(.*)$/);
-        if (labelMatch) {
-            const label = labelMatch[1];
-            const instructionPart = labelMatch[2];
-    
-            if (instructionPart) {
-                line = instructionPart.trim();
-            } else {
-                this.currentInstruction++;
-                return;
-            }
-        }
-    
-        if (line.endsWith(':')) {
-            this.currentInstruction++;
+        // Verifica se a linha é válida antes de aplicar trim
+        if (typeof line !== 'string' || line === '') {
+            console.error(`Erro ao acessar linha ${this.currentInstruction + 1}: valor inválido ou indefinido.`);
+            this.running = false; // Finaliza a execução para evitar loops infinitos
             return;
         }
     
-        const instructionParts = line.match(/^(\w+)\s*(.*)$/);
+        // Remove espaços em branco desnecessários
+        line = line.trim();
+        const [instructionPart] = line.split(';');  // Ignora tudo após ';' como comentário
+        const instructionParts = instructionPart.match(/^(\w+)\s*(.*)$/);
+    
         if (!instructionParts) {
             console.error(`Erro na linha ${this.currentInstruction + 1}: "${line}"`);
-            this.currentInstruction++;
+            this.running = false;
             return;
         }
-        
+    
         const instruction = instructionParts[1].toUpperCase();
         const args = instructionParts[2].split(',').map(arg => arg.trim());
+    
+        console.log(`Executando instrução: ${instruction} com argumentos: ${args} na linha ${this.currentInstruction + 1}`);
     
         switch (instruction) {
             case 'MOV':
@@ -120,6 +118,7 @@ class Interpreter {
             case 'JL':
             case 'CALL':
             case 'RET':
+                this.logical.execute(instruction, args);
                 break;
             case 'SHL':
             case 'SHR':
@@ -132,32 +131,38 @@ class Interpreter {
                 this.stack.execute(instruction, args);
                 break;
             case 'NOP':
+                console.log("NOP: Nenhuma operação realizada");
                 break;
             default:
                 console.error(`Instrução desconhecida: ${instruction}`);
         }
     
-        // Verifica se é a última instrução antes de incrementar
-        if (this.currentInstruction < this.memory.length - 1) {
-            if (!['JMP', 'JE', 'JNE', 'JG', 'JL', 'CALL', 'RET'].includes(instruction)) {
-                this.currentInstruction++;
-            }
-        } else {
-            this.running = false; // Finaliza a execução
+        // Incrementa a linha apenas se a instrução não for de controle de fluxo (JMP, JE, etc.)
+        if (!['JMP', 'JE', 'JNE', 'JG', 'JL', 'CALL', 'RET'].includes(instruction)) {
+            this.currentInstruction++;
         }
-
+    
+        // Verifica se a execução atingiu o final do código e para a execução
+        if (this.currentInstruction >= this.memory.length) {
+            this.running = false;  // Finaliza a execução se a última instrução foi processada
+            console.log("Execução finalizada, última linha alcançada.");
+        }
+    
+        // Adicionando log para verificar o estado da memória e dos registradores após a execução
+        console.log("Estado da memória após execução:", this.memory);
+        console.log("Estado dos registradores após execução:", this.registers);
+    
+        // Atualiza painel de debug
         if (this.debugger) {
-            console.log("Atualizando o painel de debug...");
             this.debugger.updatePanel();
         }
     
-
+        // Atualiza visualização
         if (window.visualization) {
             window.visualization.updateVisualization();
         }
     }
-     
-
+    
     run(speed) {
         if (!this.memory || this.memory.length === 0) {
             console.warn('Nenhum código carregado. Por favor, carregue um programa antes de executar.');

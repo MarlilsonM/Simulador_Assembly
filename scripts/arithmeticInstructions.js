@@ -38,9 +38,24 @@ class ArithmeticInstructions {
     }
 
     add(args) {
-        const [dest, src] = args;
-        this.interpreter.registers[dest] += this.interpreter.registers[src];
+        const [destination, source] = args;
+    
+        // Verifica se os valores nos registradores são números válidos
+        const destValue = parseFloat(this.interpreter.registers[destination]);
+        const sourceValue = parseFloat(this.interpreter.registers[source]);
+    
+        if (isNaN(destValue) || isNaN(sourceValue)) {
+            console.error(`Erro: Valor não numérico encontrado. ${destination}=${destValue}, ${source}=${sourceValue}`);
+            return;
+        }
+    
+        const result = destValue + sourceValue;
+    
+        // Atualiza o registrador de destino com o resultado da soma
+        this.interpreter.registers[destination] = result;
+        console.log(`ADD ${destination}, ${source}: ${result}`);
     }
+    
 
     sub(args) {
         const [dest, src] = args;
