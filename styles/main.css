@@ -133,3 +133,15 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
+#output-panel {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+#program-output {
+    white-space: pre-wrap; /* Mantém o formato de quebra de linha */
+    font-family: monospace; /* Fonte de largura fixa para manter a formatação */
+}

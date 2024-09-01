@@ -36,19 +36,39 @@ class Interpreter {
     }
 
     loadProgram(program) {
-        // Carrega e tokeniza o programa Assembly
         this.memory = program.split('\n').map(line => line.trim()).filter(line => line !== '');
-    
-        // Adiciona um marcador de fim de programa
-        this.memory.push('END_OF_PROGRAM'); 
-    
         this.currentInstruction = 0;
+        this.labels = this.parseLabels();  // Processar labels no código
         if (this.memory.length === 0) {
             console.warn('Nenhum código carregado. Por favor, carregue um programa antes de executar.');
         } else {
             console.log('Programa carregado:', this.memory);
         }
     }
+
+    updateOutput(message) {
+        const outputElement = document.getElementById('program-output');
+        outputElement.textContent += message + '\n'; // Adiciona a mensagem e pula para a próxima linha
+    }
+
+    parseLabels() {
+        const labels = {};
+        this.memory.forEach((line, index) => {
+            const labelMatch = line.match(/^(\w+):\s*(.*)$/);
+            if (labelMatch) {
+                const label = labelMatch[1];
+                labels[label] = index;  // Associa a label à linha correspondente
+                // Substitui a linha com apenas a instrução, se houver
+                if (labelMatch[2].trim()) {
+                    this.memory[index] = labelMatch[2].trim();
+                } else {
+                    this.memory[index] = 'NOP'; // Define uma NOP se não houver instrução após a label
+                }
+            }
+        });
+        console.log("Labels detectadas e posições:", labels);
+        return labels;
+    }    
 
     executeStep() {
         if (!this.memory || this.memory.length === 0) {
@@ -99,6 +119,7 @@ class Interpreter {
             case 'LOAD':
             case 'STORE':
                 this.dataMovement.execute(instruction, args);
+                this.updateOutput(`Instrução ${instruction} executada com argumentos: ${args.join(', ')}`);
                 break;
             case 'ADD':
             case 'SUB':
@@ -110,6 +131,7 @@ class Interpreter {
             case 'NOT':
             case 'CMP':
                 this.arithmetic.execute(instruction, args);
+                this.updateOutput(`Instrução ${instruction} executada com resultado no registrador ${args[0]}: ${this.registers[args[0]]}`);
                 break;
             case 'JMP':
             case 'JE':
@@ -118,23 +140,36 @@ class Interpreter {
             case 'JL':
             case 'CALL':
             case 'RET':
-                this.logical.execute(instruction, args);
+                if (this.labels[args[0]]) {
+                    this.currentInstruction = this.labels[args[0]];
+                    this.updateOutput(`Salto para a etiqueta ${args[0]}, nova linha: ${this.currentInstruction + 1}`);
+                } else {
+                    console.error(`Etiqueta ${args[0]} não encontrada.`);
+                    this.updateOutput(`Erro: Etiqueta ${args[0]} não encontrada.`);
+                    this.running = false;
+                }
                 break;
             case 'SHL':
             case 'SHR':
             case 'ROL':
             case 'ROR':
                 this.bitManipulation.execute(instruction, args);
+                this.updateOutput(`Instrução de manipulação de bits ${instruction} executada com argumentos: ${args.join(', ')}`);
                 break;
             case 'PUSH':
             case 'POP':
                 this.stack.execute(instruction, args);
+                this.updateOutput(`Instrução de pilha ${instruction} executada com argumentos: ${args.join(', ')}`);
                 break;
             case 'NOP':
                 console.log("NOP: Nenhuma operação realizada");
+                this.updateOutput("NOP: Nenhuma operação realizada");
+                this.currentInstruction++;
                 break;
             default:
                 console.error(`Instrução desconhecida: ${instruction}`);
+                this.updateOutput(`Erro: Instrução desconhecida "${instruction}"`);
+                this.currentInstruction++;
         }
     
         // Incrementa a linha apenas se a instrução não for de controle de fluxo (JMP, JE, etc.)
@@ -161,7 +196,7 @@ class Interpreter {
         if (window.visualization) {
             window.visualization.updateVisualization();
         }
-    }
+    }    
     
     run(speed) {
         if (!this.memory || this.memory.length === 0) {
