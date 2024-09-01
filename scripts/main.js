@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Agora, instancie o debugger, passando o interpretador como parâmetro
     window.debugger = new Debugger(window.interpreter);
+    window.interpreter.debugger = window.debugger;
 
     // Instanciar a visualização e passar o interpretador como parâmetro
     window.visualization = new Visualization(window.interpreter);

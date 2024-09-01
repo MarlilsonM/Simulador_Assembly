@@ -85,45 +85,43 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+    color: #333;
 }
 
-#debug-panel h3 {
-    margin-top: 0;
+#debug-panel h3, #debug-panel h4 {
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
-#registers, #memory, #breakpoints {
-    margin-bottom: 10px;
-    display: block !important;
-    visibility: visible !important;
+#debug-panel pre {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: 'Courier New', Courier, monospace;
 }
 
-.breakpoint-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
+#breakpoints {
+    margin-top: 15px;
+}
+
+#breakpoints-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+#breakpoints-list li {
+    background-color: #e9ecef;
     padding: 5px;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    cursor: pointer;
-}
-
-.breakpoint-item:hover {
-    background-color: #ececec;
-}
-
-.breakpoint-item button {
-    background-color: #ff4c4c;
-    color: white;
-    border: none;
     border-radius: 3px;
-    padding: 3px 6px;
+    margin-bottom: 5px;
     cursor: pointer;
-}
-
-.breakpoint-item button:hover {
-    background-color: #ff1c1c;
 }
 
 #visualization {

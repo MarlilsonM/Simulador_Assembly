@@ -13,20 +13,19 @@ class Debugger {
                     this.addBreakpoint(lineNumber);
                 }
             });
-        } else {
         }
     }
 
     addBreakpoint(lineNumber) {
         this.breakpoints.add(lineNumber);
-        console.log(`Breakpoint adicionado na linha ${lineNumber}`);
         this.updateBreakpointsList();
+        console.log(`Breakpoint adicionado na linha ${lineNumber}`);
     }
 
     removeBreakpoint(lineNumber) {
         this.breakpoints.delete(lineNumber);
-        console.log(`Breakpoint removido na linha ${lineNumber}`);
         this.updateBreakpointsList();
+        console.log(`Breakpoint removido na linha ${lineNumber}`);
     }
 
     updatePanel() {
@@ -39,36 +38,36 @@ class Debugger {
             return;
         }
 
-        let registersHtml = '<h3>Registradores</h3>';
+        // Atualiza os valores dos registradores
+        let registersHtml = '';
         for (const [key, value] of Object.entries(this.interpreter.registers)) {
-            registersHtml += `<p>${key}: ${value}</p>`;
+            registersHtml += `${key}: ${value}\n`;
         }
-        registersElement.innerHTML = registersHtml;
+        registersElement.textContent = registersHtml;
 
-        let memoryHtml = '<h3>Memória</h3>';
+        // Atualiza a visualização da memória
+        let memoryHtml = '';
         this.interpreter.memory.forEach((value, index) => {
-            memoryHtml += `<p>${index}: ${value}</p>`;
+            memoryHtml += `${index}: ${value}\n`;
         });
-        memoryElement.innerHTML = memoryHtml;
+        memoryElement.textContent = memoryHtml;
 
-        this.updateBreakpointsList();
+        // Atualiza a lista de breakpoints
+        let breakpointsHtml = '';
+        this.breakpoints.forEach(line => {
+            breakpointsHtml += `Linha ${line}\n`;
+        });
+        breakpointsElement.innerHTML = breakpointsHtml;
     }
-   
-    
+
     shouldPause() {
-        const shouldPause = this.breakpoints.has(this.interpreter.currentInstruction + 1);
-        console.log(`Verificando breakpoint na linha ${this.interpreter.currentInstruction + 1}: ${shouldPause}`);
-        return shouldPause;
+        return this.breakpoints.has(this.interpreter.currentInstruction + 1);
     }
 
     updateBreakpointsList() {
         const breakpointsList = document.getElementById('breakpoints-list');
-        if (!breakpointsList) {
-            console.error('Elemento "breakpoints-list" não encontrado.');
-            return;
-        }
+        breakpointsList.innerHTML = '';
 
-        breakpointsList.innerHTML = ''; // Limpa a lista atual
         this.breakpoints.forEach(lineNumber => {
             const li = document.createElement('li');
             li.textContent = `Linha ${lineNumber}`;
