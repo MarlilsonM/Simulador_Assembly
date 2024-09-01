@@ -40,55 +40,46 @@ class ArithmeticInstructions {
     add(args) {
         const [dest, src] = args;
         this.interpreter.registers[dest] += this.interpreter.registers[src];
-        console.log(`ADD ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
     sub(args) {
         const [dest, src] = args;
         this.interpreter.registers[dest] -= this.interpreter.registers[src];
-        console.log(`SUB ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
-
+    
     mul(args) {
         const [dest, src] = args;
         this.interpreter.registers[dest] *= this.interpreter.registers[src];
-        console.log(`MUL ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
     div(args) {
         const [dest, src] = args;
         this.interpreter.registers[dest] /= this.interpreter.registers[src];
-        console.log(`DIV ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
     and(args) {
         const [dest, src] = args;
         this.interpreter.registers[dest] &= this.interpreter.registers[src];
-        console.log(`AND ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
     or(args) {
         const [dest, src] = args;
         this.interpreter.registers[dest] |= this.interpreter.registers[src];
-        console.log(`OR ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
     xor(args) {
         const [dest, src] = args;
         this.interpreter.registers[dest] ^= this.interpreter.registers[src];
-        console.log(`XOR ${dest}, ${src}: ${this.interpreter.registers[dest]}`);
     }
 
     not(args) {
         const [dest] = args;
         this.interpreter.registers[dest] = ~this.interpreter.registers[dest];
-        console.log(`NOT ${dest}: ${this.interpreter.registers[dest]}`);
     }
 
     cmp(args) {
         const [reg1, reg2] = args;
         this.interpreter.registers['CMP'] = this.interpreter.registers[reg1] - this.interpreter.registers[reg2];
-        console.log(`CMP ${reg1}, ${reg2}: ${this.interpreter.registers['CMP']}`);
     }
 }
 

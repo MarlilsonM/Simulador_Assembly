@@ -93,6 +93,8 @@ body {
 
 #registers, #memory, #breakpoints {
     margin-bottom: 10px;
+    display: block !important;
+    visibility: visible !important;
 }
 
 .breakpoint-item {

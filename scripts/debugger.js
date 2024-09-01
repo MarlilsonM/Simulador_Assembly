@@ -6,7 +6,6 @@ class Debugger {
         const addBreakpointBtn = document.getElementById('add-breakpoint-btn');
         const breakpointInput = document.getElementById('breakpoint-input');
 
-        // Verificar se os elementos existem antes de adicionar event listeners
         if (addBreakpointBtn && breakpointInput) {
             addBreakpointBtn.addEventListener('click', () => {
                 const lineNumber = parseInt(breakpointInput.value);
@@ -14,12 +13,14 @@ class Debugger {
                     this.addBreakpoint(lineNumber);
                 }
             });
+        } else {
         }
     }
 
     addBreakpoint(lineNumber) {
         this.breakpoints.add(lineNumber);
         console.log(`Breakpoint adicionado na linha ${lineNumber}`);
+        this.updateBreakpointsList();
     }
 
     removeBreakpoint(lineNumber) {
@@ -28,22 +29,46 @@ class Debugger {
         this.updateBreakpointsList();
     }
 
-    shouldPause() {
-        return this.breakpoints.has(this.interpreter.currentInstruction + 1);
-    }
-
     updatePanel() {
-        const registersContent = document.getElementById('registers-content');
-        registersContent.textContent = `A: ${this.interpreter.registers.A}\nB: ${this.interpreter.registers.B}\nC: ${this.interpreter.registers.C}\nD: ${this.interpreter.registers.D}\nCMP: ${this.interpreter.registers.CMP || 0}`;
+        const registersElement = document.getElementById('registers-content');
+        const memoryElement = document.getElementById('memory-content');
+        const breakpointsElement = document.getElementById('breakpoints-list');
 
-        const memoryContent = document.getElementById('memory-content');
-        memoryContent.textContent = this.interpreter.memory.map((value, index) => `Endereço ${index}: ${value}`).join('\n');
+        if (!registersElement || !memoryElement || !breakpointsElement) {
+            console.error('Elementos do painel de debug não encontrados.');
+            return;
+        }
+
+        let registersHtml = '<h3>Registradores</h3>';
+        for (const [key, value] of Object.entries(this.interpreter.registers)) {
+            registersHtml += `<p>${key}: ${value}</p>`;
+        }
+        registersElement.innerHTML = registersHtml;
+
+        let memoryHtml = '<h3>Memória</h3>';
+        this.interpreter.memory.forEach((value, index) => {
+            memoryHtml += `<p>${index}: ${value}</p>`;
+        });
+        memoryElement.innerHTML = memoryHtml;
+
+        this.updateBreakpointsList();
+    }
+   
+    
+    shouldPause() {
+        const shouldPause = this.breakpoints.has(this.interpreter.currentInstruction + 1);
+        console.log(`Verificando breakpoint na linha ${this.interpreter.currentInstruction + 1}: ${shouldPause}`);
+        return shouldPause;
     }
 
     updateBreakpointsList() {
         const breakpointsList = document.getElementById('breakpoints-list');
-        breakpointsList.innerHTML = ''; // Limpa a lista atual
+        if (!breakpointsList) {
+            console.error('Elemento "breakpoints-list" não encontrado.');
+            return;
+        }
 
+        breakpointsList.innerHTML = ''; // Limpa a lista atual
         this.breakpoints.forEach(lineNumber => {
             const li = document.createElement('li');
             li.textContent = `Linha ${lineNumber}`;

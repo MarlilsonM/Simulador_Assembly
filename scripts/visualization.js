@@ -2,7 +2,19 @@ class Visualization {
     constructor(interpreter) {
         this.interpreter = interpreter;
         this.canvas = document.getElementById('execution-canvas');
+        
+        // Verifica se o elemento canvas foi encontrado
+        if (!this.canvas) {
+            throw new Error('Canvas element with ID "execution-canvas" not found.');
+        }
+
         this.ctx = this.canvas.getContext('2d');
+        
+        // Verifica se o contexto foi obtido corretamente
+        if (!this.ctx) {
+            throw new Error('Unable to get 2D context from the canvas.');
+        }
+
         this.chart = null;
     }
 

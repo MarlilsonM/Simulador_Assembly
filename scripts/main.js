@@ -12,9 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Instanciar a visualização e passar o interpretador como parâmetro
     window.visualization = new Visualization(window.interpreter);
 
-    console.log("Debugger inicializado:", window.debugger);
-    console.log("Visualização inicializada:", window.visualization);
-
     let isRunning = false;  // Flag para verificar se o código já está em execução
 
     // Controle de execução do código
@@ -34,16 +31,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('step-btn').addEventListener('click', () => {
+        const code = window.editor.getValue();
+    
+        // Verifica se o código está carregado
         if (!window.interpreter.memory || window.interpreter.memory.length === 0) {
-            console.warn('Nenhum código carregado. Por favor, carregue um programa antes de executar.');
-            return;
+            window.interpreter.loadProgram(code);
         }
-        console.log("Executando passo...");
         window.interpreter.executeStep();
     });
 
     document.getElementById('reset-btn').addEventListener('click', () => {
-        console.log("Resetando...");
         window.interpreter.reset();
         isRunning = false;  // Permite nova execução após resetar
         window.visualization.updateVisualization();  // Atualizar a visualização
@@ -51,12 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Controle de mudanças de velocidade e largura de bits
     document.getElementById('speed-select').addEventListener('change', (event) => {
-        console.log('Velocidade alterada para:', event.target.value);
     });
 
     document.getElementById('bit-width-select').addEventListener('change', (event) => {
         const bitWidth = parseInt(event.target.value, 10);
         window.interpreter.setBitWidth(bitWidth);
-        console.log('Largura de bits alterada para:', bitWidth);
     });
 });
