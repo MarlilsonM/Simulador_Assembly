@@ -6,46 +6,40 @@ class LogicalInstructions {
     jmp(args) {
         const [label] = args;
         console.log(`Tentando pular para a etiqueta: "${label}"`);
-    
+
         if (!this.interpreter.memory) {
             console.error('Memória não foi inicializada.');
             return;
         }
-    
-        // Log detalhado do conteúdo da memória
-        console.log('Memória completa:', JSON.stringify(this.interpreter.memory, null, 2));
-    
-        // Busca pela etiqueta ignorando tudo após o nome da etiqueta
+
         const index = this.interpreter.memory.findIndex((line, idx) => {
-            const originalLine = line;  // Linha original da memória
-            const normalizedLine = line.split(':')[0].trim(); // Mantém apenas a etiqueta antes dos ':'
+            const originalLine = line;
+            const normalizedLine = line.split(':')[0].trim();
             const comparisonResult = normalizedLine === label;
-    
-            // Log detalhado para cada linha comparada
-            console.log(`Linha ${idx + 1}:`);
-            console.log(`Original: "${originalLine}"`);
-            console.log(`Normalizada: "${normalizedLine}"`);
-            console.log(`Comparando com: "${label}"`);
-            console.log(`Resultado da comparação: ${comparisonResult ? 'MATCH' : 'NO MATCH'}`);
-    
+
             return comparisonResult;
         });
-    
+
         if (index !== -1) {
             this.interpreter.currentInstruction = index;
             console.log(`Salto para a etiqueta: "${label}" na linha ${index + 1}`);
         } else {
             console.error(`Etiqueta "${label}" não encontrada. Verifique se o label está correto e existe no código.`);
         }
-    }          
+    }         
 
     je(args) {
-        console.log('Executando JE, CMP:', this.interpreter.registers['CMP']);
-        if (this.interpreter.registers['CMP'] === 0) {
-            this.jmp(args);
+        if (this.interpreter.registers.FLAGS === 0) {
+            const label = args[0];
+            if (this.interpreter.labels.hasOwnProperty(label)) {
+                this.interpreter.currentInstruction = this.interpreter.labels[label];
+                console.log(`Salto para a etiqueta ${label}, nova linha: ${this.interpreter.currentInstruction + 1}`);
+            } else {
+                console.error(`Etiqueta ${label} não encontrada.`);
+                this.interpreter.currentInstruction++;
+            }
         } else {
             this.interpreter.currentInstruction++;
-            console.log('JE falhou, indo para a próxima instrução:', this.interpreter.currentInstruction + 1);
         }
     }
 

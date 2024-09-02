@@ -12,8 +12,6 @@ class Interpreter {
             B: 0,
             C: 0,
             D: 0,
-            E: 0,
-            F: 0,
             SP: 0, // Stack Pointer (ponteiro da pilha)
             PC: 0, // Program Counter (contador de programa)
             FLAGS: 0 // Registrador de flags para armazenar resultados de comparações e condições
@@ -28,6 +26,30 @@ class Interpreter {
         this.dataMovement = new DataMovementInstructions(this);
         this.bitManipulation = new BitManipulationInstructions(this);
         this.stack = new StackInstructions(this);
+    }
+
+    updateRegistersUI(registers) {
+        // Verifica se os elementos HTML existem antes de atualizar
+        const regAElement = document.getElementById('reg-A');
+        const regBElement = document.getElementById('reg-B');
+        const regCElement = document.getElementById('reg-C');
+        const regDElement = document.getElementById('reg-D');
+        const regSPElement = document.getElementById('reg-SP');
+        const flagZElement = document.getElementById('flag-Z');
+        const flagFElement = document.getElementById('flag-F');
+
+        if (!regAElement || !regBElement || !regCElement || !regDElement || !regSPElement || !flagZElement || !flagFElement) {
+            console.error("Erro: Um ou mais elementos do DOM não foram encontrados.");
+            return;
+        }
+
+        regAElement.textContent = this.registers.A.toString(16).padStart(2, '0').toUpperCase();
+        regBElement.textContent = this.registers.B.toString(16).padStart(2, '0').toUpperCase();
+        regCElement.textContent = this.registers.C.toString(16).padStart(2, '0').toUpperCase();
+        regDElement.textContent = this.registers.D.toString(16).padStart(2, '0').toUpperCase();
+        regSPElement.textContent = this.registers.SP.toString(16).padStart(2, '0').toUpperCase();
+        flagZElement.textContent = this.registers.FLAGS === 0 ? 'TRUE' : 'FALSE';
+        flagFElement.textContent = this.registers.FLAG ? 'TRUE' : 'FALSE';
     }
 
     setBitWidth(bitWidth) {
@@ -68,7 +90,7 @@ class Interpreter {
         });
         console.log("Labels detectadas e posições:", labels);
         return labels;
-    }    
+    } 
 
     executeStep() {
         if (!this.memory || this.memory.length === 0) {
@@ -83,6 +105,34 @@ class Interpreter {
         }
     
         let line = this.memory[this.currentInstruction];
+
+        // Verifica se a linha é válida
+        if (typeof line !== 'string' || line.trim() === '') {
+            console.error(`Erro ao acessar linha ${this.currentInstruction + 1}: valor inválido ou indefinido.`);
+            this.running = false; // Finaliza a execução para evitar loops infinitos
+            return;
+        }
+
+        // Verifica se a linha contém uma etiqueta de fim
+        if (line.trim().toLowerCase() === 'end:') {
+            console.log("Execução finalizada: Etiqueta 'end' encontrada.");
+            this.running = false;
+            return;
+        }
+
+        // Verifica se a linha é a instrução END
+        if (line.trim().toUpperCase() === 'END') {
+            console.log("Execução finalizada: Instrução 'END' encontrada.");
+            this.running = false;
+            return;
+        }
+
+        // Adicione esta verificação logo após pegar a linha da memória
+        if (typeof line !== 'string' || line.trim() === '') {
+            console.error(`Erro ao acessar linha ${this.currentInstruction + 1}: valor inválido ou indefinido.`);
+            this.running = false; // Finaliza a execução para evitar loops infinitos
+            return;
+        }
     
         // Verifica se atingiu o marcador de fim de programa
         if (line === 'END_OF_PROGRAM') {
@@ -92,9 +142,9 @@ class Interpreter {
         }
     
         // Verifica se a linha é válida antes de aplicar trim
-        if (typeof line !== 'string' || line === '') {
-            console.error(`Erro ao acessar linha ${this.currentInstruction + 1}: valor inválido ou indefinido.`);
-            this.running = false; // Finaliza a execução para evitar loops infinitos
+        if (typeof line !== 'string' || line.trim() === '' || line.trim().startsWith(';')) {
+            console.warn(`Ignorando linha ${this.currentInstruction + 1}: "${line}" (linha de comentário ou vazia).`);
+            this.currentInstruction++;
             return;
         }
     
@@ -140,7 +190,7 @@ class Interpreter {
             case 'JL':
             case 'CALL':
             case 'RET':
-                if (this.labels[args[0]]) {
+                if (this.labels.hasOwnProperty(args[0])) {
                     this.currentInstruction = this.labels[args[0]];
                     this.updateOutput(`Salto para a etiqueta ${args[0]}, nova linha: ${this.currentInstruction + 1}`);
                 } else {
@@ -171,11 +221,13 @@ class Interpreter {
                 this.updateOutput(`Erro: Instrução desconhecida "${instruction}"`);
                 this.currentInstruction++;
         }
-    
+
         // Incrementa a linha apenas se a instrução não for de controle de fluxo (JMP, JE, etc.)
         if (!['JMP', 'JE', 'JNE', 'JG', 'JL', 'CALL', 'RET'].includes(instruction)) {
             this.currentInstruction++;
         }
+
+        this.updateRegistersUI(); // Atualiza os registradores na UI
     
         // Verifica se a execução atingiu o final do código e para a execução
         if (this.currentInstruction >= this.memory.length) {
@@ -226,14 +278,30 @@ class Interpreter {
             B: 0,
             C: 0,
             D: 0,
-            E: 0,
-            F: 0,
             SP: 0, // Stack Pointer
             PC: 0, // Program Counter
             FLAGS: 0 // Flags
         };
         this.currentInstruction = 0;
         this.running = false;
+        this.updateRegistersUI();
+        this.clearMemoryUI();
+        this.clearOutput();
+    }
+
+
+    clearMemoryUI() {
+        const memoryElement = document.getElementById('memory-content');
+        if (memoryElement) {
+            memoryElement.innerHTML = ''; // Limpa o conteúdo da memória na UI
+        }
+    }
+
+    clearOutput() {
+        const outputElement = document.getElementById('program-output');
+        if (outputElement) {
+            outputElement.textContent = ''; // Limpa a saída do programa na UI
+        }
     }
 }
 

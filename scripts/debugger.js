@@ -29,11 +29,10 @@ class Debugger {
     }
 
     updatePanel() {
-        const registersElement = document.getElementById('registers-content');
         const memoryElement = document.getElementById('memory-content');
         const breakpointsElement = document.getElementById('breakpoints-list');
 
-        if (!registersElement || !memoryElement || !breakpointsElement) {
+        if (!memoryElement || !breakpointsElement) {
             console.error('Elementos do painel de debug não encontrados.');
             return;
         }
@@ -43,7 +42,6 @@ class Debugger {
         for (const [key, value] of Object.entries(this.interpreter.registers)) {
             registersHtml += `${key}: ${value}\n`;
         }
-        registersElement.textContent = registersHtml;
 
         // Atualiza a visualização da memória
         let memoryHtml = '';
@@ -70,9 +68,29 @@ class Debugger {
 
         this.breakpoints.forEach(lineNumber => {
             const li = document.createElement('li');
+            li.className = 'breakpoint-item'; // Aplica a classe de estilo
+    
             li.textContent = `Linha ${lineNumber}`;
-            li.addEventListener('click', () => this.removeBreakpoint(lineNumber));
+            
+            // Cria o ícone de remoção
+            const removeIcon = document.createElement('span');
+            removeIcon.className = 'remove-icon';
+            removeIcon.textContent = '❌'; // Ícone de remoção
+            
+            // Adiciona evento de clique ao ícone de remoção
+            removeIcon.addEventListener('click', (event) => {
+                event.stopPropagation(); // Previne que o clique no ícone remova o item da lista
+                this.removeBreakpoint(lineNumber);
+            });
+    
+            // Adiciona o ícone ao item de lista
+            li.appendChild(removeIcon);
+            
+            // Adiciona o item de lista ao contêiner de breakpoints
             breakpointsList.appendChild(li);
+    
+            // Adiciona evento de clique ao item de lista para remover o breakpoint ao clicar no texto
+            li.addEventListener('click', () => this.removeBreakpoint(lineNumber));
         });
     }
 }

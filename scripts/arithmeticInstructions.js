@@ -93,8 +93,16 @@ class ArithmeticInstructions {
     }
 
     cmp(args) {
-        const [reg1, reg2] = args;
-        this.interpreter.registers['CMP'] = this.interpreter.registers[reg1] - this.interpreter.registers[reg2];
+        const reg1 = args[0];
+        const reg2 = args[1];
+        const value1 = this.interpreter.registers[reg1];
+        const value2 = this.interpreter.registers[reg2];
+    
+        if (value1 === value2) {
+            this.interpreter.registers.FLAGS = 0;  // Seta a flag de zero
+        } else {
+            this.interpreter.registers.FLAGS = 1;
+        }
     }
 }
 

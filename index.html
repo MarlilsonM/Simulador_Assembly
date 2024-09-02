@@ -42,9 +42,29 @@
     <div id="debug-panel">
         <h3>Painel de Debug</h3>
         <div id="registers">
-            <h4>Registradores</h4>
-            <pre id="registers-content"></pre>
+            <h4>Registradores / Flags</h4>
+            <table>
+                <tr>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                    <th>D</th>
+                    <th>SP</th>
+                    <th>Z</th>
+                    <th>F</th>
+                </tr>
+                <tr>
+                    <td id="reg-A">00</td>
+                    <td id="reg-B">00</td>
+                    <td id="reg-C">00</td>
+                    <td id="reg-D">00</td>
+                    <td id="reg-SP">00</td>
+                    <td id="flag-Z">FALSE</td>
+                    <td id="flag-F">FALSE</td>
+                </tr>
+            </table>
         </div>
+        
         <div id="memory">
             <h4>Memória</h4>
             <pre id="memory-content"></pre>

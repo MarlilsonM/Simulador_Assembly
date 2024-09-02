@@ -1,147 +1,366 @@
+
+/* Reset CSS */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css');
+
+/* Variáveis globais para cores, fontes e sombras */
+:root {
+    --primary-color: #1abc9c;
+    --secondary-color: #2c3e50;
+    --highlight-color-ip: #e74c3c;
+    --highlight-color-sp: #f39c12;
+    --background-color: #ecf0f1;
+    --text-color: #333;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --font-family: 'Roboto', Arial, sans-serif;
+    --font-size-base: 1rem;
+    --line-height-base: 1.6;
+}
+
 /* Estilos globais */
 body {
-    font-family: 'Roboto', Arial, sans-serif; /* Fonte profissional e legível */
+    overflow-x: hidden;
+    font-family: var(--font-family);
     margin: 0;
-    padding: 0;
-    background-color: #f5f5f5; /* Fundo neutro e agradável aos olhos */
-    color: #333; /* Cor do texto principal */
+    padding-top: 60px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: var(--line-height-base);
+    font-size: var(--font-size-base);
 }
 
-/* Container do editor */
-#editor-container {
-    margin: 20px;
-    padding: 15px;
-    border: 1px solid #ccc; /* Borda sutil ao redor do editor */
-    background-color: #fff; /* Fundo branco para destacar o código */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra leve para efeito de elevação */
-    border-radius: 5px; /* Bordas arredondadas para suavizar o visual */
-}
-
-/* Controles */
+/* Layout para desktop - botões no topo */
 #controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-}
-
-/* Estilos dos botões */
-#controls button {
-    padding: 10px 20px;
-    margin-right: 10px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-}
-
-#controls button:hover {
-    background-color: #0056b3;
-}
-
-#controls button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-/* Estilos dos seletores (dropdowns) */
-#controls select {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc; /* Borda sutil ao redor dos seletores */
-    border-radius: 5px;
-    background-color: #fff; /* Fundo branco */
-    cursor: pointer; /* Cursor de mão ao passar sobre o seletor */
-}
-
-/* Área de saída gráfica */
-#output {
-    margin: 20px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 400px;
-}
-
-/* Estilos do canvas dentro da área de saída */
-#output-canvas {
-    width: 100%; /* O canvas ocupará 100% da largura disponível */
-    height: 100%; /* O canvas ocupará 100% da altura disponível */
-    border-radius: 5px; /* Bordas arredondadas no canvas */
-    background-color: #e9ecef; /* Fundo claro para o canvas */
-}
-
-#debug-panel {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    font-family: Arial, sans-serif;
-    color: #333;
-}
-
-#debug-panel h3, #debug-panel h4 {
-    margin: 0;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-#debug-panel pre {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    max-height: 200px;
-    overflow-y: auto;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-#breakpoints {
-    margin-top: 15px;
-}
-
-#breakpoints-list {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0;
-}
-
-#breakpoints-list li {
-    background-color: #e9ecef;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    margin-bottom: 5px;
-    cursor: pointer;
-}
-
-#visualization {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 700px;
-    height: 100%;
-    min-height: 350px;  /* Define uma altura mínima maior */
-    background-color: #f8f9fa;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    height: 60px;
+    box-sizing: border-box;
+    background-color: var(--primary-color);
+    padding: 10px 20px;
+    box-shadow: var(--box-shadow);
+    z-index: 10;
 }
 
-#output-panel {
-    margin-top: 20px;
+/* Estilos para botões dentro do #controls */
+#controls button {
+    background-color: #2ecc71;
+    border: 1px solid #27ae60;
+    color: white;
+    font-size: 1rem;
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin-right: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#controls button:hover,
+#controls button:focus {
+    background-color: #27ae60;
+    transform: scale(1.05); /* Aumenta levemente o botão ao focar */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra */
+    outline: none; /* Remove o outline padrão */
+}
+
+#controls select {
+    background-color: white;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 8px 14px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+#controls select:focus {
+    outline: none;
+    border: 1px solid #27ae60;
+}
+
+/* Estrutura de painéis */
+#output-panel, #debug-panel, #editor-container, #visualization {
+    border: 1px solid #ddd;
+    background-color: #fff;
+    box-shadow: var(--box-shadow);
+    border-radius: 12px;
+    width: calc(100% - 40px);
+    box-sizing: border-box;
+}
+
+#registers {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    box-shadow: var(--box-shadow);
+    border-radius: 12px;
+    width: calc(100% - 40px);
+    box-sizing: border-box;
+}
+
+#registers table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+#registers th {
+    background-color: var(--primary-color);
+    color: white;
     padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
 }
 
-#program-output {
-    white-space: pre-wrap; /* Mantém o formato de quebra de linha */
-    font-family: monospace; /* Fonte de largura fixa para manter a formatação */
+#registers td {
+    padding: 10px;
+    background-color: #f9f9f9;
+    font-weight: bold;
+}
+
+#registers td,
+#registers th {
+    border: 1px solid #ccc;
+}
+
+#registers h4 {
+    color: var(--primary-color);
+    margin-top: 0;
+    padding-top: 0;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Estilização de títulos e textos */
+h3, h4 {
+    color: var(--primary-color);
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
+p, pre {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+/* Estilos para mobile */
+@media (max-width: 767px) {
+    body {
+        padding-top: 0px;
+    }
+    
+    #controls {
+        position: fixed;
+        bottom: 0;
+        top: auto; /* Remove o topo fixo */
+        width: 100%;
+        background-color: var(--primary-color);
+        padding: 0; /* Remove o padding extra */
+        justify-content: space-around;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+        height: 60px;
+    }
+
+    #controls button {
+        flex-grow: 1;
+        margin-right: 0;
+        border-radius: 0;
+        height: 100%; /* Ocupa toda a altura do menu */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #controls select {
+        height: 100%; /* Ocupa toda a altura do menu */
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    /* Estiliza os dropdowns para aparecerem para cima */
+    #controls select option {
+        position: absolute;
+        bottom: 100%; /* Faz o dropdown aparecer acima do botão */
+        z-index: 20;
+    }
+
+    #controls button:hover {
+        background-color: var(--primary-color);
+    }
+
+
+    #controls label {
+        padding-left: 10px; /* Adiciona espaçamento à esquerda dos textos "Velocidade:" e "Largura de Bits:" */
+        margin-right: 5px; /* Adiciona espaçamento à direita, se necessário */
+        color: white; /* Garante que a cor do texto continue legível */
+    }
+
+    #output-panel, #debug-panel, #visualization {
+        margin: 10px 0;
+        padding: 0px 10px 15px 10px;
+        width: 100%; /* Garante que os painéis ocupem toda a largura */
+    }
+
+    #editor-container{
+        margin: 0;
+        padding: 5px 5px;
+        width: 100%; /* Garante que os painéis ocupem toda a largura */
+    }
+}
+
+/* Estilos para tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+    #controls {
+        position: fixed;
+        top: 0; /* Manter o menu fixo no topo */
+        bottom: auto; /* Remover qualquer fixação na parte inferior */
+        width: 100%;
+        background-color: var(--primary-color);
+        padding: 0; /* Remove o padding extra */
+        justify-content: space-around;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+        height: 60px; /* Define a altura do menu */
+    }
+
+    #controls button {
+        flex-grow: 1;
+        margin-right: 0;
+        border-radius: 0;
+        height: 100%; /* Ocupa toda a altura do menu */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #controls select {
+        height: 100%; /* Ocupa toda a altura do menu */
+        display: flex;
+        align-items: center;
+    }
+
+    #output-panel, #debug-panel, #editor-container, #visualization {
+        margin: 20px 16px;
+        padding: 24px;
+    }
+}
+
+/* Estilos para laptop */
+@media (min-width: 1024px) and (max-width: 1366px) {
+    #controls {
+        padding: 14px;
+    }
+
+    #output-panel, #debug-panel, #editor-container, #visualization {
+        margin: 24px 20px;
+        padding: 24px;
+    }
+}
+
+/* Estilos para desktop */
+@media (min-width: 1367px) {
+    #controls {
+        padding: 16px 24px;
+    }
+
+    #output-panel, #debug-panel, #editor-container, #visualization {
+        margin: 28px 24px;
+        padding: 28px;
+    }
+}
+
+/* Componentes */
+.btn {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 0.375rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+/* Foco Visível */
+button:focus, select:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Painéis */
+.panel {
+    margin: 0.5rem 1rem;
+    padding: 1rem;
+    border: 1px solid #bbb;
+    background-color: #fff;
+    box-shadow: var(--box-shadow);
+    border-radius: 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#add-breakpoint-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transições suaves */
+}
+
+#add-breakpoint-btn:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.02); 
+}
+
+#add-breakpoint-btn:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.breakpoint-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: #f4f4f4;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    cursor: pointer; /* Indica que o item é clicável */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.breakpoint-item:hover {
+    background-color: #e1e1e1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.breakpoint-item .remove-icon {
+    margin-left: 10px;
+    color: var(--highlight-color-ip);
+}
+
+.breakpoint-item:hover .remove-icon {
+    color: var(--highlight-color-sp);
 }
