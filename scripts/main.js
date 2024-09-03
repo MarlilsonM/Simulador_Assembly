@@ -17,13 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Controle de execução do código
     document.getElementById('play-btn').addEventListener('click', () => {
-        if (!isRunning) {  // Apenas iniciar se não estiver em execução
-            const code = window.editor.getValue();
-            window.interpreter.loadProgram(code);
-            const speed = document.getElementById('speed-select').value;
-            isRunning = true;
-            window.interpreter.run(speed);
+        if (isRunning) { 
+            window.interpreter.stop();
+            window.interpreter.reset();
+            isRunning = false;
         }
+
+        const code = window.editor.getValue();
+        window.interpreter.loadProgram(code);
+        const speed = document.getElementById('speed-select').value;
+        isRunning = true;
+        window.interpreter.run(speed);
     });
 
     document.getElementById('pause-btn').addEventListener('click', () => {

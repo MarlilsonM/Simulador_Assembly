@@ -214,6 +214,10 @@ p, pre {
         padding: 5px 5px;
         width: 100%; /* Garante que os painéis ocupem toda a largura */
     }
+
+    #visualization {  
+        padding-bottom: 60px; 
+    }
 }
 
 /* Estilos para tablet */
