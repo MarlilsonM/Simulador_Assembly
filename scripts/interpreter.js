@@ -7,10 +7,13 @@ class Interpreter {
     constructor() {
         this.memory = [];
         this.registers = {
-            A: 0,
-            B: 0,
-            C: 0,
-            D: 0,
+            r0: 0,
+            r1: 0,
+            r2: 0,
+            r3: 0,
+            r4: 0,
+            r5: 0,
+            r6: 0,
             SP: 0, // Stack Pointer (ponteiro da pilha)
             PC: 0, // Program Counter (contador de programa)
             FLAGS: 0 // Registrador de flags para armazenar resultados de comparações e condições
@@ -28,23 +31,29 @@ class Interpreter {
 
     updateRegistersUI(registers) {
         // Verifica se os elementos HTML existem antes de atualizar
-        const regAElement = document.getElementById('reg-A');
-        const regBElement = document.getElementById('reg-B');
-        const regCElement = document.getElementById('reg-C');
-        const regDElement = document.getElementById('reg-D');
+        const regr0Element = document.getElementById('reg-r0');
+        const regr1Element = document.getElementById('reg-r1');
+        const regr2Element = document.getElementById('reg-r2');
+        const regr3Element = document.getElementById('reg-r3');
+        const regr4Element = document.getElementById('reg-r4');
+        const regr5Element = document.getElementById('reg-r5');
+        const regr6Element = document.getElementById('reg-r6');
         const regSPElement = document.getElementById('reg-SP');
         const flagZElement = document.getElementById('flag-Z');
         const flagFElement = document.getElementById('flag-F');
 
-        if (!regAElement || !regBElement || !regCElement || !regDElement || !regSPElement || !flagZElement || !flagFElement) {
+        if (!regr0Element || !regr1Element || !regr2Element || !regr3Element  || !regr4Element  || !regr5Element  || !regr6Element || !regSPElement || !flagZElement || !flagFElement) {
             console.error("Erro: Um ou mais elementos do DOM não foram encontrados.");
             return;
         }
 
-        regAElement.textContent = this.registers.A.toString(16).padStart(2, '0').toUpperCase();
-        regBElement.textContent = this.registers.B.toString(16).padStart(2, '0').toUpperCase();
-        regCElement.textContent = this.registers.C.toString(16).padStart(2, '0').toUpperCase();
-        regDElement.textContent = this.registers.D.toString(16).padStart(2, '0').toUpperCase();
+        regr0Element.textContent = this.registers.r0.toString(16).padStart(2, '0').toUpperCase();
+        regr1Element.textContent = this.registers.r1.toString(16).padStart(2, '0').toUpperCase();
+        regr2Element.textContent = this.registers.r2.toString(16).padStart(2, '0').toUpperCase();
+        regr3Element.textContent = this.registers.r3.toString(16).padStart(2, '0').toUpperCase();
+        regr4Element.textContent = this.registers.r4.toString(16).padStart(2, '0').toUpperCase();
+        regr5Element.textContent = this.registers.r5.toString(16).padStart(2, '0').toUpperCase();
+        regr6Element.textContent = this.registers.r6.toString(16).padStart(2, '0').toUpperCase();
         regSPElement.textContent = this.registers.SP.toString(16).padStart(2, '0').toUpperCase();
         flagZElement.textContent = this.registers.FLAGS === 0 ? 'TRUE' : 'FALSE';
         flagFElement.textContent = this.registers.FLAG ? 'TRUE' : 'FALSE';
@@ -265,10 +274,13 @@ class Interpreter {
     reset() {
         this.memory = [];
         this.registers = {
-            A: 0,
-            B: 0,
-            C: 0,
-            D: 0,
+            r0: 0,
+            r1: 0,
+            r2: 0,
+            r3: 0,
+            r4: 0,
+            r5: 0,
+            r6: 0,
             SP: 0, // Stack Pointer
             PC: 0, // Program Counter
             FLAGS: 0 // Flags

@@ -4,7 +4,7 @@
 
 /* Variáveis globais para cores, fontes e sombras */
 :root {
-    --primary-color: #1abc9c;
+    --primary-color:  #009688;
     --secondary-color: #2c3e50;
     --highlight-color-ip: #e74c3c;
     --highlight-color-sp: #f39c12;
@@ -31,7 +31,7 @@ body {
 /* Layout para desktop - botões no topo */
 #controls {
     display: flex;
-    justify-content: space-between;
+    gap: 10px;
     align-items: center;
     position: fixed;
     top: 0;
@@ -47,22 +47,22 @@ body {
 
 /* Estilos para botões dentro do #controls */
 #controls button {
-    background-color: #2ecc71;
-    border: 1px solid #27ae60;
+    background-color: #ab47bc;
+    border: none;
     color: white;
     font-size: 1rem;
-    padding: 8px 16px;
-    border-radius: 4px;
-    margin-right: 8px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-right: 10px;
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: flex;
     align-items: center;
-    justify-content: center;
+    cursor: pointer;
 }
 
 #controls button:hover,
 #controls button:focus {
-    background-color: #27ae60;
+    background-color: #8e24aa;
     transform: scale(1.05); /* Aumenta levemente o botão ao focar */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra */
     outline: none; /* Remove o outline padrão */
@@ -82,6 +82,18 @@ body {
 #controls select:focus {
     outline: none;
     border: 1px solid #27ae60;
+}
+
+#container-editor-debug {
+    display: flex;
+}
+
+#editor-container {
+    flex: 0 0 60%;
+}
+
+#debug-panel {
+    flex-grow: 1;
 }
 
 /* Estrutura de painéis */
@@ -114,11 +126,11 @@ body {
 #registers th {
     background-color: var(--primary-color);
     color: white;
-    padding: 10px;
+    padding: 5px;
 }
 
 #registers td {
-    padding: 10px;
+    padding: 5px;
     background-color: #f9f9f9;
     font-weight: bold;
 }
@@ -198,9 +210,10 @@ p, pre {
 
 
     #controls label {
-        padding-left: 10px; /* Adiciona espaçamento à esquerda dos textos "Velocidade:" e "Largura de Bits:" */
-        margin-right: 5px; /* Adiciona espaçamento à direita, se necessário */
-        color: white; /* Garante que a cor do texto continue legível */
+        padding-left: 10px;
+        margin-right: 5px;
+        color: white;
+        font-weight: bold;
     }
 
     #output-panel, #debug-panel, #visualization {
@@ -249,6 +262,10 @@ p, pre {
         height: 100%; /* Ocupa toda a altura do menu */
         display: flex;
         align-items: center;
+        padding: 5px;
+        border-radius: 5px;
+        border: none;
+        color: #333;
     }
 
     #output-panel, #debug-panel, #editor-container, #visualization {

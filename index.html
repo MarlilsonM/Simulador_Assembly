@@ -11,10 +11,6 @@
     <link rel="stylesheet" href="codemirror/addon/hint/show-hint.css">
 </head>
 <body>
-    <div id="editor-container">
-        <textarea id="code-editor"></textarea>
-    </div>
-
     <div id="controls">
         <button id="play-btn">Executar</button>
         <button id="pause-btn">Pausar</button>
@@ -34,48 +30,59 @@
         </select>
     </div>
 
+    <div id="container-editor-debug">
+        <div id="editor-container">
+            <textarea id="code-editor"></textarea>
+        </div>
+        <div id="debug-panel">
+            <h3>Painel de Debug</h3>
+            <div id="registers">
+                <h4>Registradores / Flags</h4>
+                <table>
+                    <tr>
+                        <th>r0</th>
+                        <th>r1</th>
+                        <th>r2</th>
+                        <th>r3</th>
+                        <th>r4</th>
+                        <th>r5</th>
+                        <th>r6</th>
+                        <th>SP</th>
+                        <th>flag-Z</th>
+                        <th>flag-F</th>
+                    </tr>
+                    <tr>
+                        <td id="reg-r0">00</td>
+                        <td id="reg-r1">00</td>
+                        <td id="reg-r2">00</td>
+                        <td id="reg-r3">00</td>
+                        <td id="reg-r4">00</td>
+                        <td id="reg-r5">00</td>
+                        <td id="reg-r6">00</td>
+                        <td id="reg-SP">00</td>
+                        <td id="flag-Z">FALSE</td>
+                        <td id="flag-F">FALSE</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div id="memory">
+                <h4>Memória</h4>
+                <pre id="memory-content"></pre>
+            </div>
+            <div id="breakpoints">
+                <h4>Breakpoints</h4>
+                <ul id="breakpoints-list"></ul>
+                <input type="number" id="breakpoint-input" placeholder="Nº da linha" />
+                <button id="add-breakpoint-btn">Adicionar Breakpoint</button>
+            </div>
+        </div> 
+    </div>
+
     <div id="output-panel">
         <h3>Saída do Programa</h3>
         <pre id="program-output"></pre>
-    </div>
-
-    <div id="debug-panel">
-        <h3>Painel de Debug</h3>
-        <div id="registers">
-            <h4>Registradores / Flags</h4>
-            <table>
-                <tr>
-                    <th>A</th>
-                    <th>B</th>
-                    <th>C</th>
-                    <th>D</th>
-                    <th>SP</th>
-                    <th>flag-Z</th>
-                    <th>flag-F</th>
-                </tr>
-                <tr>
-                    <td id="reg-A">00</td>
-                    <td id="reg-B">00</td>
-                    <td id="reg-C">00</td>
-                    <td id="reg-D">00</td>
-                    <td id="reg-SP">00</td>
-                    <td id="flag-Z">FALSE</td>
-                    <td id="flag-F">FALSE</td>
-                </tr>
-            </table>
-        </div>
-        
-        <div id="memory">
-            <h4>Memória</h4>
-            <pre id="memory-content"></pre>
-        </div>
-        <div id="breakpoints">
-            <h4>Breakpoints</h4>
-            <ul id="breakpoints-list"></ul>
-            <input type="number" id="breakpoint-input" placeholder="Nº da linha" />
-            <button id="add-breakpoint-btn">Adicionar Breakpoint</button>
-        </div>
-    </div>    
+    </div>   
 
     <div id="output">
         <div id="visualization">
