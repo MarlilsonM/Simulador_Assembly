@@ -1,7 +1,6 @@
 import ArithmeticInstructions from './arithmeticInstructions.js';
 import LogicalInstructions from './logicalInstructions.js';
 import DataMovementInstructions from './dataMovementInstructions.js';
-import BitManipulationInstructions from './bitManipulationInstructions.js';
 import StackInstructions from './stackInstructions.js';
 
 class Interpreter {
@@ -24,7 +23,6 @@ class Interpreter {
         this.arithmetic = new ArithmeticInstructions(this);
         this.logical = new LogicalInstructions(this);
         this.dataMovement = new DataMovementInstructions(this);
-        this.bitManipulation = new BitManipulationInstructions(this);
         this.stack = new StackInstructions(this);
     }
 
@@ -198,13 +196,6 @@ class Interpreter {
                     this.updateOutput(`Erro: Etiqueta ${args[0]} não encontrada.`);
                     this.running = false;
                 }
-                break;
-            case 'SHL':
-            case 'SHR':
-            case 'ROL':
-            case 'ROR':
-                this.bitManipulation.execute(instruction, args);
-                this.updateOutput(`Instrução de manipulação de bits ${instruction} executada com argumentos: ${args.join(', ')}`);
                 break;
             case 'PUSH':
             case 'POP':
