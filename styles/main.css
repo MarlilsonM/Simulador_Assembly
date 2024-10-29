@@ -6,10 +6,10 @@
 :root {
     --primary-color:  #009688;
     --secondary-color: #2c3e50;
-    --highlight-color-ip: #e74c3c;
-    --highlight-color-sp: #f39c12;
     --background-color: #ecf0f1;
     --text-color: #333;
+    --primary-color-button: #ab47bc;
+    --secondary-color-button: #8e24aa;
     --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     --font-family: 'Roboto', Arial, sans-serif;
     --font-size-base: 1rem;
@@ -24,8 +24,11 @@ body {
     padding-top: 60px;
     background-color: var(--background-color);
     color: var(--text-color);
-    line-height: var(--line-height-base);
-    font-size: var(--font-size-base);
+}
+
+.dark-mode {
+    --background-color: #121212;
+    --text-color: #ffffff;
 }
 
 /* Layout para desktop - botões no topo */
@@ -99,7 +102,7 @@ body {
 /* Estrutura de painéis */
 #output-panel, #debug-panel, #editor-container, #visualization {
     border: 1px solid #ddd;
-    background-color: #fff;
+    background-color: var(--background-color);
     box-shadow: var(--box-shadow);
     border-radius: 12px;
     width: calc(100% - 40px);
@@ -131,7 +134,7 @@ body {
 
 #registers td {
     padding: 5px;
-    background-color: #f9f9f9;
+    background-color: var(--background-color);
     font-weight: bold;
 }
 
