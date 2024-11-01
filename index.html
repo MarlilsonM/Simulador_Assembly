@@ -3,112 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Simulador de Assembly para aprendizado interativo de programação de baixo nível">
     <title>Simulador de Assembly</title>
-    <!-- Link para o CSS principal -->
     <link rel="stylesheet" href="styles/main.css">
-    <!-- Link para CodeMirror -->
     <link rel="stylesheet" href="codemirror/codemirror.css">
     <link rel="stylesheet" href="codemirror/addon/hint/show-hint.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <div id="controls">
-        <button id="play-btn">Executar</button>
-        <button id="pause-btn">Pausar</button>
-        <button id="step-btn">Passo a Passo</button>
-        <button id="reset-btn">Reiniciar</button>
-        <label for="speed-select">Velocidade:</label>
-        <select id="speed-select">
-            <option value="fast">Rápido</option>
-            <option value="medium">Médio</option>
-            <option value="slow">Lento</option>
-        </select>
-        <label for="bit-width-select">Largura de Bits:</label>
-        <select id="bit-width-select">
-            <option value="8">8 bits</option>
-            <option value="16">16 bits</option>
-            <option value="32">32 bits</option>
-        </select>
-        <button class="toggle-theme" id="toggle-theme">Alternar Modo</button>
-
-    </div>
-
-    <div id="container-editor-debug">
-        <div id="editor-container">
-            <textarea id="code-editor"></textarea>
-        </div>
-        <div id="debug-panel">
-            <h3>Painel de Debug</h3>
-            <div id="registers">
-                <h4>Registradores / Flags</h4>
-                <table>
-                    <tr>
-                        <th>r0</th>
-                        <th>r1</th>
-                        <th>r2</th>
-                        <th>r3</th>
-                        <th>r4</th>
-                        <th>r5</th>
-                        <th>r6</th>
-                        <th>SP</th>
-                        <th>flag-Z</th>
-                        <th>flag-F</th>
-                    </tr>
-                    <tr>
-                        <td id="reg-r0">00</td>
-                        <td id="reg-r1">00</td>
-                        <td id="reg-r2">00</td>
-                        <td id="reg-r3">00</td>
-                        <td id="reg-r4">00</td>
-                        <td id="reg-r5">00</td>
-                        <td id="reg-r6">00</td>
-                        <td id="reg-SP">00</td>
-                        <td id="flag-Z">FALSE</td>
-                        <td id="flag-F">FALSE</td>
-                    </tr>
-                </table>
-            </div>
+    <header>
+        <nav id="controls" aria-label="Controles do simulador">
+            <button id="play-btn" aria-label="Executar">Executar</button>
+            <button id="pause-btn" aria-label="Pausar">Pausar</button>
+            <button id="step-btn" aria-label="Passo a Passo">Passo a Passo</button>
+            <button id="reset-btn" aria-label="Reiniciar">Reiniciar</button>
             
-            <div id="memory">
-                <h4>Memória</h4>
-                <pre id="memory-content"></pre>
+            <div class="right-panel">
+                <div class="select-wrapper">
+                    <label for="speed-select">Velocidade:</label>
+                    <select id="speed-select" aria-label="Selecionar velocidade de execução">
+                        <option value="fast">Rápido</option>
+                        <option value="medium">Médio</option>
+                        <option value="slow">Lento</option>
+                    </select>
+                </div>
+                
+                <div class="select-wrapper">
+                    <label for="bit-width-select">Largura de Bits:</label>
+                    <select id="bit-width-select" aria-label="Selecionar largura de bits">
+                        <option value="8">8 bits</option>
+                        <option value="16">16 bits</option>
+                        <option value="32">32 bits</option>
+                    </select>
+                </div>
+                
+                <button id="toggle-theme" class="theme-toggle" aria-label="Alternar modo claro/escuro">
+                    <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                        <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
+                        <g class="sun-beams" stroke="currentColor">
+                            <line x1="12" y1="1" x2="12" y2="3" />
+                            <line x1="12" y1="21" x2="12" y2="23" />
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                            <line x1="1" y1="12" x2="3" y2="12" />
+                            <line x1="21" y1="12" x2="23" y2="12" />
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                        </g>
+                        <mask class="moon" id="moon-mask">
+                            <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                            <circle cx="24" cy="10" r="6" fill="black" />
+                        </mask>
+                    </svg>
+                </button>
             </div>
-            <div id="breakpoints">
-                <h4>Breakpoints</h4>
-                <ul id="breakpoints-list"></ul>
-                <input type="number" id="breakpoint-input" placeholder="Nº da linha" />
-                <button id="add-breakpoint-btn">Adicionar Breakpoint</button>
-            </div>
-        </div> 
-    </div>
+        </nav>
+    </header>
 
-    <div id="output-panel">
-        <h3>Saída do Programa</h3>
-        <pre id="program-output"></pre>
-    </div>   
+    <main>
+        <section id="container-editor-debug">
+            <div class="editor-panel">
+                <div id="editor-container" aria-label="Editor de código Assembly">
+                    <textarea id="code-editor" aria-labelledby="editor-label"></textarea>
+                    <label id="editor-label" for="code-editor" class="visually-hidden">Editor de código Assembly</label>
+                </div>
+    
+                <section id="output-panel">
+                    <h2>Saída do Programa</h2>
+                    <pre id="program-output" aria-live="polite"></pre>
+                </section> 
+            </div> 
+            
+            <aside id="debug-panel" role="complementary" aria-label="Painel de depuração">
+                <h2>Painel de Debug</h2>
+                <div id="registers">
+                    <h3>Registradores / Flags</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">r0</th>
+                                <th scope="col">r1</th>
+                                <th scope="col">r2</th>
+                                <th scope="col">r3</th>
+                                <th scope="col">r4</th>
+                                <th scope="col">r5</th>
+                                <th scope="col">r6</th>
+                                <th scope="col">SP</th>
+                                <th scope="col">flag-Z</th>
+                                <th scope="col">flag-F</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="reg-r0">00</td>
+                                <td id="reg-r1">00</td>
+                                <td id="reg-r2">00</td>
+                                <td id="reg-r3">00</td>
+                                <td id="reg-r4">00</td>
+                                <td id="reg-r5">00</td>
+                                <td id="reg-r6">00</td>
+                                <td id="reg-SP">00</td>
+                                <td id="flag-Z">FALSE</td>
+                                <td id="flag-F">FALSE</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="memory">
+                    <h3>Memória</h3>
+                    <pre id="memory-content" aria-label="Conteúdo da memória"></pre>
+                </div>
+                <div id="breakpoints">
+                    <h3>Breakpoints</h3>
+                    <ul id="breakpoints-list" aria-label="Lista de breakpoints"></ul>
+                    <div class="breakpoint-input-container">
+                        <label for="breakpoint-input" class="visually-hidden">Número da linha para breakpoint</label>
+                        <input type="number" id="breakpoint-input" placeholder="Nº da linha" aria-labelledby="breakpoint-label">
+                        <button id="add-breakpoint-btn" aria-label="Adicionar Breakpoint">Adicionar Breakpoint</button>
+                    </div>
+                </div>
+            </aside>
+        </section> 
+    
+        <section id="visualization">
+            <h2>Visualização da Execução</h2>
+            <canvas id="execution-canvas" width="600" height="400" aria-label="Visualização gráfica da execução"></canvas>
+        </section>
+    </main>
 
-    <div id="output">
-        <div id="visualization">
-            <canvas id="execution-canvas" width="600" height="400"></canvas>
-        </div>
-    </div>
+    <footer>
+        <p>&copy; 2023 Simulador de Assembly. Todos os direitos reservados.</p>
+    </footer>
 
-    <!--  Scripts de tema  -->
-    <script src="scripts/theme-toggle"></script>
-
-    <!-- Scripts para CodeMirror -->
+    <!-- Scripts -->
+    <script src="scripts/theme-toggle.js"></script>
     <script src="codemirror/codemirror.js"></script>
-    <script src="codemirror/mode/assembly/gas.js"></script>
+    <script src="codemirror/mode/assembly/assembly.js"></script>
     <script src="codemirror/addon/edit/matchbrackets.js"></script>
     <script src="codemirror/addon/hint/show-hint.js"></script>
-
-    <!-- Importação do Chart.js -->
     <script type="module">
         import { Chart, registerables } from 'https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.js';
         Chart.register(...registerables);
         window.Chart = Chart;
     </script>
-
-    <!-- Scripts do projeto -->
     <script src="scripts/editor.js"></script>
     <script type="module" src="scripts/interpreter.js"></script>
     <script type="module" src="scripts/debugger.js"></script>
