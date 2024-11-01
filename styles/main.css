@@ -269,6 +269,7 @@ select {
         height: auto;
         padding: 0;
         flex-wrap: wrap;
+        position: fixed;
     }
 
     .control-group {
@@ -303,6 +304,10 @@ select {
 
 /* Mobile */
 @media (max-width: 768px) {
+    body {
+        padding-bottom: 180px;
+    }
+
     #controls {
         flex-direction: column;
         height: auto;
