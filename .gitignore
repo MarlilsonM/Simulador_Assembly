@@ -1,0 +1,50 @@
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de IDE/editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Arquivos de log e debug
+*.log
+debug.log
+
+# Cache do CodeMirror
+codemirror/.cache/
+codemirror/*.map
+
+# Arquivos temporários do editor
+*~
+*.swp
+*.swo
+
+# Arquivos de backup
+*.bak
+*.backup
+
+# Se você estiver usando npm/yarn
+node_modules/
+package-lock.json
+yarn.lock
+
+# Arquivos de build/compilação
+/dist/
+/build/
+
+# Arquivos específicos do seu simulador
+# Arquivos temporários de execução
+*.temp
+*.tmp
+
+# Arquivos de configuração local
+config.local.js
+
+# Arquivos de teste/desenvolvimento
+/test/temp/
+/test/coverage/
+
+# Arquivos de cache do navegador
+.cache/
