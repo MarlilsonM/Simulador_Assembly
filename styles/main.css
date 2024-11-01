@@ -264,12 +264,12 @@ select {
     }
 
     #controls {
-        bottom: 0;
-        top: auto;
+        bottom: 0 !important;
+        top: auto !important;
+        position: fixed !important;
         height: auto;
         padding: 0;
         flex-wrap: wrap;
-        position: fixed;
     }
 
     .control-group {
