@@ -254,10 +254,52 @@ select {
 
 /* Tablet */
 @media (max-width: 1024px) {
-    body {
-        margin: 0;
+    * {
+        box-sizing: border-box;
     }
 
+    body {
+        margin: 0;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Container principal */
+    #container-editor-debug {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: var(--spacing-medium);
+    }
+
+    /* Editor e painel de debug */
+    .editor-panel, #debug-panel {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    /* Tabela de registradores */
+    #registers table {
+        width: 100%;
+        max-width: 100%;
+        font-size: 0.8em; /* Reduz o tamanho da fonte em telas menores */
+    }
+
+    /* Controles */
+    #controls {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: var(--spacing-small);
+    }
+
+    #controls button, #controls select {
+        margin: var(--spacing-small);
+        flex-grow: 1;
+        max-width: 150px;
+    }
+    
     .editor-panel,
     #debug-panel {
         flex: 1 1 100%;
@@ -349,6 +391,33 @@ select {
         margin: var(--spacing-small) auto;
     }
 }
+
+    /* Para telas muito pequenas */
+    @media (max-width: 480px) {
+        #controls button, #controls select {
+            flex-basis: 100%;
+            max-width: 100%;
+        }
+    }
+
+    /* Ajustes para o CodeMirror */
+    .CodeMirror {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Ajustes para o painel de saída e visualização */
+    #output-panel, #visualization {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    /* Ajuste para o canvas de visualização */
+    #execution-canvas {
+        max-width: 100%;
+        height: auto;
+    }
 
 /* Acessibilidade */
 @media (prefers-reduced-motion: reduce) {
