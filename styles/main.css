@@ -33,7 +33,7 @@ body {
     line-height: var(--line-height-base);
     color: var(--text-color);
     background-color: var(--background-color);
-    margin: 100px 0 0 0;
+    margin: 60px 0 0 0;
     overflow-x: hidden;
     transition: background-color var(--transition-speed), color var(--transition-speed);
 }
@@ -49,19 +49,14 @@ body {
 .theme-toggle {
     background: none;
     border: none;
-    padding: 0;
-    width: 2.5rem;
-    height: 2.5rem;
-    aspect-ratio: 1;
+    padding: var(--spacing-small);
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    cursor: pointer;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-    outline-offset: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    margin-left: var(--spacing-medium);
 }
 
 .theme-toggle:hover {
@@ -126,16 +121,27 @@ body {
 #controls {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 60px;
+    height: 70px;
     background-color: var(--primary-color);
-    padding: var(--spacing-medium);
+    padding: 0 var(--spacing-large);
     box-shadow: var(--box-shadow);
     z-index: 10;
     transition: background-color var(--transition-speed);
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+}
+
+.theme-group {
+    margin-right: var(--spacing-large);
 }
 
 #container-editor-debug {
@@ -143,6 +149,11 @@ body {
     flex-wrap: wrap;
     gap: var(--spacing-medium);
     padding: var(--spacing-medium);
+}
+
+.editor-panel {
+    flex: 7;
+    min-width: 300px;
 }
 
 #editor-container, #debug-panel {
@@ -162,6 +173,7 @@ button, select {
 button {
     background-color: var(--primary-color-button);
     color: white;
+    font-weight: bold;
 }
 
 button:hover, button:focus {
@@ -172,22 +184,34 @@ button:hover, button:focus {
 select {
     background-color: white;
     color: var(--text-color);
+    padding-right: 25px;
+}
+
+.select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+}
+
+.select-wrapper label {
+    color: white;
+    font-weight: bold;
 }
 
 /* Ajustes para o modo escuro */
 [data-theme="dark"] button {
-    background-color: #ab47bc; /* Cor do botão no modo escuro */
-    color: white; /* Cor do texto no botão no modo escuro */
+    background-color: #ab47bc;
+    color: white; 
 }
 
 [data-theme="dark"] button:hover,
 [data-theme="dark"] button:focus {
-    background-color: #9c27b0; /* Cor do botão ao passar o mouse no modo escuro */
+    background-color: #9c27b0;
 }
 
 [data-theme="dark"] select {
-    background-color: #333; /* Cor de fundo do select no modo escuro */
-    color: var(--text-color); /* Cor do texto no select no modo escuro */
+    background-color: #333;
+    color: var(--text-color);
 }
 
 /* Painéis */
@@ -227,21 +251,97 @@ select {
 }
 
 /* Responsividade */
-@media (max-width: 768px) {
+
+/* Tablet */
+@media (max-width: 1024px) {
     body {
         margin: 0;
     }
 
-    #controls {
-        position: fixed;
-        bottom: 0;
-        top: auto;
-        flex-wrap: wrap;
-        height: auto;
+    .editor-panel,
+    #debug-panel {
+        flex: 1 1 100%;
     }
 
-    #container-editor-debug {
+    #controls {
+        bottom: 0;
+        top: auto;
+        height: auto;
+        padding: 0;
+        flex-wrap: wrap;
+    }
+
+    .control-group {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0;
+    }
+
+    .control-group:first-child {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    .control-group:first-child button {
+        flex-grow: 1;
+        border-radius: 0;
+        height: 60px;
+        padding: 0;
+        font-size: 14px; /* Reduzir o tamanho da fonte se necessário */
+    }
+
+    .select-wrapper, .theme-toggle {
+        margin: var(--spacing-small);
+    }
+
+    #add-breakpoint-btn {
+        padding: var(--spacing-small) var(--spacing-medium);
+        border-radius: 5px;
+        height: auto;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    #controls {
         flex-direction: column;
+        height: auto;
+        padding: var(--spacing-small) 0;
+    }
+
+    .control-group {
+        width: 100%;
+        justify-content: space-around;
+        margin-bottom: var(--spacing-small);
+    }
+
+    .control-group:not(:first-child) {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    button, select {
+        border-radius: 0;
+        flex-grow: 1;
+        text-align: center;
+        padding: var(--spacing-medium) var(--spacing-small);
+    }
+
+    .theme-toggle {
+        margin: var(--spacing-small) auto;
+    }
+
+    .select-wrapper {
+        width: 100%;
+        margin: var(--spacing-small) 0;
+    }
+
+    .select-wrapper select {
+        width: 100%;
+    }
+
+    .theme-toggle {
+        margin: var(--spacing-small) auto;
     }
 }
 
