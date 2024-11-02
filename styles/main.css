@@ -373,6 +373,12 @@ select {
 
 }
 
+.options-box {
+    max-height: 0; /* Começa fechado */
+    overflow: hidden; /* Esconde o conteúdo que excede a altura */
+    transition: max-height 0.3s ease-in-out; /* Animação suave */
+}
+
 /* Mobile */
 @media (max-width: 768px) {
     .control-group .text {
@@ -404,7 +410,7 @@ select {
     display: block;
   }
 
-    /* Para telas muito pequenas */
+/* Para telas muito pequenas */
 @media (max-width: 480px) {
     .control-group:last-child {
         flex-wrap: wrap;
