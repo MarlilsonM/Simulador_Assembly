@@ -14,52 +14,69 @@
     <header>
         <nav id="controls" aria-label="Controles do simulador">
             <div class="control-group">
-                <button id="play-btn" aria-label="Executar">Executar</button>
-                <button id="pause-btn" aria-label="Pausar">Pausar</button>
-                <button id="step-btn" aria-label="Passo a Passo">Passo a Passo</button>
-                <button id="reset-btn" aria-label="Reiniciar">Reiniciar</button>
-            </div>
-            
-            <div class="control-group">
-                <div class="select-wrapper">
-                    <label for="speed-select">Velocidade:</label>
-                    <select id="speed-select" aria-label="Selecionar velocidade de execução">
-                        <option value="fast">Rápido</option>
-                        <option value="medium">Médio</option>
-                        <option value="slow">Lento</option>
-                    </select>
-                </div>
-                
-                <div class="select-wrapper">
-                    <label for="bit-width-select">Largura de Bits:</label>
-                    <select id="bit-width-select" aria-label="Selecionar largura de bits">
-                        <option value="8">8 bits</option>
-                        <option value="16">16 bits</option>
-                        <option value="32">32 bits</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="theme-group">
-                <button id="toggle-theme" class="theme-toggle" aria-label="Alternar modo claro/escuro">
-                    <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
-                            <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
-                            <g class="sun-beams" stroke="currentColor">
-                                <line x1="12" y1="1" x2="12" y2="3" />
-                                <line x1="12" y1="21" x2="12" y2="23" />
-                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                                <line x1="1" y1="12" x2="3" y2="12" />
-                                <line x1="21" y1="12" x2="23" y2="12" />
-                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                            </g>
-                            <mask class="moon" id="moon-mask">
-                                <rect x="0" y="0" width="100%" height="100%" fill="white" />
-                                <circle cx="24" cy="10" r="6" fill="black" />
-                            </mask>
-                        </svg>
+                <button id="play-btn" aria-label="Executar">
+                    <span class="text">Executar</span>
+                    <img src="icons/play.svg" alt="Executar" class="icon">
                 </button>
+                <button id="pause-btn" aria-label="Pausar">
+                    <span class="text">Pausar</span>
+                    <img src="icons/pause.svg" alt="Pausar" class="icon">
+                </button>
+                <button id="step-btn" aria-label="Passo a Passo">
+                    <span class="text">Passo a Passo</span>
+                    <img src="icons/step.svg" alt="Passo a Passo" class="icon">
+                </button>
+                <button id="reset-btn" aria-label="Reiniciar">
+                    <span class="text">Reiniciar</span>
+                    <img src="icons/restart.svg" alt="Reiniciar" class="icon">
+                </button>
+                <button id="options-btn" class="btn-options" aria-label="Opções">
+                    <img src="icons/chevron-up.svg" alt="Opções" class="icon-chevron">
+                </button>
+            </div>
+            
+            <div class="options-box">
+                <div class="control-group">
+                    <div class="select-wrapper">
+                        <label for="speed-select">Velocidade:</label>
+                        <select id="speed-select" aria-label="Selecionar velocidade de execução">
+                            <option value="fast">Rápido</option>
+                            <option value="medium">Médio</option>
+                            <option value="slow">Lento</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-wrapper">
+                        <label for="bit-width-select">Largura de Bits:</label>
+                        <select id="bit-width-select" aria-label="Selecionar largura de bits">
+                            <option value="8">8 bits</option>
+                            <option value="16">16 bits</option>
+                            <option value="32">32 bits</option>
+                        </select>
+                    </div>
+                    
+                    <div class="theme-group">
+                        <button id="toggle-theme" class="theme-toggle" aria-label="Alternar modo claro/escuro">
+                            <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                                <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
+                                <g class="sun-beams" stroke="currentColor">
+                                    <line x1="12" y1="1" x2="12" y2="3" />
+                                    <line x1="12" y1="21" x2="12" y2="23" />
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                                    <line x1="1" y1="12" x2="3" y2="12" />
+                                    <line x1="21" y1="12" x2="23" y2="12" />
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                                </g>
+                                <mask class="moon" id="moon-mask">
+                                    <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                                    <circle cx="24" cy="10" r="6" fill="black" />
+                                </mask>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -141,6 +158,7 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="scripts/script.js"></script>
     <script src="scripts/theme-toggle.js"></script>
     <script src="codemirror/codemirror.js"></script>
     <script src="codemirror/mode/assembly/assembly.js"></script>

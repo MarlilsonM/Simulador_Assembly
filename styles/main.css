@@ -174,6 +174,10 @@ button {
     background-color: var(--primary-color-button);
     color: white;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-small);
 }
 
 button:hover, button:focus {
@@ -227,7 +231,7 @@ select {
 [data-theme="dark"] #output-panel,
 [data-theme="dark"] #debug-panel,
 [data-theme="dark"] #editor-container,
-[data-theme="dark"] #visualization {
+[ data-theme="dark"] #visualization {
     background-color: var(--dark-background-color);
     color: var(--dark-text-color);
 }
@@ -371,77 +375,55 @@ select {
 
 /* Mobile */
 @media (max-width: 768px) {
-    body {
-        padding-bottom: 120px;
+    .control-group .text {
+        display: none;
     }
 
-    #controls {
-        flex-direction: column;
-        height: auto;
-        min-height: 0;
-        padding: var(--spacing-small) 0;
+    .control-group .icon {
+        display: inline-block;
     }
 
-    .control-group {
-        width: 100%;
-        justify-content: space-around;
-        margin-bottom: var(--spacing-small);
+    #options-btn {
+        display: inline-flex;
     }
 
-    .control-group:not(:first-child) {
-        flex-direction: column;
-        align-items: stretch;
+    .options-box {
+        display: none;
     }
-
-    .control-group:first-child button {
-        height: 40px;
-    }
-
-    button, select {
-        border-radius: 0;
-        flex-grow: 1;
-        text-align: center;
-        padding: var(--spacing-medium) var(--spacing-small);
-    }
-
-    .theme-toggle {
-        margin: var(--spacing-small) auto;
-    }
-
-    .select-wrapper {
-        width: 100%;
-        margin: var(--spacing-small) 0;
-    }
-
-    .select-wrapper select {
-        width: 100%;
-    }
-
-    .theme-toggle {
-        margin: var(--spacing-small) auto;
+    
+    .options-box.visible {
+        display: block;
     }
 }
 
+.options-box {
+    display: none;
+}
+
+.options-box.visible {
+    display: block;
+  }
+
     /* Para telas muito pequenas */
-    @media (max-width: 480px) {
-        .control-group:last-child {
-            flex-wrap: wrap;
-        }
+@media (max-width: 480px) {
+    .control-group:last-child {
+        flex-wrap: wrap;
+    }
 
-        .select-wrapper {
-            flex-basis: 48%;
-            max-width: 48%;
-            margin: 2px;
-        }
-    
-        .theme-toggle {
-            margin-top: 4px;
-        }
+    .select-wrapper {
+        flex-basis: 48%;
+        max-width: 48%;
+        margin: 2px;
+    }
 
-        #controls button, #controls select {
-            flex-basis: 100%;
-            max-width: 100%;
-        }
+    .theme-toggle {
+        margin-top: 4px;
+    }
+
+    #controls button, #controls select {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
     }
 
     /* Ajustes para o CodeMirror */
@@ -468,4 +450,115 @@ select {
     * {
         transition: none !important;
     }
+}
+
+/* Estilos para ícones */
+.icon {
+    width: 20px;
+    height: 20px;
+    display: none; /* Inicialmente oculto, será mostrado em telas menores */
+}
+
+.icon-chevron {
+    width: 20px;
+    height: 20px;
+    transition: transform var(--transition-speed);
+}
+
+/* Rotação do ícone chevron quando as opções estão visíveis */
+.options-box.visible + .icon-chevron {
+    transform: rotate(180deg);
+}
+
+/* Ajustes para os botões com ícones */
+button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-small);
+}
+
+/* Estilos para a caixa de opções */
+.options-box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-color);
+    padding: var(--spacing-medium);
+    box-shadow: var(--box-shadow);
+    display: none;
+    z-index: 9;
+}
+
+.options-box.visible {
+    display: block;
+}
+
+/* Ajuste no media query mobile existente */
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 120px; /* Espaço para a barra de controles fixa */
+    }
+
+    .control-group .text {
+        display: none;
+    }
+
+    .control-group .icon {
+        display: block;
+    }
+
+    #options-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing-small);
+    }
+
+    .options-box {
+        position: fixed;
+        bottom: 60px; /* Altura da barra de controles */
+        top: auto;
+        background-color: var(--primary-color);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Ajuste para o layout dos controles em mobile */
+    #controls {
+        flex-wrap: wrap;
+    }
+
+    .control-group {
+        justify-content: space-around;
+    }
+}
+
+/* Ajuste para o modo escuro */
+[data-theme="dark"] .options-box {
+    background-color: var(--dark-background-color);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Melhorias de acessibilidade */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Ajustes para hover e focus */
+button:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.icon-chevron:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }
