@@ -74,10 +74,7 @@ body {
     transform-origin: center;
 }
 
-.sun-and-moon > .sun {
-    transition: transform 0.5s cubic-bezier(0.5, 1.5, 0.75, 1.25);
-}
-
+.sun-and-moon > .sun,
 .sun-and-moon > .sun-beams {
     transition: transform 0.5s cubic-bezier(0.5, 1.5, 0.75, 1.25);
 }
@@ -231,7 +228,7 @@ select {
 [data-theme="dark"] #output-panel,
 [data-theme="dark"] #debug-panel,
 [data-theme="dark"] #editor-container,
-[ data-theme="dark"] #visualization {
+[data-theme="dark"] #visualization {
     background-color: var(--dark-background-color);
     color: var(--dark-text-color);
 }
@@ -255,10 +252,7 @@ select {
 }
 
 /* Responsividade */
-
-/* Tablet */
 @media (max-width: 1024px) {
-
     * {
         box-sizing: border-box;
     }
@@ -270,7 +264,6 @@ select {
         max-width: 100%;
     }
 
-    /* Container principal */
     #container-editor-debug {
         display: flex;
         flex-direction: column;
@@ -278,21 +271,18 @@ select {
         padding: 0;
     }
 
-    /* Editor e painel de debug */
     .editor-panel, #debug-panel {
         width: 100%;
         max-width: 100%;
         overflow-x: auto;
     }
 
-    /* Tabela de registradores */
     #registers table {
         width: 100%;
         max-width: 100%;
         font-size: 0.8em;
     }
 
-    /* Controles */
     #controls {
         display: flex;
         bottom: 0 !important;
@@ -319,7 +309,7 @@ select {
         margin: 0.03rem;
         flex-grow: 1;
     }
-    
+
     .editor-panel,
     #debug-panel {
         flex: 1 1 100%;
@@ -370,122 +360,13 @@ select {
         height: 32px;
         margin: 0 4px;
     }
-
 }
 
+/* Caixa de opções */
 .options-box {
-    max-height: 0; /* Começa fechado */
-    overflow: hidden; /* Esconde o conteúdo que excede a altura */
-    transition: max-height 0.3s ease-in-out; /* Animação suave */
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-    .control-group .text {
-        display: none;
-    }
-
-    .control-group .icon {
-        display: inline-block;
-    }
-
-    #options-btn {
-        display: inline-flex;
-    }
-
-    .options-box {
-        display: none;
-    }
-    
-    .options-box.visible {
-        display: block;
-    }
-}
-
-.options-box {
-    display: none;
-}
-
-.options-box.visible {
-    display: block;
-  }
-
-/* Para telas muito pequenas */
-@media (max-width: 480px) {
-    .control-group:last-child {
-        flex-wrap: wrap;
-    }
-
-    .select-wrapper {
-        flex-basis: 48%;
-        max-width: 48%;
-        margin: 2px;
-    }
-
-    .theme-toggle {
-        margin-top: 4px;
-    }
-
-    #controls button, #controls select {
-        flex-basis: 100%;
-        max-width: 100%;
-    }
-    }
-
-    /* Ajustes para o CodeMirror */
-    .CodeMirror {
-        max-width: 100%;
-        height: auto;
-    }
-
-    /* Ajustes para o painel de saída e visualização */
-    #output-panel, #visualization {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: auto;
-    }
-
-    /* Ajuste para o canvas de visualização */
-    #execution-canvas {
-        max-width: 100%;
-        height: auto;
-    }
-
-/* Acessibilidade */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        transition: none !important;
-    }
-}
-
-/* Estilos para ícones */
-.icon {
-    width: 20px;
-    height: 20px;
-    display: none; /* Inicialmente oculto, será mostrado em telas menores */
-}
-
-.icon-chevron {
-    width: 20px;
-    height: 20px;
-    transition: transform var(--transition-speed);
-}
-
-/* Rotação do ícone chevron quando as opções estão visíveis */
-.options-box.visible + .icon-chevron {
-    transform: rotate(180deg);
-}
-
-/* Ajustes para os botões com ícones */
-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-small);
-}
-
-/* Estilos para a caixa de opções */
-.options-box {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-speed) ease-in-out;
     position: absolute;
     top: 100%;
     left: 0;
@@ -501,10 +382,10 @@ button {
     display: block;
 }
 
-/* Ajuste no media query mobile existente */
+/* Mobile */
 @media (max-width: 768px) {
     body {
-        padding-bottom: 120px; /* Espaço para a barra de controles fixa */
+        padding-bottom: 120px;
     }
 
     .control-group .text {
@@ -524,13 +405,12 @@ button {
 
     .options-box {
         position: fixed;
-        bottom: 60px; /* Altura da barra de controles */
+        bottom: 60px;
         top: auto;
         background-color: var(--primary-color);
         border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* Ajuste para o layout dos controles em mobile */
     #controls {
         flex-wrap: wrap;
     }
@@ -540,13 +420,77 @@ button {
     }
 }
 
-/* Ajuste para o modo escuro */
+/* Telas muito pequenas */
+@media (max-width: 480px) {
+    .control-group:last-child {
+        flex-wrap: wrap;
+    }
+
+    .select-wrapper {
+        flex-basis: 48%;
+        max-width: 48%;
+        margin: 2px;
+    }
+
+    .theme-toggle {
+        margin-top: 4px;
+    }
+
+    #controls button, 
+    #controls select {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
+
+    .CodeMirror {
+        max-width: 100%;
+        height: auto;
+    }
+
+    #output-panel, 
+    #visualization {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    #execution-canvas {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+/* Ícones */
+.icon {
+    width: 20px;
+    height: 20px;
+    display: none;
+}
+
+.icon-chevron {
+    width: 20px;
+    height: 20px;
+    transition: transform var(--transition-speed);
+}
+
+.options-box.visible + .icon-chevron {
+    transform: rotate(180deg);
+}
+
+/* Modo escuro para options-box */
 [data-theme="dark"] .options-box {
     background-color: var(--dark-background-color);
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Melhorias de acessibilidade */
+/* Acessibilidade visual */
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -558,12 +502,8 @@ button {
     border: 0;
 }
 
-/* Ajustes para hover e focus */
-button:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
+/* Focus states */
+button:focus-visible,
 .icon-chevron:focus-visible {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
