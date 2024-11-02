@@ -476,6 +476,23 @@ select {
     }
 }
 
+/* Adicione as novas configurações aqui */
+.options-box {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-color);
+    padding: var(--spacing-medium);
+    box-shadow: var(--box-shadow);
+    z-index: 9;
+}
+
+.options-box.visible {
+    display: block;
+}
+
 /* Acessibilidade */
 @media (prefers-reduced-motion: reduce) {
     * {
