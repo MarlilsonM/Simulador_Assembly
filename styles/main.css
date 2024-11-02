@@ -199,23 +199,20 @@ button.theme-toggle:active {
 }
 
 /* Botões e controles */
-button, select {
+button {
     font-size: var(--font-size-base);
     padding: var(--spacing-small) var(--spacing-medium);
     border-radius: 5px;
     border: none;
     cursor: pointer;
     transition: background-color var(--transition-speed), transform var(--transition-speed);
-}
-
-button {
-    background-color: var(--primary-color-button);
-    color: white;
-    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--spacing-small);
+    background-color: var(--primary-color-button);
+    color: white;
+    font-weight: bold;
 }
 
 button:hover, button:focus {
@@ -224,9 +221,15 @@ button:hover, button:focus {
 }
 
 select {
+    font-size: var(--font-size-base);
+    padding: var(--spacing-small) var(--spacing-medium);
+    padding-right: 25px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
     background-color: white;
     color: var(--text-color);
-    padding-right: 25px;
 }
 
 .select-wrapper {
@@ -446,19 +449,6 @@ select {
     height: 20px;
 }
 
-#controls button {
-    font-size: var(--font-size-base);
-    padding: var(--spacing-small) var(--spacing-medium);
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    transition: background-color var(--transition-speed), transform var(--transition-speed);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-small);
-}
-
 /* Para telas entre 769px e 1024px */
 @media (min-width: 769px) and (max-width: 1024px) {
     .control-group .text {
@@ -470,12 +460,12 @@ select {
     }
 
     #controls button {
-        padding: 8px;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        margin: 0.03rem;
+        flex-grow: 1;
+        height: 36px;
+        padding: 0 4px;
+        font-size: 14px;
+        border-radius: 0;
     }
 
     #controls {
@@ -518,15 +508,15 @@ select {
 
     .control-group {
         width: 100%;
-        justify-content: stretch; /* Faz os botões preencherem o espaço igualmente */
-        gap: 0; /* Remove o espaço entre os botões */
+        justify-content: stretch;
+        gap: 0; 
     }
 
     #controls button {
-        flex: 1; /* Faz cada botão crescer igualmente */
-        border-radius: 0; /* Remove as bordas arredondadas */
-        padding: var(--spacing-small); /* Ajusta o padding para ser igual em todos os lados */
-        height: 100%; /* Faz o botão preencher a altura total */
+        flex: 1; 
+        border-radius: 0; 
+        padding: var(--spacing-small);
+        height: 100%;
     }
 
     .control-group .text {
@@ -602,7 +592,7 @@ select {
 /* Telas muito pequenas */
 @media (max-width: 480px) {
     #controls button {
-        padding: var(--spacing-small) 2px; /* Reduz ainda mais o padding horizontal */
+        padding: var(--spacing-small) 2px;
     }
 
     .options-box {
