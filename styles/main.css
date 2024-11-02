@@ -364,22 +364,6 @@ select {
 
 /* Caixa de opções */
 .options-box {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height var(--transition-speed) ease-in-out;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: var(--primary-color);
-    padding: var(--spacing-medium);
-    box-shadow: var(--box-shadow);
-    display: none;
-    z-index: 9;
-}
-
-/* Estilos para a caixa de opções */
-.options-box {
     position: absolute;
     top: 100%;
     left: 0;
@@ -389,6 +373,7 @@ select {
     box-shadow: var(--box-shadow);
     opacity: 0;
     visibility: hidden;
+    display: none; /* Adicionado */
     transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 9;
 }
@@ -396,6 +381,27 @@ select {
 .options-box.visible {
     opacity: 1;
     visibility: visible;
+    display: block;
+}
+
+#options-btn {
+    position: relative;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-small);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Estilo para o conteúdo dentro da caixa de opções */
+.options-box .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+    padding: var(--spacing-medium);
 }
 
 /* Mobile */
@@ -423,8 +429,11 @@ select {
         position: fixed;
         bottom: 60px;
         top: auto;
+        left: 0;
+        width: 100%;
         background-color: var(--primary-color);
         border-top: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 998;
     }
 
     #controls {
@@ -474,23 +483,6 @@ select {
         max-width: 100%;
         height: auto;
     }
-}
-
-/* Adicione as novas configurações aqui */
-.options-box {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: var(--primary-color);
-    padding: var(--spacing-medium);
-    box-shadow: var(--box-shadow);
-    z-index: 9;
-}
-
-.options-box.visible {
-    display: block;
 }
 
 /* Acessibilidade */
