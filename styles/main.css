@@ -46,27 +46,31 @@ body {
 }
 
 /* Estilos para o botão de tema */
-.theme-toggle {
-    background: none;
-    border: none;
-    padding: var(--spacing-small);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+button.theme-toggle {
+    background: rgba(255, 255, 255, 0.1) ;
+    border: 1.5px solid rgba(255, 255, 255, 0.2) ;
+    padding: 6px ;
+    width: 38px ;
+    height: 38px ;
+    border-radius: 50% ;
+    display: flex ;
+    align-items: center ;
+    justify-content: center ;
     margin-left: var(--spacing-medium);
+    transition: all var(--transition-speed) ease-in-out;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.theme-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+/* Sobrescrever estilos gerais de botão para o theme-toggle */
+button.theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.2) ;
+    transform: scale(1.05) ;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.theme-toggle > svg {
-    width: 20px;
-    height: 20px;
-    stroke-linecap: round;
+button.theme-toggle:active {
+    transform: scale(0.95) ;
 }
 
 /* Animações */
@@ -155,6 +159,43 @@ body {
 
 #editor-container, #debug-panel {
     flex: 1 1 300px;
+}
+
+/* Estilos base para o botão de opções */
+#options-btn {
+    position: relative;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-small);
+    background-color: var(--primary-color-button);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    transition: all var(--transition-speed);
+}
+
+#options-btn:hover {
+    background-color: var(--secondary-color-button);
+    transform: translateY(-2px);
+}
+
+.icon-chevron {
+    width: 20px;
+    height: 20px;
+    transition: transform var(--transition-speed);
+    filter: brightness(0) invert(1);
+}
+
+/* Ajuste para modo escuro se necessário */
+[data-theme="dark"] #options-btn {
+    background-color: var(--primary-color-button);
+}
+
+[data-theme="dark"] #options-btn:hover {
+    background-color: var(--secondary-color-button);
 }
 
 /* Botões e controles */
@@ -354,12 +395,6 @@ select {
         border-radius: 5px;
         height: auto;
     }
-
-    .theme-toggle {
-        width: 32px;
-        height: 32px;
-        margin: 0 4px;
-    }
 }
 
 /* Caixa de opções */
@@ -371,11 +406,11 @@ select {
     background-color: var(--primary-color);
     padding: var(--spacing-medium);
     box-shadow: var(--box-shadow);
+    z-index: 997;
     opacity: 0;
     visibility: hidden;
-    display: none; /* Adicionado */
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 9;
+    display: none;
+    transition: all 0.3s ease;
 }
 
 .options-box.visible {
@@ -384,30 +419,114 @@ select {
     display: block;
 }
 
-#options-btn {
-    position: relative;
-    z-index: 999;
+/* Estilo para o conteúdo dentro da caixa de opções */
+.options-box .control-group {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    gap: var(--spacing-medium);
+    padding: var(--spacing-small);
+}
+
+.options-box .select-wrapper {
+    flex: 1;
+    max-width: 30%;
+    margin: 0 10px;
+}
+
+/* Estilos padrão para texto e ícones */
+.control-group .text {
+    display: inline;
+}
+
+.control-group .icon {
+    display: none;
+    width: 20px;
+    height: 20px;
+}
+
+#controls button {
+    font-size: var(--font-size-base);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--spacing-small);
-    background: none;
-    border: none;
-    cursor: pointer;
+    gap: var(--spacing-small);
 }
 
-/* Estilo para o conteúdo dentro da caixa de opções */
-.options-box .control-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-medium);
-    padding: var(--spacing-medium);
+/* Para telas entre 769px e 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .control-group .text {
+        display: none;
+    }
+
+    .control-group .icon {
+        display: inline-block;
+    }
+
+    #controls button {
+        padding: 8px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #controls {
+        position: fixed;
+        bottom: 0;
+        top: auto;
+    }
+
+    .options-box {
+        position: fixed;
+        bottom: 60px; /* Altura do #controls */
+        top: auto;
+        left: 0;
+        width: 100%;
+        transform: translateY(100%);
+    }
+
+    .options-box.visible {
+        transform: translateY(0);
+    }
+
+    .options-box .control-group {
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        padding: var(--spacing-small);
+    }
+
+    .options-box .select-wrapper {
+        flex: 1;
+        max-width: 45%;
+    }
 }
 
 /* Mobile */
 @media (max-width: 768px) {
-    body {
-        padding-bottom: 120px;
+    #controls {
+        padding: 0; /* Remove o padding do container */
+    }
+
+    .control-group {
+        width: 100%;
+        justify-content: stretch; /* Faz os botões preencherem o espaço igualmente */
+        gap: 0; /* Remove o espaço entre os botões */
+    }
+
+    #controls button {
+        flex: 1; /* Faz cada botão crescer igualmente */
+        border-radius: 0; /* Remove as bordas arredondadas */
+        padding: var(--spacing-small); /* Ajusta o padding para ser igual em todos os lados */
+        height: 100%; /* Faz o botão preencher a altura total */
     }
 
     .control-group .text {
@@ -415,38 +534,85 @@ select {
     }
 
     .control-group .icon {
-        display: block;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
     }
 
+    /* Ajusta o botão de opções para se alinhar com os outros */
     #options-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        background-color: var(--primary-color-button);
+        border-radius: 0;
         padding: var(--spacing-small);
+        height: 100%;
+        margin: 0;
+        flex: 1;
+        transform: none;
+    }
+
+    #options-btn:hover {
+        transform: none;
+        background-color: var(--secondary-color-button);
+    }
+    
+    #options-btn .icon-chevron {
+        margin: 0;
+    }
+
+    /* Remove a margem do último grupo de controles */
+    .control-group:last-child {
+        margin: 0;
     }
 
     .options-box {
         position: fixed;
         bottom: 60px;
         top: auto;
-        left: 0;
+        transform: translateY(100%);
+    }
+
+    .options-box.visible {
+        transform: translateY(0);
+    }
+
+    .options-box .control-group {
+        flex-direction: column;
         width: 100%;
-        background-color: var(--primary-color);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        z-index: 998;
+        gap: 10px;
     }
 
-    #controls {
-        flex-wrap: wrap;
+    .options-box .select-wrapper {
+        width: 100%;
+        max-width: 100%;
     }
 
-    .control-group {
-        justify-content: space-around;
+    .theme-toggle {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+        margin: 0 4px;
+    }
+
+    .theme-toggle > svg {
+        width: 24px;
+        height: 24px;
     }
 }
 
 /* Telas muito pequenas */
 @media (max-width: 480px) {
+    #controls button {
+        padding: var(--spacing-small) 2px; /* Reduz ainda mais o padding horizontal */
+    }
+
+    .options-box {
+        padding: var(--spacing-small);
+    }
+
+    .options-box .control-group {
+        gap: 5px;
+    }
+
     .control-group:last-child {
         flex-wrap: wrap;
     }
@@ -455,10 +621,6 @@ select {
         flex-basis: 48%;
         max-width: 48%;
         margin: 2px;
-    }
-
-    .theme-toggle {
-        margin-top: 4px;
     }
 
     #controls button, 
@@ -483,6 +645,17 @@ select {
         max-width: 100%;
         height: auto;
     }
+
+    .theme-toggle {
+        width: 36px;
+        height: 36px;
+        padding: 6px;
+    }
+
+    .theme-toggle > svg {
+        width: 20px;
+        height: 20px;
+    }
 }
 
 /* Acessibilidade */
@@ -497,12 +670,6 @@ select {
     width: 20px;
     height: 20px;
     display: none;
-}
-
-.icon-chevron {
-    width: 20px;
-    height: 20px;
-    transition: transform var(--transition-speed);
 }
 
 .options-box.visible + .icon-chevron {
@@ -525,11 +692,4 @@ select {
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     border: 0;
-}
-
-/* Focus states */
-button:focus-visible,
-.icon-chevron:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
 }
