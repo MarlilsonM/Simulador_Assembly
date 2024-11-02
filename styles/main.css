@@ -378,8 +378,24 @@ select {
     z-index: 9;
 }
 
+/* Estilos para a caixa de opções */
+.options-box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-color);
+    padding: var(--spacing-medium);
+    box-shadow: var(--box-shadow);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 9;
+}
+
 .options-box.visible {
-    display: block;
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Mobile */

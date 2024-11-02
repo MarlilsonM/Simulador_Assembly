@@ -2,24 +2,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const optionsButton = document.getElementById('options-btn');
     const optionsBox = document.querySelector('.options-box');
     const chevronIcon = optionsButton.querySelector('.icon-chevron');
+    let isOptionsVisible = false;
 
-    optionsButton.addEventListener('click', (event) => {
-        event.stopPropagation(); // Impede que o clique no botão feche a caixa imediatamente
-        optionsBox.classList.toggle('visible');
-        const isVisible = optionsBox.classList.contains('visible');
-        chevronIcon.src = isVisible ? 'icons/chevron-down.svg' : 'icons/chevron-up.svg';
-
-        // Adiciona uma animação suave
-        optionsBox.style.transition = 'max-height 0.3s ease-in-out';
-        optionsBox.style.maxHeight = isVisible ? '200px' : '0'; // Ajuste o valor conforme necessário
+    optionsButton.addEventListener('click', function(event) {
+        event.stopPropagation(); // Impede que o clique se propague para o documento
+        isOptionsVisible = !isOptionsVisible;
+        optionsBox.classList.toggle('visible', isOptionsVisible);
+        chevronIcon.src = isOptionsVisible ? 'icons/chevron-down.svg' : 'icons/chevron-up.svg';
     });
 
-    // Fecha a caixa de opções se o usuário clicar fora dela
-    document.addEventListener('click', () => {
-        if (optionsBox.classList.contains('visible')) {
+    // Fechar as opções quando clicar fora delas
+    document.addEventListener('click', function(event) {
+        if (isOptionsVisible && !optionsBox.contains(event.target) && event.target !== optionsButton) {
+            isOptionsVisible = false;
             optionsBox.classList.remove('visible');
-            chevronIcon.src = 'icons/chevron-up.svg'; // Reseta o ícone
-            optionsBox.style.maxHeight = '0'; // Reseta a altura
+            chevronIcon.src = 'icons/chevron-up.svg';
         }
     });
-})
+
+    // Impedir que cliques dentro da caixa de opções a fechem
+    optionsBox.addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+});
