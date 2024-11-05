@@ -19,10 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('play-btn').addEventListener('click', () => {
         if (isRunning) { 
             window.interpreter.stop();
-            window.interpreter.reset();
             isRunning = false;
         }
-
+        
+        // Reset completo antes de uma nova execução
+        window.interpreter.reset();
+        
         const code = window.editor.getValue();
         window.interpreter.loadProgram(code);
         const speed = document.getElementById('speed-select').value;

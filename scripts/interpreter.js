@@ -5,7 +5,7 @@ import StackInstructions from './stackInstructions.js';
 
 class Interpreter {
     constructor() {
-        this.memory = [];
+        this.memory = new Array(1000).fill(0);
         this.registers = {
             r0: 0,
             r1: 0,
@@ -14,10 +14,12 @@ class Interpreter {
             r4: 0,
             r5: 0,
             r6: 0,
-            SP: 20, // Stack Pointer (ponteiro da pilha)
+            SP: 999, // Stack Pointer (ponteiro da pilha)
             PC: 0, // Program Counter (contador de programa)
-            FLAGS: 0 // Registrador de flags para armazenar resultados de comparações e condições
+            FLAGS: 0, // Registrador de flags para armazenar resultados de comparações e condições
+            FLAG: false
         };
+        this.STACK_LIMIT = 100;
         this.currentInstruction = 0;
         this.running = false;
         this.bitWidth = 8; // Padrão para 8 bits
@@ -42,22 +44,27 @@ class Interpreter {
         const flagZElement = document.getElementById('flag-Z');
         const flagFElement = document.getElementById('flag-F');
 
-        if (!regr0Element || !regr1Element || !regr2Element || !regr3Element  || !regr4Element  || !regr5Element  || !regr6Element || !regSPElement || !flagZElement || !flagFElement) {
+        if (!regr0Element || !regr1Element || !regr2Element || !regr3Element || 
+            !regr4Element || !regr5Element || !regr6Element || !regSPElement || 
+            !flagZElement || !flagFElement) {
             console.error("Erro: Um ou mais elementos do DOM não foram encontrados.");
             return;
         }
 
-        regr0Element.textContent = this.registers.r0.toString(16).padStart(2, '0').toUpperCase();
-        regr1Element.textContent = this.registers.r1.toString(16).padStart(2, '0').toUpperCase();
-        regr2Element.textContent = this.registers.r2.toString(16).padStart(2, '0').toUpperCase();
-        regr3Element.textContent = this.registers.r3.toString(16).padStart(2, '0').toUpperCase();
-        regr4Element.textContent = this.registers.r4.toString(16).padStart(2, '0').toUpperCase();
-        regr5Element.textContent = this.registers.r5.toString(16).padStart(2, '0').toUpperCase();
-        regr6Element.textContent = this.registers.r6.toString(16).padStart(2, '0').toUpperCase();
-        regSPElement.textContent = this.registers.SP.toString(16).padStart(2, '0').toUpperCase();
-        flagZElement.textContent = this.registers.FLAGS === 0 ? 'TRUE' : 'FALSE';
-        flagFElement.textContent = this.registers.FLAG ? 'TRUE' : 'FALSE';
-    }
+        // Garante que os valores dos registradores sejam números antes de converter
+    regr0Element.textContent = (this.registers.r0 || 0).toString(16).padStart(2, '0').toUpperCase();
+    regr1Element.textContent = (this.registers.r1 || 0).toString(16).padStart(2, '0').toUpperCase();
+    regr2Element.textContent = (this.registers.r2 || 0).toString(16).padStart(2, '0').toUpperCase();
+    regr3Element.textContent = (this.registers.r3 || 0).toString(16).padStart(2, '0').toUpperCase();
+    regr4Element.textContent = (this.registers.r4 || 0).toString(16).padStart(2, '0').toUpperCase();
+    regr5Element.textContent = (this.registers.r5 || 0).toString(16).padStart(2, '0').toUpperCase();
+    regr6Element.textContent = (this.registers.r6 || 0).toString(16).padStart(2, '0').toUpperCase();
+    regSPElement.textContent = (this.registers.SP || 0).toString(16).padStart(2, '0').toUpperCase();
+    
+    // Atualiza as flags
+    flagZElement.textContent = this.registers.FLAGS === 0 ? 'TRUE' : 'FALSE';
+    flagFElement.textContent = this.registers.FLAG ? 'TRUE' : 'FALSE';
+}
 
     setBitWidth(bitWidth) {
         this.bitWidth = bitWidth;
@@ -221,6 +228,9 @@ class Interpreter {
                 break;
             case 'PUSH':
             case 'POP':
+            case 'DUP':
+            case 'SWAP':
+            case 'ROT':
                 this.stack.execute(instruction, args);
                 this.updateOutput(`Instrução de pilha ${instruction} executada com argumentos: ${args.join(', ')}`);
                 this.updateStackUI();
@@ -286,7 +296,7 @@ class Interpreter {
     }
 
     reset() {
-        this.memory = [];
+        this.memory = new Array(1000).fill(0);
         this.registers = {
             r0: 0,
             r1: 0,
@@ -295,15 +305,26 @@ class Interpreter {
             r4: 0,
             r5: 0,
             r6: 0,
-            SP: 0, // Stack Pointer
-            PC: 0, // Program Counter
-            FLAGS: 0 // Flags
+            SP: 999, // Stack Pointer volta para o topo
+            PC: 0,   // Program Counter
+            FLAGS: 0, // Flags
+            FLAG: false
         };
         this.currentInstruction = 0;
         this.running = false;
+        
+        // Recriar as instâncias das classes de instruções
+        this.arithmetic = new ArithmeticInstructions(this);
+        this.logical = new LogicalInstructions(this);
+        this.dataMovement = new DataMovementInstructions(this);
+        this.stack = new StackInstructions(this);
+        
+        // Atualizar a UI
         this.updateRegistersUI();
         this.clearMemoryUI();
         this.clearOutput();
+        
+        console.log('Estado do interpretador resetado');
     }
 
 
