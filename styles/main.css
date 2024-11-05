@@ -38,6 +38,37 @@ body {
     transition: background-color var(--transition-speed), color var(--transition-speed);
 }
 
+.highlighted-line {
+    background-color: rgba(255, 255, 0, 0.2);
+    transition: background-color 0.3s;
+}
+
+.vector-register {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.vector-register td {
+    border: 1px solid #ddd;
+    padding: 4px;
+    text-align: center;
+}
+
+#vector-registers table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#vector-registers th, #vector-registers td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+#vector-registers th {
+    background-color: #f2f2f2;
+}
+
 /* Modo escuro */
 [data-theme="dark"] {
     --background-color: var(--dark-background-color);
@@ -231,21 +262,28 @@ select {
 }
 
 /* Tabela de registradores */
-#registers table {
+#registers table,
+#vector-registers table {
     width: 100%;
     border-collapse: collapse;
     margin-top: var(--spacing-medium);
 }
 
-#registers th, #registers td {
+#registers th, #registers td, #vector-registers th, #vector-registers td {
     border: 1px solid #ccc;
     padding: var(--spacing-small);
     text-align: center;
 }
 
-#registers th {
+#registers th,
+#vector-registers th {
     background-color: var(--primary-color);
     color: white;
+}
+
+#vector-registers td {
+    font-family: monospace;
+    white-space: nowrap;
 }
 
 /* Caixa de opções */
@@ -324,7 +362,8 @@ select {
         flex: 1 1 100%;
     }
 
-    #registers table {
+    #registers table,
+    #vector-registers table {
         width: 100%;
         font-size: 0.8em;
     }

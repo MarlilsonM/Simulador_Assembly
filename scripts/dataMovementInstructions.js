@@ -5,19 +5,31 @@ class DataMovementInstructions {
 
     mov(args) {
         const [dest, src] = args;
-
-        if (this.interpreter.registers[dest] === undefined) {
-            console.error(`Registrador ${dest} não encontrado`);
-            return;
-        }
-
+    
+        // Se for um endereço de memória
+        if (dest.includes('[')) {
+            const address = parseInt(dest.replace('[', '').replace(']', ''));
+            if (!isNaN(address)) {
+                // Converte o valor fonte para número de ponto flutuante
+                const value = parseFloat(src);
+                if (!isNaN(value)) {
+                    this.interpreter.memory[address] = value;
+                } else {
+                    console.error(`Valor inválido para MOV: ${src}`);
+                }
+                this.interpreter.updateMemoryUI();
+                return;
+            }
+        }    
+        
         if (this.interpreter.registers[src] !== undefined) {
             this.interpreter.registers[dest] = this.interpreter.registers[src];
-        } else if (!isNaN(parseInt(src, 10))) {
-            this.interpreter.registers[dest] = parseInt(src, 10);
+        } else if (!isNaN(parseFloat(src))) {
+            this.interpreter.registers[dest] = parseFloat(src);
         } else {
             console.error(`Erro no MOV: ${src} não é um registrador válido ou um número`);
         }
+        this.interpreter.updateRegistersUI();
     }
 
 

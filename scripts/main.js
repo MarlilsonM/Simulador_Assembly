@@ -5,6 +5,7 @@ import Visualization from './visualization.js';
 document.addEventListener('DOMContentLoaded', () => {
     // Primeiro, instancie o interpretador
     window.interpreter = new Interpreter();
+    console.log("Interpretador inicializado");
 
     // Agora, instancie o debugger, passando o interpretador como parâmetro
     window.debugger = new Debugger(window.interpreter);
@@ -37,15 +38,35 @@ document.addEventListener('DOMContentLoaded', () => {
         isRunning = false;  // Permite nova execução após pausar
     });
 
-    document.getElementById('step-btn').addEventListener('click', () => {
-        const code = window.editor.getValue();
-    
-        // Verifica se o código está carregado
-        if (!window.interpreter.memory || window.interpreter.memory.length === 0) {
-            window.interpreter.loadProgram(code);
+document.getElementById('step-btn').addEventListener('click', () => {
+    const code = window.editor.getValue();
+    console.log("Botão de passo clicado");
+
+    // Só carrega o programa se ainda não estiver carregado ou se for a primeira execução
+    if (!window.interpreter.running || window.interpreter.currentInstruction === 0) {
+        console.log("Carregando novo programa");
+        window.interpreter.loadProgram(code);
+        window.interpreter.running = true;
+    }
+
+    if (window.interpreter.programLength > 0) {
+        try {
+            const result = window.interpreter.executeStep();
+            console.log(`Instrução ${window.interpreter.currentInstruction} executada. Resultado:`, result);
+            
+            // Se chegou ao fim do programa
+            if (!result) {
+                window.interpreter.running = false;
+                console.log("Programa finalizado");
+            }
+        } catch (error) {
+            console.error('Erro na execução do passo:', error);
+            window.interpreter.running = false;
         }
-        window.interpreter.executeStep();
-    });
+    } else {
+        console.log('Nenhum programa carregado ou programa vazio');
+    }
+});
 
     document.getElementById('reset-btn').addEventListener('click', () => {
         window.interpreter.reset();

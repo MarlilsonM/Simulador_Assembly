@@ -31,31 +31,49 @@ class Debugger {
     updatePanel() {
         const memoryElement = document.getElementById('memory-content');
         const breakpointsElement = document.getElementById('breakpoints-list');
-
+    
         if (!memoryElement || !breakpointsElement) {
             console.error('Elementos do painel de debug não encontrados.');
             return;
         }
-
-        // Atualiza os valores dos registradores
-        let registersHtml = '';
-        for (const [key, value] of Object.entries(this.interpreter.registers)) {
-            registersHtml += `${key}: ${value}\n`;
-        }
-
+    
         // Atualiza a visualização da memória
-        let memoryHtml = '';
-        this.interpreter.memory.forEach((value, index) => {
-            memoryHtml += `${index}: ${value}\n`;
-        });
+        let memoryHtml = 'Instruções:\n';
+        
+        // Mostra instruções até END
+        for (let i = 0; i < this.interpreter.programLength; i++) {
+            if (this.interpreter.memory[i] === 'END' || 
+                this.interpreter.memory[i] === 'END:' || 
+                this.interpreter.memory[i] === '.END' || 
+                this.interpreter.memory[i] === 'HALT') {
+                memoryHtml += `${i}: ${this.interpreter.memory[i]}\n`;
+                break;
+            }
+            memoryHtml += `${i}: ${this.interpreter.memory[i]}\n`;
+        }
+    
+        // Adiciona seção de dados não-zero
+        memoryHtml += '\nDados:\n';
+        let hasData = false;
+        for (let i = this.interpreter.programLength; i < this.interpreter.memory.length; i++) {
+            if (this.interpreter.memory[i] !== 0 && this.interpreter.memory[i] !== '0') {
+                memoryHtml += `${i}: ${this.interpreter.memory[i]}\n`;
+                hasData = true;
+            }
+        }
+    
+        if (!hasData) {
+            memoryHtml += '(Sem dados)\n';
+        }
+    
         memoryElement.textContent = memoryHtml;
-
+    
         // Atualiza a lista de breakpoints
         let breakpointsHtml = '';
         this.breakpoints.forEach(line => {
             breakpointsHtml += `Linha ${line}\n`;
         });
-        breakpointsElement.innerHTML = breakpointsHtml;
+        breakpointsElement.innerHTML = breakpointsHtml || '(Sem breakpoints)';
     }
 
     shouldPause() {
