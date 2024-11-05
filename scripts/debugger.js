@@ -71,6 +71,62 @@ class Debugger {
             breakpointsHtml += `Linha ${line}\n`;
         });
         breakpointsElement.innerHTML = breakpointsHtml || '(Sem breakpoints)';
+        this.updateDetailedStack();
+    }
+
+    updateDetailedStack() {
+        const stackElement = document.getElementById('detailed-stack');
+        if (!stackElement) return;
+
+        let stackContent = '<h3>Pilha Detalhada</h3>';
+        stackContent += '<table><tr><th>Endereço</th><th>Valor</th><th>Tipo</th></tr>';
+
+        const sp = this.interpreter.registers.SP;
+        for (let i = 999; i >= sp; i--) {
+            const value = this.interpreter.memory[i];
+            const type = this.getValueType(value);
+            const isSP = i === sp ? ' (SP)' : '';
+            stackContent += `<tr>
+                <td>${i}${isSP}</td>
+                <td>${value}</td>
+                <td>${type}</td>
+            </tr>`;
+        }
+
+        stackContent += '</table>';
+        stackElement.innerHTML = stackContent;
+
+        // Adicionar visualização dos registradores vetoriais
+        let vectorContent = '<h3>Registradores Vetoriais</h3>';
+        vectorContent += '<table><tr><th>Registrador</th><th>Valores</th></tr>';
+
+        for (let i = 0; i < 4; i++) {
+            const values = this.interpreter.vectorRegisters[`v${i}`];
+            vectorContent += `<tr>
+                <td>v${i}</td>
+                <td>[${values.join(', ')}]</td>
+            </tr>`;
+        }
+
+        vectorContent += '</table>';
+
+        // Adicione este conteúdo ao elemento HTML apropriado
+        const vectorElement = document.getElementById('vector-registers');
+        if (vectorElement) {
+            vectorElement.innerHTML = vectorContent;
+        }
+    }
+
+    getValueType(value) {
+        if (typeof value === 'number') {
+            return Number.isInteger(value) ? 'Inteiro' : 'Ponto Flutuante';
+        } else if (typeof value === 'string') {
+            return 'String';
+        } else if (value === undefined || value === null) {
+            return 'Indefinido';
+        } else {
+            return 'Outro';
+        }
     }
 
     shouldPause() {
