@@ -31,47 +31,47 @@ class Debugger {
         const breakpointsElement = document.getElementById('breakpoints-list');
     
         if (!memoryElement || !breakpointsElement) {
-                        return;
+            return;
         }
     
         // Atualiza a visualização da memória
-        let memoryHtml = 'Instruções:\n';
+        let memoryHtml = '<div class="memory-section"><h4>Instruções:</h4>';
         
         // Mostra instruções até END
         for (let i = 0; i < this.interpreter.programLength; i++) {
-            if (this.interpreter.memory[i] === 'END' || 
-                this.interpreter.memory[i] === 'END:' || 
-                this.interpreter.memory[i] === '.END' || 
-                this.interpreter.memory[i] === 'HALT') {
-                memoryHtml += `${i}: ${this.interpreter.memory[i]}\n`;
+            const instruction = this.interpreter.memory[i];
+            if (instruction === 'END' || instruction === 'END:' || 
+                instruction === '.END' || instruction === 'HALT') {
+                memoryHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
                 break;
             }
-            memoryHtml += `${i}: ${this.interpreter.memory[i]}\n`;
+            memoryHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
         }
+        memoryHtml += '</div>';
     
         // Adiciona seção de dados não-zero
-        memoryHtml += '\nDados:\n';
+        memoryHtml += '<div class="memory-section"><h4>Dados:</h4>';
         let hasData = false;
         for (let i = this.interpreter.programLength; i < this.interpreter.memory.length; i++) {
             if (this.interpreter.memory[i] !== 0 && this.interpreter.memory[i] !== '0') {
-                memoryHtml += `${i}: ${this.interpreter.memory[i]}\n`;
+                memoryHtml += `<div><span class="address">${i}:</span><span class="data">${this.interpreter.memory[i]}</span></div>`;
                 hasData = true;
             }
         }
     
         if (!hasData) {
-            memoryHtml += '(Sem dados)\n';
+            memoryHtml += '<div>(Sem dados)</div>';
         }
+        memoryHtml += '</div>';
     
-        memoryElement.textContent = memoryHtml;
+        memoryElement.innerHTML = memoryHtml;
     
         // Atualiza a lista de breakpoints
         let breakpointsHtml = '';
         this.breakpoints.forEach(line => {
-            breakpointsHtml += `Linha ${line}\n`;
+            breakpointsHtml += `<div>Linha ${line}</div>`;
         });
-        breakpointsElement.innerHTML = breakpointsHtml || '(Sem breakpoints)';
-        this.updateDetailedStack();
+        breakpointsElement.innerHTML = breakpointsHtml || '<div>(Sem breakpoints)</div>';
     }
 
     updateDetailedStack() {

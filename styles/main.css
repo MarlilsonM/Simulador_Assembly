@@ -19,6 +19,8 @@
     --spacing-medium: 1rem;
     --spacing-large: 1.5rem;
     --transition-speed: 0.3s;
+    --scrollbar-track-color: #f1f1f1;
+    --scrollbar-thumb-color: #888;
 
     /* Cores para o modo escuro */
     --dark-background-color: #121212;
@@ -43,6 +45,8 @@ body {
     --background-color: var(--dark-background-color);
     --text-color: var(--dark-text-color);
     --primary-color: var(--dark-primary-color);
+    --scrollbar-track-color: #2c3e50;
+    --scrollbar-thumb-color: #7f8c8d;
 }
 
 /* Layout */
@@ -157,6 +161,51 @@ body {
 
 [data-theme="dark"] #detailed-stack tr:hover {
     background-color: rgba(255, 255, 255, 0.2);
+}
+
+/*Estilo para memória*/
+#memory {
+    max-height: 400px; /* Ajuste este valor conforme necessário */
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--background-color);
+}
+
+#memory-content {
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: var(--text-color);
+    padding: 10px;
+}
+
+#memory-content .instruction {
+    color: var(--instruction-color);
+}
+
+#memory-content .data {
+    color: var(--data-color);
+}
+
+#memory-content .address {
+    color: var(--address-color);
+    margin-right: 5px;
+}
+
+/* Estilo para a barra de rolagem */
+#memory::-webkit-scrollbar {
+    width: 10px;
+}
+
+#memory::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+}
+
+#memory::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 6px;
+    border: 3px solid var(--scrollbar-track-color);
 }
 
 /* Estilos base para o botão de opções */
