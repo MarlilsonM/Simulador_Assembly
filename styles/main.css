@@ -46,54 +46,70 @@ body {
 }
 
 /* Estilos para o botão de tema */
-button.theme-toggle {
-    background: rgba(255, 255, 255, 0.1) ;
-    border: 1.5px solid rgba(255, 255, 255, 0.2) ;
-    padding: 6px ;
-    width: 38px ;
-    height: 38px ;
-    border-radius: 50% ;
-    display: flex ;
-    align-items: center ;
-    justify-content: center ;
-    margin-left: var(--spacing-medium);
-    transition: all var(--transition-speed) ease-in-out;
+.theme-toggle {
+    --size: 2rem;
+    --icon-fill: currentColor;
+    --icon-fill-hover: currentColor;
+    background: none;
+    border: none;
+    padding: 0;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    outline-offset: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Sobrescrever estilos gerais de botão para o theme-toggle */
-button.theme-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.2) ;
-    transform: scale(1.05) ;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+/* Estilos SVG dentro do botão de tema */
+.theme-toggle > svg {
+    width: 100%;
+    height: 100%;
+    stroke-linecap: round;
 }
 
-button.theme-toggle:active {
-    transform: scale(0.95) ;
-}
-
-/* Animações */
+/* Estilos para os ícones do sol e da lua */
 .sun-and-moon > :is(.moon, .sun, .sun-beams) {
-    transform-origin: center;
+    transform-origin: center center;
+    transition: transform  0.25s cubic-bezier(0, 0, 0, 1);
 }
 
-.sun-and-moon > .sun,
-.sun-and-moon > .sun-beams {
-    transition: transform 0.5s cubic-bezier(0.5, 1.5, 0.75, 1.25);
+/* Estilo para o sol */
+.sun-and-moon > .sun {
+    fill: var(--icon-fill); /* ou currentColor */
+    stroke: var(--icon-stroke, var(--icon-fill));
+    stroke-width: 2px;
 }
 
+/* Estilo para a lua */
 .sun-and-moon > .moon {
+    fill: var(--icon-fill);
     transition: transform 0.25s cubic-bezier(0, 0, 0, 1);
 }
 
-/* Animações para modo escuro */
+/* Efeitos de hover e foco no botão de tema */
+.theme-toggle:is(:hover, :focus-visible) {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+/* Efeitos de clique no botão de tema */
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Animações para o modo escuro */
 [data-theme="dark"] .sun-and-moon > .sun {
     transform: scale(1.75);
 }
 
 [data-theme="dark"] .sun-and-moon > .sun-beams {
-    transform: rotate(-45deg);
     opacity: 0;
 }
 
@@ -101,21 +117,20 @@ button.theme-toggle:active {
     transform: translateX(-7px);
 }
 
-/* Transições suaves */
-.theme-toggle:is(:hover, :focus-visible) > .sun-and-moon > :is(.moon, .sun) {
+[data-theme="dark"] .sun-and-moon > .moon {
+    transform: translateX(-7px);
+}
+
+/* Ajuste a animação para o novo div que contém o SVG */
+#theme-toggle-icon {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.5s;
+}
+
+/* Transições suaves para o novo div */
+.theme-toggle:is(:hover, :focus-visible) > #theme-toggle-icon {
     transform: scale(1.1);
-}
-
-.theme-toggle:is(:hover, :focus-visible) .sun-and-moon > .sun-beams {
-    transform: scale(0.9);
-}
-
-[data-theme="dark"] .theme-toggle:is(:hover, :focus-visible) .sun-and-moon > .sun {
-    transform: scale(1.85);
-}
-
-[data-theme="dark"] .theme-toggle:is(:hover, :focus-visible) .sun-and-moon > .sun-beams {
-    transform: rotate(-45deg) scale(0.9);
 }
 
 /* Layout */
@@ -528,6 +543,12 @@ select {
 
 /* Mobile */
 @media (max-width: 768px) {
+    .sun-and-moon > .sun,
+    .sun-and-moon > .sun-beams,
+    .sun-and-moon > .moon > circle {
+        stroke-width: 1.5px; /* Reduz a largura da stroke para telas menores */
+    }
+
     #controls {
         padding: 0; /* Remove o padding do container */
     }
