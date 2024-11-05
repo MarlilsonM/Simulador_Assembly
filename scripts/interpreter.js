@@ -58,8 +58,7 @@ class Interpreter {
         if (!regr0Element || !regr1Element || !regr2Element || !regr3Element || 
             !regr4Element || !regr5Element || !regr6Element || !regSPElement || 
             !flagZElement || !flagFElement) {
-            console.error("Erro: Um ou mais elementos do DOM não foram encontrados.");
-            return;
+                        return;
         }
 
         // Garante que os valores dos registradores sejam números antes de converter
@@ -137,8 +136,7 @@ class Interpreter {
 
     loadProgram(program) {
         if (!program || program.trim() === '') {
-            console.warn('Programa vazio');
-            return;
+                        return;
         }
         
         // Reset inicial
@@ -150,7 +148,6 @@ class Interpreter {
             .filter(line => line !== '' && line !== '0');
         
         this.programLength = lines.length;
-        console.log(`Carregando programa com ${this.programLength} instruções`);
         
         // Armazena as linhas do programa no início da memória
         lines.forEach((line, index) => {
@@ -159,8 +156,6 @@ class Interpreter {
         
         this.labels = this.parseLabels(this.programLength);
         this.updateMemoryUI();
-        console.log(`Programa carregado com ${this.programLength} instruções`);
-        console.log("Primeiras 5 instruções:", this.memory.slice(0, 5));
     }
 
     updateOutput(message) {
@@ -185,10 +180,8 @@ class Interpreter {
                     }
                 }
             } else {
-                console.warn(`Linha ${index} não é uma string: ${line}`);
-            }
+                            }
         }
-        console.log("Labels detectadas e posições:", labels);
         return labels;
     }
 
@@ -207,8 +200,7 @@ class Interpreter {
 
     highlightCurrentLine() {
         if (!window.editor) {
-            console.warn('Editor não está disponível');
-            return;
+                        return;
         }
     
         // Remove o destaque da linha anterior
@@ -216,8 +208,7 @@ class Interpreter {
             try {
                 window.editor.removeLineClass(this.lastHighlightedLine, 'background', 'highlighted-line');
             } catch (error) {
-                console.warn('Erro ao remover destaque da linha:', error);
-            }
+                            }
         }
     
         // Adiciona destaque à linha atual
@@ -226,8 +217,7 @@ class Interpreter {
                 window.editor.addLineClass(this.currentInstruction, 'background', 'highlighted-line');
                 this.lastHighlightedLine = this.currentInstruction;
             } catch (error) {
-                console.warn('Erro ao adicionar destaque à linha:', error);
-            }
+                            }
         }
     }
 
@@ -237,8 +227,7 @@ class Interpreter {
                 window.editor.removeLineClass(this.lastHighlightedLine, 'background', 'highlighted-line');
                 this.lastHighlightedLine = undefined;
             } catch (error) {
-                console.warn('Erro ao limpar destaque:', error);
-            }
+                            }
         }
     }
 
@@ -253,32 +242,27 @@ class Interpreter {
 
     executeStep() {
         if (!this.memory || this.programLength === 0) {
-            console.warn('Nenhum programa carregado');
-            return false;
+                        return false;
         }
     
         const currentLine = this.memory[this.currentInstruction];
-        console.log(`Executando instrução ${this.currentInstruction}: ${currentLine}`);
     
         if (this.currentInstruction >= this.programLength) {
-            console.log('Fim do programa alcançado');
-            this.stop();
+                        this.stop();
             this.clearHighlight();
             this.updateOutput('Programa finalizado');
             return false;
         }
     
         if (!currentLine || typeof currentLine !== 'string') {
-            console.warn(`Linha inválida na instrução ${this.currentInstruction}: ${currentLine}`);
-            this.currentInstruction++;
+                        this.currentInstruction++;
             return true;
         }
     
         let line = currentLine.split(';')[0].trim();
     
         if (line === '' || this.isEndOfProgram(line)) {
-            console.log('Fim do programa detectado');
-            this.stop();
+                        this.stop();
             this.clearHighlight();
             this.updateOutput('Programa finalizado');
             return false;
@@ -291,8 +275,7 @@ class Interpreter {
         const match = line.match(instructionRegex);
         
         if (!match) {
-            console.error(`Formato de instrução inválido na linha ${this.currentInstruction}: ${line}`);
-            this.currentInstruction++;
+                        this.currentInstruction++;
             return true;
         }
     
@@ -303,14 +286,11 @@ class Interpreter {
             .map(arg => arg.trim())
             .filter(arg => arg !== '');
     
-        console.log(`Executando instrução: ${instruction} com argumentos:`, args);
-    
         try {
             this.validateArgs(instruction, args);
             this.executeInstruction(instruction, args);
         } catch (error) {
-            console.error(`Erro na execução: ${error.message}`);
-            this.updateOutput(`Erro: ${error.message}`);
+                        this.updateOutput(`Erro: ${error.message}`);
             this.stop();
             return false;
         }
@@ -421,16 +401,14 @@ class Interpreter {
                 throw new Error(`Instrução desconhecida: ${instruction}`);
             }
         } catch (error) {
-            console.error(`Erro na execução: ${error.message}`);
-            this.updateOutput(`Erro: ${error.message}`);
+                        this.updateOutput(`Erro: ${error.message}`);
             this.running = false;
         }
     }
 
     isValidLine(line) {
         if (typeof line !== 'string' || line.trim() === '') {
-            console.error(`Linha ${this.currentInstruction + 1} inválida`);
-            this.running = false;
+                        this.running = false;
             return false;
         }
         return true;
@@ -438,8 +416,7 @@ class Interpreter {
     
     run(speed) {
         if (!this.memory || this.programLength === 0) {
-            console.warn('Nenhum programa carregado');
-            return false;
+                        return false;
         }
     
         this.running = true;
@@ -470,8 +447,7 @@ class Interpreter {
         if (this.currentInstruction >= this.programLength) {
             this.clearHighlight();
         }
-        console.log('Execução interrompida');
-    }
+            }
 
     reset() {
         this.memory = new Array(1000).fill(0);
@@ -509,8 +485,7 @@ class Interpreter {
         this.clearOutput();
         this.clearHighlight();
         
-        console.log('Estado do interpretador resetado');
-    }
+            }
 
     clearOutput() {
         const outputElement = document.getElementById('program-output');

@@ -33,8 +33,7 @@ class ArithmeticInstructions {
                 this.cmp(args);
                 break;
             default:
-                console.error(`Instrução aritmética desconhecida: ${instruction}`);
-        }
+                        }
     }
 
     add(args) {
@@ -45,16 +44,14 @@ class ArithmeticInstructions {
         const sourceValue = parseFloat(this.interpreter.registers[source]);
     
         if (isNaN(destValue) || isNaN(sourceValue)) {
-            console.error(`Erro: Valor não numérico encontrado. ${destination}=${destValue}, ${source}=${sourceValue}`);
-            return;
+                        return;
         }
     
         const result = destValue + sourceValue;
     
         // Atualiza o registrador de destino com o resultado da soma
         this.interpreter.registers[destination] = result;
-        console.log(`ADD ${destination}, ${source}: ${result}`);
-    }
+            }
     
 
     sub(args) {

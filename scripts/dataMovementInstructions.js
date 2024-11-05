@@ -15,8 +15,7 @@ class DataMovementInstructions {
                 if (!isNaN(value)) {
                     this.interpreter.memory[address] = value;
                 } else {
-                    console.error(`Valor inválido para MOV: ${src}`);
-                }
+                                    }
                 this.interpreter.updateMemoryUI();
                 return;
             }
@@ -27,8 +26,7 @@ class DataMovementInstructions {
         } else if (!isNaN(parseFloat(src))) {
             this.interpreter.registers[dest] = parseFloat(src);
         } else {
-            console.error(`Erro no MOV: ${src} não é um registrador válido ou um número`);
-        }
+                    }
         this.interpreter.updateRegistersUI();
     }
 
@@ -45,8 +43,7 @@ class DataMovementInstructions {
                 this.store(args);
                 break;
             default:
-                console.error(`Instrução de movimentação de dados desconhecida: ${instruction}`);
-        }
+                        }
     }
 
     load(args) {

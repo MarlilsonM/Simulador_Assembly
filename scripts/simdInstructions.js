@@ -45,8 +45,7 @@ class SIMDInstructions {
                     throw new Error(`Instrução SIMD desconhecida: ${instruction}`);
             }
         } catch (error) {
-            console.error(`Erro na execução da instrução SIMD ${instruction}:`, error);
-            this.interpreter.updateOutput(`Erro: ${error.message}`);
+                        this.interpreter.updateOutput(`Erro: ${error.message}`);
             throw error;
         }
     }
@@ -67,7 +66,6 @@ class SIMDInstructions {
                 const val2 = this.ensureNumber(this.interpreter.vectorRegisters[vsrc2][i]);
                 this.interpreter.vectorRegisters[vdest][i] = val1 + val2;
             }
-            console.log(`VADD ${vdest} = [${Array.from(this.interpreter.vectorRegisters[vdest])}]`);
             this.interpreter.updateOutput(`VADD ${vdest} = [${Array.from(this.interpreter.vectorRegisters[vdest]).map(x => x.toFixed(2))}]`);
         } catch (error) {
             throw new Error(`Erro em VADD: ${error.message}`);
@@ -82,7 +80,6 @@ class SIMDInstructions {
                 const val2 = this.ensureNumber(this.interpreter.vectorRegisters[vsrc2][i]);
                 this.interpreter.vectorRegisters[vdest][i] = val1 * val2;
             }
-            console.log(`VMUL ${vdest} = [${Array.from(this.interpreter.vectorRegisters[vdest])}]`);
             this.interpreter.updateOutput(`VMUL ${vdest} = [${Array.from(this.interpreter.vectorRegisters[vdest]).map(x => x.toFixed(2))}]`);
         } catch (error) {
             throw new Error(`Erro em VMUL: ${error.message}`);
@@ -100,12 +97,13 @@ class SIMDInstructions {
                 }
                 this.interpreter.vectorRegisters[vdest][i] = val1 / val2;
             }
-            console.log(`VDIV ${vdest} = [${Array.from(this.interpreter.vectorRegisters[vdest])}]`);
             this.interpreter.updateOutput(`VDIV ${vdest} = [${Array.from(this.interpreter.vectorRegisters[vdest]).map(x => x.toFixed(2))}]`);
         } catch (error) {
             throw new Error(`Erro em VDIV: ${error.message}`);
         }
     }
+
+    
 
     vload(args) {
         const [vdest, memAddr] = args;
@@ -114,12 +112,11 @@ class SIMDInstructions {
             if (isNaN(addr) || addr < 0 || addr > this.interpreter.memory.length - 4) {
                 throw new Error(`Endereço de memória inválido: ${memAddr}`);
             }
-
+    
             for (let i = 0; i < 4; i++) {
                 const value = this.ensureNumber(this.interpreter.memory[addr + i]);
                 this.interpreter.vectorRegisters[vdest][i] = value;
             }
-            console.log(`VLOAD ${vdest} = [${Array.from(this.interpreter.vectorRegisters[vdest])}]`);
             this.interpreter.updateOutput(`VLOAD ${vdest} = [${Array.from(this.interpreter.vectorRegisters[vdest]).map(x => x.toFixed(2))}]`);
         } catch (error) {
             throw new Error(`Erro em VLOAD: ${error.message}`);
@@ -139,8 +136,7 @@ class SIMDInstructions {
                 const value = this.ensureNumber(this.interpreter.vectorRegisters[vsrc][i]);
                 this.interpreter.memory[addr + i] = value;
             }
-            console.log(`VSTORE ${vsrc} to memory at ${addr}`);
-            this.interpreter.updateOutput(`VSTORE ${vsrc} para memória em ${addr}`);
+                        this.interpreter.updateOutput(`VSTORE ${vsrc} para memória em ${addr}`);
         } catch (error) {
             throw new Error(`Erro em VSTORE: ${error.message}`);
         }

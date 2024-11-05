@@ -19,22 +19,19 @@ class Debugger {
     addBreakpoint(lineNumber) {
         this.breakpoints.add(lineNumber);
         this.updateBreakpointsList();
-        console.log(`Breakpoint adicionado na linha ${lineNumber}`);
-    }
+            }
 
     removeBreakpoint(lineNumber) {
         this.breakpoints.delete(lineNumber);
         this.updateBreakpointsList();
-        console.log(`Breakpoint removido na linha ${lineNumber}`);
-    }
+            }
 
     updatePanel() {
         const memoryElement = document.getElementById('memory-content');
         const breakpointsElement = document.getElementById('breakpoints-list');
     
         if (!memoryElement || !breakpointsElement) {
-            console.error('Elementos do painel de debug não encontrados.');
-            return;
+                        return;
         }
     
         // Atualiza a visualização da memória

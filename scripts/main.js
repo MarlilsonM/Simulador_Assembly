@@ -5,8 +5,7 @@ import Visualization from './visualization.js';
 document.addEventListener('DOMContentLoaded', () => {
     // Primeiro, instancie o interpretador
     window.interpreter = new Interpreter();
-    console.log("Interpretador inicializado");
-
+    
     // Agora, instancie o debugger, passando o interpretador como parâmetro
     window.debugger = new Debugger(window.interpreter);
     window.interpreter.debugger = window.debugger;
@@ -40,32 +39,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.getElementById('step-btn').addEventListener('click', () => {
     const code = window.editor.getValue();
-    console.log("Botão de passo clicado");
-
+    
     // Só carrega o programa se ainda não estiver carregado ou se for a primeira execução
     if (!window.interpreter.running || window.interpreter.currentInstruction === 0) {
-        console.log("Carregando novo programa");
-        window.interpreter.loadProgram(code);
+                window.interpreter.loadProgram(code);
         window.interpreter.running = true;
     }
 
     if (window.interpreter.programLength > 0) {
         try {
             const result = window.interpreter.executeStep();
-            console.log(`Instrução ${window.interpreter.currentInstruction} executada. Resultado:`, result);
-            
+                        
             // Se chegou ao fim do programa
             if (!result) {
                 window.interpreter.running = false;
-                console.log("Programa finalizado");
-            }
+                            }
         } catch (error) {
-            console.error('Erro na execução do passo:', error);
-            window.interpreter.running = false;
+                        window.interpreter.running = false;
         }
     } else {
-        console.log('Nenhum programa carregado ou programa vazio');
-    }
+            }
 });
 
     document.getElementById('reset-btn').addEventListener('click', () => {
