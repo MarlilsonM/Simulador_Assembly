@@ -45,94 +45,6 @@ body {
     --primary-color: var(--dark-primary-color);
 }
 
-/* Estilos para o botão de tema */
-.theme-toggle {
-    --size: 2rem;
-    --icon-fill: currentColor;
-    --icon-fill-hover: currentColor;
-    background: none;
-    border: none;
-    padding: 0;
-    width: var(--size);
-    height: var(--size);
-    border-radius: 50%;
-    cursor: pointer;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-    outline-offset: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color var(--transition-speed), transform var(--transition-speed);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Estilos SVG dentro do botão de tema */
-.theme-toggle > svg {
-    width: 100%;
-    height: 100%;
-    stroke-linecap: round;
-}
-
-/* Estilos para os ícones do sol e da lua */
-.sun-and-moon > :is(.moon, .sun, .sun-beams) {
-    transform-origin: center center;
-    transition: transform  0.25s cubic-bezier(0, 0, 0, 1);
-}
-
-/* Estilo para o sol */
-.sun-and-moon > .sun {
-    fill: var(--icon-fill); /* ou currentColor */
-    stroke: var(--icon-stroke, var(--icon-fill));
-    stroke-width: 2px;
-}
-
-/* Estilo para a lua */
-.sun-and-moon > .moon {
-    fill: var(--icon-fill);
-    transition: transform 0.25s cubic-bezier(0, 0, 0, 1);
-}
-
-/* Efeitos de hover e foco no botão de tema */
-.theme-toggle:is(:hover, :focus-visible) {
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
-}
-
-/* Efeitos de clique no botão de tema */
-.theme-toggle:active {
-    transform: scale(0.95);
-}
-
-/* Animações para o modo escuro */
-[data-theme="dark"] .sun-and-moon > .sun {
-    transform: scale(1.75);
-}
-
-[data-theme="dark"] .sun-and-moon > .sun-beams {
-    opacity: 0;
-}
-
-[data-theme="dark"] .sun-and-moon > .moon > circle {
-    transform: translateX(-7px);
-}
-
-[data-theme="dark"] .sun-and-moon > .moon {
-    transform: translateX(-7px);
-}
-
-/* Ajuste a animação para o novo div que contém o SVG */
-#theme-toggle-icon {
-    width: 24px;
-    height: 24px;
-    transition: transform 0.5s;
-}
-
-/* Transições suaves para o novo div */
-.theme-toggle:is(:hover, :focus-visible) > #theme-toggle-icon {
-    transform: scale(1.1);
-}
-
 /* Layout */
 #controls {
     display: flex;
@@ -336,111 +248,6 @@ select {
     color: white;
 }
 
-/* Responsividade */
-@media (max-width: 1024px) {
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        overflow-x: hidden;
-        width: 100%;
-        max-width: 100%;
-    }
-
-    #container-editor-debug {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        padding: 0;
-    }
-
-    .editor-panel, #debug-panel {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: auto;
-    }
-
-    #registers table {
-        width: 100%;
-        max-width: 100%;
-        font-size: 0.8em;
-    }
-
-    #controls {
-        display: flex;
-        bottom: 0 !important;
-        top: auto !important;
-        position: fixed !important;
-        height: auto;
-        padding: 4px;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .control-group {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        width: 100%;
-        justify-content: space-around;
-        gap: 0;
-        margin: 0;
-    }
-
-    #controls button, #controls select {
-        margin: 0.03rem;
-        flex-grow: 1;
-    }
-
-    .editor-panel,
-    #debug-panel {
-        flex: 1 1 100%;
-    }
-
-    .control-group:first-child {
-        flex: 1;
-    }
-
-    .control-group:first-child button {
-        flex: 1;
-        height: 36px;
-        padding: 0 4px;
-        font-size: 14px;
-        margin: 0;
-        border-radius: 0;
-    }
-
-    .control-group:last-child {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        padding: 4px;
-    }
-
-    .select-wrapper {
-        flex: 1;
-        margin: 0 4px;
-        max-width: 30%;
-    }
-
-    .select-wrapper select {
-        width: 100%;
-        height: 32px;
-        padding: 4px 8px;
-    }
-
-    #add-breakpoint-btn {
-        padding: var(--spacing-small) var(--spacing-medium);
-        border-radius: 5px;
-        height: auto;
-    }
-}
-
 /* Caixa de opções */
 .options-box {
     position: absolute;
@@ -490,38 +297,128 @@ select {
     height: 20px;
 }
 
-/* Para telas entre 769px e 1024px */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .control-group .text {
-        display: none;
+/* Responsividade para tablets e dispositivos menores */
+@media (max-width: 1024px) {
+    * {
+        box-sizing: border-box;
     }
 
-    .control-group .icon {
-        display: inline-block;
+    body {
+        margin: 0;
+        overflow-x: hidden;
+        width: 100%;
     }
 
-    #controls button {
-        margin: 0.03rem;
-        flex-grow: 1;
-        height: 36px;
-        padding: 0 4px;
-        font-size: 14px;
-        border-radius: 0;
+    /* Layout principal */
+    #container-editor-debug {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
     }
 
+    .editor-panel, 
+    #debug-panel {
+        width: 100%;
+        overflow-x: auto;
+        flex: 1 1 100%;
+    }
+
+    #registers table {
+        width: 100%;
+        font-size: 0.8em;
+    }
+
+    /* Controles e barra de navegação */
     #controls {
+        display: flex;
         position: fixed;
         bottom: 0;
         top: auto;
+        height: 60px;
+        padding: 2px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
 
+    .control-group {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        justify-content: space-around;
+        gap: 0;
+        margin: 0;
+    }
+
+    /* Botões e seletores */
+    #controls button, 
+    #controls select {
+        margin: 0.03rem;
+        flex-grow: 1;
+        height: 58px;
+        font-size: 16px;
+        border-radius: 0;
+    }
+
+    #controls .theme-toggle {
+        width: 36px;
+        height: 36px;
+        padding: 6px;
+        border-radius: 50%;
+    }
+
+    #controls .theme-toggle > svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .control-group:first-child {
+        flex: 1;
+    }
+
+    .control-group:last-child {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 4px;
+    }
+
+    /* Seletores e wrappers */
+    .select-wrapper {
+        flex: 1;
+        margin: 0 4px;
+        max-width: 30%;
+    }
+
+    .select-wrapper select {
+        width: 100%;
+        height: 32px;
+        padding: 4px 8px;
+    }
+
+    #add-breakpoint-btn {
+        padding: var(--spacing-small) var(--spacing-medium);
+        border-radius: 5px;
+        height: auto;
+    }
+
+    /* Caixa de opções */
     .options-box {
         position: fixed;
-        bottom: 60px; /* Altura do #controls */
+        bottom: 60px;
         top: auto;
         left: 0;
         width: 100%;
+        background-color: var(--primary-color);
+        padding: var(--spacing-medium);
+        box-shadow: var(--box-shadow);
+        z-index: 997;
         transform: translateY(100%);
+        transition: transform 0.3s ease;
     }
 
     .options-box.visible {
@@ -532,12 +429,26 @@ select {
         flex-direction: row;
         justify-content: space-around;
         align-items: center;
+        width: 100%;
+        gap: var(--spacing-medium);
         padding: var(--spacing-small);
     }
 
     .options-box .select-wrapper {
         flex: 1;
         max-width: 45%;
+        margin: 0 10px;
+    }
+
+    /* Texto e ícones */
+    .control-group .text {
+        display: none;
+    }
+
+    .control-group .icon {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
     }
 }
 
@@ -546,11 +457,12 @@ select {
     .sun-and-moon > .sun,
     .sun-and-moon > .sun-beams,
     .sun-and-moon > .moon > circle {
-        stroke-width: 1.5px; /* Reduz a largura da stroke para telas menores */
+        stroke-width: 1.5px;
     }
 
     #controls {
-        padding: 0; /* Remove o padding do container */
+        height: 45px;
+        padding: 0;
     }
 
     .control-group {
@@ -567,6 +479,12 @@ select {
         min-height: 44px;
     }
 
+    #controls .theme-toggle {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+    }
+
     .control-group .text {
         display: none;
     }
@@ -580,7 +498,6 @@ select {
     /* Ajusta o botão de opções para se alinhar com os outros */
     #options-btn {
         background-color: var(--primary-color-button);
-        border-radius: 0;
         padding: var(--spacing-small);
         height: 100%;
         margin: 0;
@@ -604,7 +521,7 @@ select {
 
     .options-box {
         position: fixed;
-        bottom: 60px;
+        bottom: 45px;
         top: auto;
         transform: translateY(100%);
     }
@@ -622,16 +539,6 @@ select {
     .options-box .select-wrapper {
         width: 100%;
         max-width: 100%;
-    }
-
-    .theme-toggle {
-        width: 44px;
-        height: 44px;
-    }
-
-    .theme-toggle > svg {
-        width: 24px;
-        height: 24px;
     }
 }
 
@@ -680,17 +587,6 @@ select {
     #execution-canvas {
         max-width: 100%;
         height: auto;
-    }
-
-    .theme-toggle {
-        width: 36px;
-        height: 36px;
-        padding: 6px;
-    }
-
-    .theme-toggle > svg {
-        width: 20px;
-        height: 20px;
     }
 }
 
