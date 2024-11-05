@@ -18,7 +18,15 @@ class StackInstructions {
 
     push(args) {
         const [src] = args;
+        if (!this.interpreter.registers.hasOwnProperty(src)) {
+            console.error(`Erro: Registrador ${src} não existe`);
+            return;
+        }
         const sp = this.interpreter.registers['SP'];
+        if (sp < 0) {
+            console.error('Stack Overflow: Pilha está cheia');
+            return;
+        }
         this.interpreter.memory[sp] = this.interpreter.registers[src];
         this.interpreter.registers['SP']--;
         console.log(`PUSH ${src}: ${this.interpreter.memory[sp]}`);
@@ -26,6 +34,14 @@ class StackInstructions {
 
     pop(args) {
         const [dest] = args;
+        if (!this.interpreter.registers.hasOwnProperty(dest)) {
+            console.error(`Erro: Registrador ${dest} não existe`);
+            return;
+        }
+        if (this.interpreter.registers['SP'] >= this.interpreter.memory.length - 1) {
+            console.error('Stack Underflow: Pilha está vazia');
+            return;
+        }
         this.interpreter.registers['SP']++;
         const sp = this.interpreter.registers['SP'];
         this.interpreter.registers[dest] = this.interpreter.memory[sp];
@@ -33,4 +49,4 @@ class StackInstructions {
     }
 }
 
-export default StackInstructions
+export default StackInstructions;

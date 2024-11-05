@@ -44,7 +44,8 @@ class Visualization {
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            stepSize: 1
+                            stepSize: Math.ceil(Math.max(...data) / 100),
+                            maxTicksLimit: 10
                         }
                     }
                 },

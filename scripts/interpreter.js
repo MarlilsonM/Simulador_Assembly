@@ -14,7 +14,7 @@ class Interpreter {
             r4: 0,
             r5: 0,
             r6: 0,
-            SP: 0, // Stack Pointer (ponteiro da pilha)
+            SP: 20, // Stack Pointer (ponteiro da pilha)
             PC: 0, // Program Counter (contador de programa)
             FLAGS: 0 // Registrador de flags para armazenar resultados de comparações e condições
         };
@@ -98,6 +98,19 @@ class Interpreter {
         console.log("Labels detectadas e posições:", labels);
         return labels;
     } 
+
+    updateStackUI() {
+        const stackElement = document.getElementById('memory-content');
+        if (stackElement) {
+            let stackContent = 'Stack:\n';
+            for (let i = this.registers.SP + 1; i < 1000; i++) {
+                if (this.memory[i] !== undefined) {
+                    stackContent += `[${i}]: ${this.memory[i]}\n`;
+                }
+            }
+            stackElement.textContent = stackContent;
+        }
+    }
 
     executeStep() {
         if (!this.memory || this.memory.length === 0) {
@@ -210,6 +223,7 @@ class Interpreter {
             case 'POP':
                 this.stack.execute(instruction, args);
                 this.updateOutput(`Instrução de pilha ${instruction} executada com argumentos: ${args.join(', ')}`);
+                this.updateStackUI();
                 break;
             case 'NOP':
                 console.log("NOP: Nenhuma operação realizada");
