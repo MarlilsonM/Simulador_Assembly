@@ -12,8 +12,19 @@ class LogicalInstructions {
             case 'JE': return this.je(args);
             case 'JNE': return this.jne(args);
             case 'JG': return this.jg(args);
+            case 'JGE': return this.jge(args);
+            case 'JZ': return this.jz(args);
+            case 'JNZ': return this.jnz(args);
+            case 'JC': return this.jc(args);
+            case 'JNC': return this.jnc(args);
+            case 'JO': return this.jo(args);
+            case 'JNO': return this.jno(args);
             case 'JL': return this.jl(args);
             case 'JLE': return this.jle(args);
+            case 'JBE': return this.jbe(args);
+            case 'JA': return this.ja(args);
+            case 'JAE': return this.jae(args);
+            case 'JB': return this.jb(args);
             case 'CALL': return this.call(args);
             case 'RET': return this.ret();
             default:
@@ -107,6 +118,43 @@ class LogicalInstructions {
         }
     }
 
+    jge(args) {
+        if (args.length !== 1) {
+            throw new Error('JGE requer um argumento (label)');
+        }
+
+        const [label] = args;
+        const shouldJump = this.interpreter.registers.FLAGS === 1 || !this.interpreter.registers.FLAG;
+
+        console.log('DEBUG JGE:', {
+            FLAGS: this.interpreter.registers.FLAGS,
+            FLAG: this.interpreter.registers.FLAG,
+            shouldJump: shouldJump
+        });
+
+        if (shouldJump) {
+            if (!this.interpreter.labels.hasOwnProperty(label)) {
+                throw new Error(`Label não encontrada: ${label}`);
+            }
+
+            const jumpToIndex = this.interpreter.labels[label];
+            this.interpreter.currentInstruction = jumpToIndex; // Salta para a label
+            return { 
+                instruction: 'JGE', 
+                args: [label], 
+                result: `Salto para ${label} (condição atendida)`,
+                nextInstruction: jumpToIndex
+            };
+        } else {
+            this.interpreter.currentInstruction++; // Continua para a próxima instrução
+            return { 
+                instruction: 'JGE', 
+                args: [label], 
+                result: 'Condição não atendida, continuando'
+            };
+        }
+    }
+
     jl(args) {
         if (args.length !== 1) {
             throw new Error('JL requer um argumento (label)');
@@ -153,6 +201,140 @@ class LogicalInstructions {
                 result: 'Condição não atendida, continuando'
             };
         }
+    }
+
+    jz(args) {
+        if (args.length !== 1) {
+            throw new Error('JZ requer um argumento (label)');
+        }
+        const [label] = args;
+        
+        if (this.interpreter.registers.FLAGS === 0) {
+            return this.jmp(args);
+        }
+        this.interpreter.currentInstruction++;
+        return { instruction: 'JZ', args, result: 'Condição não atendida, continuando' };
+    }
+
+    jnz(args) {
+        if (args.length !== 1) {
+            throw new Error('JNZ requer um argumento (label)');
+        }
+        const [label] = args;
+        
+        if (this.interpreter.registers.FLAGS !== 0) {
+            return this.jmp(args);
+        }
+        this.interpreter.currentInstruction++;
+        return { instruction: 'JNZ', args, result: 'Condição não atendida, continuando' };
+    }
+
+    jc(args) {
+        if (args.length !== 1) {
+            throw new Error('JC requer um argumento (label)');
+        }
+        const [label] = args;
+        
+        if (this.interpreter.registers.CARRY === 1) { // Supondo que você tenha uma flag de carry
+            return this.jmp(args);
+        }
+        this.interpreter.currentInstruction++;
+        return { instruction: 'JC', args, result: 'Condição não atendida, continuando' };
+    }
+
+    jnc(args) {
+        if (args.length !== 1) {
+            throw new Error('JNC requer um argumento (label)');
+        }
+        const [label] = args;
+        
+        if (this.interpreter.registers.CARRY === 0) { // Supondo que você tenha uma flag de carry
+            return this.jmp(args);
+        }
+        this.interpreter.currentInstruction++;
+        return { instruction: 'JNC', args, result: 'Condição não atendida, continuando' };
+    }
+
+    jo(args) {
+        if (args.length !== 1) {
+            throw new Error('JO requer um argumento (label)');
+        }
+        const [label] = args;
+        
+        if (this.interpreter.registers.OVERFLOW === 1) { // Supondo que você tenha uma flag de overflow
+            return this.jmp(args);
+        }
+        this.interpreter.currentInstruction++;
+        return { instruction: 'JO', args, result: 'Condição não atendida, continuando' };
+    }
+
+    jno(args) {
+        if (args.length !== 1) {
+            throw new Error('JNO requer um argumento (label)');
+        }
+        const [label] = args;
+        
+        if (this.interpreter.registers.OVERFLOW === 0) { // Supondo que você tenha uma flag de overflow
+            return this.jmp(args);
+        }
+        this.interpreter.currentInstruction++;
+        return { instruction: 'JNO', args, result: ' Condição não atendida, continuando' };
+    }
+
+    jbe(args) {
+        if (args.length !== 1) {
+            throw new Error('JBE requer um argumento (label)');
+        }
+        const [label] = args;
+
+        // JBE salta se FLAGS == 0 (zero) ou CARRY == 1 (menor ou igual)
+        if (this.interpreter.registers.FLAGS === 0 || this.interpreter.registers.CARRY === 1) {
+            return this.jmp(args);
+        }
+        this.interpreter.currentInstruction++;
+        return { instruction: 'JBE', args, result: 'Condição não atendida, continuando' };
+    }
+
+    ja(args) {
+        if (args.length !== 1) {
+            throw new Error('JA requer um argumento (label)');
+        }
+        const [label] = args;
+
+        // JA salta se FLAGS > 0 e CARRY == 0 (maior)
+        if (this.interpreter.registers.FLAGS > 0 && this.interpreter.registers.CARRY === 0) {
+            return this.jmp(args);
+        }
+        this.interpreter.currentInstruction++;
+        return { instruction: 'JA', args, result: 'Condição não atendida, continuando' };
+    }
+
+    jae(args) {
+        if (args.length !== 1) {
+            throw new Error('JAE requer um argumento (label)');
+        }
+        const [label] = args;
+
+        // JAE salta se FLAGS >= 0 ou CARRY == 0 (maior ou igual)
+        if (this.interpreter.registers.FLAGS >= 0 || this.interpreter.registers.CARRY === 0) {
+            return this.jmp(args);
+        }
+        this.interpreter.currentInstruction++;
+        return { instruction: 'JAE', args, result: 'Condição não atendida, continuando' };
+    }
+
+    jb(args) {
+        if (args.length !== 1) {
+            throw new Error('JB requer um argumento (label)');
+        }
+        const [label] = args;
+
+        // JB salta se CARRY == 1 (menor)
+        if (this.interpreter.registers.CARRY === 1) {
+            return this.jmp(args);
+        }
+        this.interpreter.currentInstruction++;
+        return { instruction: 'JB', args, result: 'Condição não atendida, continuando' };
     }
 
     call(args) {

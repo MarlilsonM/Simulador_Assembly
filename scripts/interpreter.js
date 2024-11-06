@@ -360,6 +360,21 @@ class Interpreter {
         try {
             this.validateArgs(instruction, args);
             const result = this.executeInstruction(instruction, args);
+            
+            // Adicione logs aqui para verificar o estado dos registradores
+            console.log('Estado dos registradores após executar:', {
+                r0: this.registers.r0,
+                r1: this.registers.r1,
+                r2: this.registers.r2,
+                r3: this.registers.r3,
+                r4: this.registers.r4,
+                r5: this.registers.r5,
+                r6: this.registers.r6,
+                SP: this.registers.SP,
+                PC: this.registers.PC,
+                FLAGS: this.registers.FLAGS,
+                FLAG: this.registers.FLAG
+            });
 
             console.log('DEBUG - Após execução:', {
                 instruction,
@@ -368,7 +383,12 @@ class Interpreter {
                 registers: { ...this.registers }
             });
             
-            const isJump = ['JMP', 'JE', 'JNE', 'JG', 'JL', 'JLE'].includes(instruction);
+            const isJump = [
+                'JMP', 'JE', 'JNE', 'JG', 'JGE', 
+                'JL', 'JLE', 'JZ', 'JNZ', 'JC', 
+                'JNC', 'JO', 'JNO', 'JB', 'JBE', 
+                'JA', 'JAE'
+            ].includes(instruction);
             
             if (isJump && result && result.nextInstruction !== undefined) {
                 this.currentInstruction = result.nextInstruction;
@@ -417,8 +437,19 @@ class Interpreter {
             JE: 1,
             JNE: 1,
             JG: 1,
+            JGE: 1,
             JL: 1,
             JLE: 1,
+            JZ: 1, 
+            JNZ: 1,
+            JC: 1, 
+            JNC: 1,
+            JO: 1, 
+            JNO: 1,
+            JB: 1, 
+            JBE: 1,
+            JA: 1, 
+            JAE: 1,
             PUSH: 1,
             POP: 1,
             CALL: 1,
@@ -475,8 +506,19 @@ class Interpreter {
                 case 'JE':
                 case 'JNE':
                 case 'JG':
+                case 'JGE':
+                case 'JZ':
+                case 'JNZ':
+                case 'JC':
+                case 'JNC':
+                case 'JO':
+                case 'JNO':
                 case 'JL':
                 case 'JLE':
+                case 'JBE':
+                case 'JA':
+                case 'JAE':
+                case 'JB':
                 case 'CALL':
                 case 'RET':
                     result = this.logical.execute(instruction, args);

@@ -258,8 +258,15 @@ JNE fib_loop   ; Continua se não terminou
 END
 
 ### Exemplo 9: Ordenação Bubble Sort
+; Inicialização do array
+MOV [100], 5   ; Primeiro elemento
+MOV [101], 3   ; Segundo elemento
+MOV [102], 8   ; Terceiro elemento
+MOV [103], 1   ; Quarto elemento
+MOV [104], 4   ; Quinto elemento
+
 ; Bubble Sort de um array
-MOV r0, 100    ; Endereço base
+MOV r0, 100    ; Endereço base do array
 MOV r1, 5      ; Tamanho do array
 SUB r1, 1      ; Tamanho - 1 para comparações
 
@@ -268,23 +275,22 @@ MOV r2, 0      ; Índice interno
 MOV r3, 0      ; Flag de troca
 
 inner_loop:
-LOAD r4, [r0+r2]     ; Elemento atual
-LOAD r5, [r0+r2+1]   ; Próximo elemento
+LOAD r4, [r0 + r2]     ; Elemento atual
+LOAD r5, [r0 + r2 + 1] ; Próximo elemento
 CMP r4, r5
-JLE no_swap          ; Pula se já estiver ordenado
+JLE no_swap            ; Pula se já estiver ordenado
 
 ; Troca elementos
-STORE [r0+r2], r5
-STORE [r0+r2+1], r4
-MOV r3, 1            ; Marca que houve troca
+STORE [r0 + r2], r5    ; Armazena o próximo elemento na posição atual
+STORE [r0 + r2 + 1], r4 ; Armazena o elemento atual na próxima posição
+MOV r3, 1              ; Marca que houve troca
 
 no_swap:
-ADD r2, 1            ; Próximo índice
-CMP r2, r1           ; Compara com limite
-JNE inner_loop       ; Continua loop interno
-
-CMP r3, 0            ; Verifica se houve trocas
-JNE outer_loop       ; Continua se houve trocas
+ADD r2, 1              ; Próximo índice
+CMP r2, r1             ; Compara com limite
+JNE inner_loop         ; Continua loop interno
+CMP r3, 0              ; Verifica se houve trocas
+JNE outer_loop         ; Continua se houve trocas
 END
 
 ### Exemplo 10: Multiplicação de Matrizes usando SIMD
