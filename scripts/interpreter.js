@@ -109,15 +109,24 @@ class Interpreter {
             let instructionsHtml = '';
             for (let i = 0; i < this.programLength; i++) {
                 const instruction = this.memory[i];
-                if (instruction === 'END' || instruction === 'END:' || 
-                    instruction === '.END' || instruction === 'HALT') {
-                    instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction end">${instruction}</span></div>`;
-                    break;
+                if (!instruction) continue; // Pula instruções undefined ou null
+    
+                if (typeof instruction === 'object' && instruction.type === 'label') {
+                    instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction label">${instruction.name}:</span></div>`;
+                } else if (typeof instruction === 'string') {
+                    if (instruction === 'END' || instruction === 'END:' || 
+                        instruction === '.END' || instruction === 'HALT') {
+                        instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction end">${instruction}</span></div>`;
+                        break;
+                    }
+                    const parts = instruction.split(' ');
+                    const opcode = parts[0];
+                    const args = parts.slice(1).join(' ');
+                    instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction"><span class="opcode">${opcode}</span> <span class="args">${args}</span></span></div>`;
+                } else {
+                    // Se não for uma string, apenas exibe o valor
+                    instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction">${instruction}</span></div>`;
                 }
-                const parts = instruction.split(' ');
-                const opcode = parts[0];
-                const args = parts.slice(1).join(' ');
-                instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction"><span class="opcode">${opcode}</span> <span class="args">${args}</span></span></div>`;
             }
             instructionsContent.innerHTML = instructionsHtml;
     
@@ -144,25 +153,48 @@ class Interpreter {
 
     loadProgram(program) {
         if (!program || program.trim() === '') {
-                        return;
+            return;
         }
         
         // Reset inicial
         this.reset();
         
         // Carrega o novo programa, removendo comentários e linhas vazias
-        const lines = program.split('\n')
+        let lines = program.split('\n')
             .map(line => line.split(';')[0].trim())
             .filter(line => line !== '' && line !== '0');
-        
-        this.programLength = lines.length;
         
         // Armazena as linhas do programa no início da memória
         lines.forEach((line, index) => {
             this.memory[index] = line;
         });
         
-        this.labels = this.parseLabels(this.programLength);
+        // Processa as labels
+        this.labels = this.parseLabels(lines.length);
+        
+        // Remove linhas vazias após processamento das labels
+        this.memory = this.memory.filter(line => line !== '' && line !== undefined);
+    
+        // Calcula o comprimento real do programa
+        let lastValidIndex = -1;
+        let maxLabelIndex = -1;
+        
+        // Encontra o maior índice usado por uma label
+        for (let label in this.labels) {
+            maxLabelIndex = Math.max(maxLabelIndex, this.labels[label]);
+        }
+        
+        // Procura a última instrução válida, incluindo instruções após as labels
+        for (let i = 0; i <= Math.max(this.memory.length - 1, maxLabelIndex + 1); i++) {
+            const line = this.memory[i];
+            if (line && (typeof line === 'string' || (typeof line === 'object' && line.type === 'label'))) {
+                lastValidIndex = i;
+            }
+        }
+        
+        // Define o tamanho do programa como a última instrução válida + 1
+        this.programLength = lastValidIndex + 1;
+        
         this.updateMemoryUI();
     }
 
@@ -194,19 +226,14 @@ class Interpreter {
         for (let index = 0; index < programLength; index++) {
             const line = this.memory[index];
             if (typeof line === 'string') {
-                const labelMatch = line.match(/^(\w+):\s*(.*)$/);
+                const labelMatch = line.match(/^(\w+):/);
                 if (labelMatch) {
                     const label = labelMatch[1];
-                    labels[label] = index;  // Associa a label à linha correspondente
-                    // Substitui a linha com apenas a instrução, se houver
-                    if (labelMatch[2].trim()) {
-                        this.memory[index] = labelMatch[2].trim();
-                    } else {
-                        this.memory[index] = 'NOP'; // Define uma NOP se não houver instrução após a label
-                    }
+                    labels[label] = index;
+                    // Não remova a linha da memória, apenas marque-a como uma label
+                    this.memory[index] = { type: 'label', name: label };
                 }
-            } else {
-                            }
+            }
         }
         return labels;
     }
@@ -270,39 +297,43 @@ class Interpreter {
     }
 
     executeStep() {
+    
         if (!this.memory || this.programLength === 0) {
             this.updateOutput("Nenhum programa carregado.", "warning");
             return false;
         }
-
+    
         if (this.debugger && this.debugger.hasBreakpoint(this.currentInstruction)) {
             this.stop();
             this.updateOutput("Breakpoint encontrado na linha " + (this.currentInstruction + 1), "info");
             return false;
         }
-
-        if (!this.memory || this.programLength === 0) {
-                        return false;
-        }
     
-        const currentLine = this.memory[this.currentInstruction];
-    
+        // Verifica se chegou ao fim do programa
         if (this.currentInstruction >= this.programLength) {
-                        this.stop();
+            this.stop();
             this.clearHighlight();
-            this.updateOutput('Programa finalizado');
+            this.updateOutput('Programa finalizado com sucesso.', 'success');
             return false;
         }
     
+        const currentLine = this.memory[this.currentInstruction];
+
+        // Se a linha atual for uma label, pule para a próxima instrução
+        if (currentLine && currentLine.type === 'label') {
+            this.currentInstruction++;
+            return true;
+        }
+    
         if (!currentLine || typeof currentLine !== 'string') {
-                        this.currentInstruction++;
+            this.currentInstruction++;
             return true;
         }
     
         let line = currentLine.split(';')[0].trim();
     
         if (line === '' || this.isEndOfProgram(line)) {
-                        this.stop();
+            this.stop();
             this.clearHighlight();
             this.updateOutput('Programa finalizado');
             return false;
@@ -315,7 +346,7 @@ class Interpreter {
         const match = line.match(instructionRegex);
         
         if (!match) {
-                        this.currentInstruction++;
+            this.currentInstruction++;
             return true;
         }
     
@@ -328,45 +359,46 @@ class Interpreter {
     
         try {
             this.validateArgs(instruction, args);
-            this.executeInstruction(instruction, args);
-        } catch (error) {
-                        this.updateOutput(`Erro: ${error.message}`);
-            this.stop();
-            return false;
-        }
-    
-        if (!['JMP', 'JE', 'JNE', 'JG', 'JL', 'CALL', 'RET'].includes(instruction)) {
-            this.currentInstruction++;
-        }
+            const result = this.executeInstruction(instruction, args);
 
-        if (this.currentInstruction >= this.programLength) {
-            this.stop();
-            this.clearHighlight();
-            this.updateOutput('Programa finalizado com sucesso.', 'success');
-            return false;
-        }
-
-        try {
-            this.validateArgs(instruction, args);
-            this.executeInstruction(instruction, args);
-            this.updateOutput(`Executada instrução: ${instruction} ${args.join(', ')}`, 'info');
+            console.log('DEBUG - Após execução:', {
+                instruction,
+                args,
+                result,
+                registers: { ...this.registers }
+            });
+            
+            const isJump = ['JMP', 'JE', 'JNE', 'JG', 'JL', 'JLE'].includes(instruction);
+            
+            if (isJump && result && result.nextInstruction !== undefined) {
+                this.currentInstruction = result.nextInstruction;
+            } else {
+                this.currentInstruction++;
+            }
+        
+            this.updateUI();
+            this.updateMemoryUI();
+            return true;
         } catch (error) {
+            console.error('DEBUG - Error in executeStep:', error);
             this.updateOutput(`Erro: ${error.message}`, 'error');
             this.stop();
             return false;
         }
-    
-        this.updateUI();
-        this.updateMemoryUI();
-        return true;
     }
     
     isEndOfProgram(line) {
+        // Verifica se line é undefined, null, ou não é uma string
+        if (line == null || typeof line !== 'string') {
+            return true; // Considera como fim do programa se a linha não for válida
+        }
+    
         const trimmedLine = line.trim().toUpperCase();
+        
         // Expande a lista de possíveis marcadores de fim de programa
         return ['END:', 'END', 'END_OF_PROGRAM', 'HALT', '.END'].includes(trimmedLine) || 
                trimmedLine.startsWith('END ') || 
-               line === '';
+               trimmedLine === '';
     }
 
     validateArgs(instruction, args) {
@@ -386,6 +418,7 @@ class Interpreter {
             JNE: 1,
             JG: 1,
             JL: 1,
+            JLE: 1,
             PUSH: 1,
             POP: 1,
             CALL: 1,
@@ -415,51 +448,69 @@ class Interpreter {
     }
     
     executeInstruction(instruction, args) {
-        const instructionMap = {
-            MOV: () => this.dataMovement.execute('MOV', args),
-            LOAD: () => this.dataMovement.execute('LOAD', args),
-            STORE: () => this.dataMovement.execute('STORE', args),
-            ADD: () => this.arithmetic.execute('ADD', args),
-            SUB: () => this.arithmetic.execute('SUB', args),
-            MUL: () => this.arithmetic.execute('MUL', args),
-            DIV: () => this.arithmetic.execute('DIV', args),
-            AND: () => this.arithmetic.execute('AND', args),
-            OR: () => this.arithmetic.execute('OR', args),
-            XOR: () => this.arithmetic.execute('XOR', args),
-            NOT: () => this.arithmetic.execute('NOT', args),
-            CMP: () => this.arithmetic.execute('CMP', args),
-            JMP: () => this.logical.execute('JMP', args),
-            JE: () => this.logical.execute('JE', args),
-            JNE: () => this.logical.execute('JNE', args),
-            JG: () => this.logical.execute('JG', args),
-            JL: () => this.logical.execute('JL', args),
-            CALL: () => this.logical.execute('CALL', args),
-            RET: () => this.logical.execute('RET', args),
-            PUSH: () => this.stack.execute('PUSH', args),
-            POP: () => this.stack.execute('POP', args),
-            DUP: () => this.stack.execute('DUP', args),
-            SWAP: () => this.stack.execute('SWAP', args),
-            ROT: () => this.stack.execute('ROT', args),
-            NOP: () => console.log("NOP: Nenhuma operação realizada"),
-            VADD: () => this.simd.execute('VADD', args),
-            VMUL: () => this.simd.execute('VMUL', args),
-            VDIV: () => this.simd.execute('VDIV', args),
-            VLOAD: () => this.simd.execute('VLOAD', args),
-            VSTORE: () => this.simd.execute('VSTORE', args),
-        };
-    
         try {
-            this.validateArgs(instruction, args);
-            const execute = instructionMap[instruction.toUpperCase()];
-            if (execute) {
-                execute();
-                this.updateOutput(`Instrução ${instruction} executada com argumentos: ${args.join(', ')}`);
-            } else {
-                throw new Error(`Instrução desconhecida: ${instruction}`);
+            let result;
+            console.log(`DEBUG - Executing: ${instruction} ${args.join(', ')}`);
+            switch (instruction.toUpperCase()) {
+                case 'NOP':
+                    result = { instruction: 'NOP', args: [], result: 'No operation' };
+                    break;
+                case 'ADD':
+                case 'SUB':
+                case 'MUL':
+                case 'DIV':
+                case 'AND':
+                case 'OR':
+                case 'XOR':
+                case 'NOT':
+                case 'CMP':
+                    result = this.arithmetic.execute(instruction, args);
+                    break;
+                case 'MOV':
+                case 'LOAD':
+                case 'STORE':
+                    result = this.dataMovement.execute(instruction, args);
+                    break;
+                case 'JMP':
+                case 'JE':
+                case 'JNE':
+                case 'JG':
+                case 'JL':
+                case 'JLE':
+                case 'CALL':
+                case 'RET':
+                    result = this.logical.execute(instruction, args);
+                    break;
+                case 'PUSH':
+                case 'POP':
+                case 'DUP':
+                case 'SWAP':
+                case 'ROT':
+                    result = this.stack.execute(instruction, args);
+                    break;
+                case 'VADD':
+                case 'VMUL':
+                case 'VDIV':
+                case 'VLOAD':
+                case 'VSTORE':
+                    result = this.simd.execute(instruction, args);
+                    break;
+                default:
+                    throw new Error(`Instrução desconhecida: ${instruction}`);
             }
+    
+            if (result) {
+                if (typeof result === 'object' && 'instruction' in result) {
+                    this.updateOutput(`${result.instruction} ${result.args.join(', ')} = ${result.result}`, 'info');
+                } else {
+                    this.updateOutput(`Executada instrução: ${instruction} ${args.join(', ')}`, 'info');
+                }
+            }
+    
+            return result; // Retorna o resultado em vez de true
         } catch (error) {
-                        this.updateOutput(`Erro: ${error.message}`);
-            this.running = false;
+            this.updateOutput(`Erro na execução de ${instruction}: ${error.message}`, 'error');
+            throw error; // Propaga o erro em vez de retornar false
         }
     }
 
@@ -473,30 +524,32 @@ class Interpreter {
     
     run(speed) {
         if (!this.memory || this.programLength === 0) {
-                        return false;
+            return false;
         }
     
         this.running = true;
         const interval = speed === 'fast' ? 100 : speed === 'medium' ? 500 : 1000;
         
-        const intervalId = setInterval(() => {
+        const runStep = () => {
             if (!this.running) {
-                clearInterval(intervalId);
                 return;
             }
             
             if (this.debugger && this.debugger.shouldPause()) {
                 this.stop();
-                clearInterval(intervalId);
                 return;
             }
             
             const shouldContinue = this.executeStep();
             
-            if (!shouldContinue || !this.running) {
-                clearInterval(intervalId);
+            if (shouldContinue && this.running) {
+                setTimeout(runStep, interval);
+            } else {
+                this.stop();
             }
-        }, interval);
+        };
+    
+        runStep();
     }
 
     stop() {

@@ -8,6 +8,14 @@ class Visualization {
             throw new Error('Canvas elements not found.');
         }
 
+        this.canvasVectorRegisters = document.getElementById('execution-canvas-vector-registers');
+        if (!this.canvasVectorRegisters) {
+            throw new Error('Canvas element for vector registers not found.');
+        }
+
+        this.ctxVectorRegisters = this.canvasVectorRegisters.getContext('2d');
+        this.chartVectorRegisters = null;
+
         this.ctxRegisters = this.canvasRegisters.getContext('2d');
         this.ctxSP = this.canvasSP.getContext('2d');
         
@@ -53,10 +61,96 @@ class Visualization {
             this.history.shift();
         }
 
+        this.updateVectorRegistersChart();
         this.updateRegistersChart(regularLabels, regularData);
         this.updateSPChart();
 
         this.updateLegend();
+    }
+
+    updateVectorRegistersChart() {
+        if (this.chartVectorRegisters) {
+            this.chartVectorRegisters.destroy();
+        }
+
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        const textColor = isDarkMode ? '#FFFFFF' : '#000000';
+        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const backgroundColor = isDarkMode ? '#1e1e1e' : '#FFF';
+
+        const labels = ['v0', 'v1', 'v2', 'v3'];
+        const datasets = [];
+
+        for (let i = 0; i < 4; i++) {
+            const values = Array.from(this.interpreter.vectorRegisters[`v${i}`]);
+            datasets.push({
+                label: `v${i}`,
+                data: values,
+                backgroundColor: `rgba(${50 + i * 50}, ${100 + i * 40}, ${150 + i * 30}, 0.7)`,
+                borderColor: `rgba(${50 + i * 50}, ${100 + i * 40}, ${150 + i * 30}, 1)`,
+                borderWidth: 1
+            });
+        }
+
+        this.chartVectorRegisters = new Chart(this.ctxVectorRegisters, {
+            type: 'bar',
+            data: {
+                labels: ['0', '1', '2', '3'],
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Valor',
+                            color: textColor,
+                            font: { weight: 'bold' }
+                        },
+                        ticks: {
+                            color: textColor,
+                            font: { weight: 'bold' }
+                        },
+                        grid: { color: gridColor }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Índice do Vetor',
+                            color: textColor,
+                            font: { weight: 'bold' }
+                        },
+                        ticks: {
+                            color: textColor,
+                            font: { weight: 'bold' }
+                        },
+                        grid: { color: gridColor }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: textColor,
+                            font: { weight: 'bold' }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+                        titleColor: textColor,
+                        bodyColor: textColor,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}[${context.dataIndex}] = ${context.raw.toFixed(2)}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        this.ctxVectorRegisters.canvas.style.backgroundColor = backgroundColor;
     }
 
     updateRegistersChart(labels, data) {
@@ -279,6 +373,16 @@ class Visualization {
                 <div class="legend-item" style="${legendStyle}">
                     <span class="legend-color" style="background: rgba(0, 123, 255, 0.7)"></span>
                     <span>Valores dos Registradores</span>
+                </div>
+            `;
+        }
+
+        const legendVectorRegisters = this.canvasVectorRegisters.parentNode.querySelector('.visualization-legend');
+        if (legendVectorRegisters) {
+            legendVectorRegisters.innerHTML = `
+                <div class="legend-item" style="${legendStyle}">
+                    <span class="legend-color" style="background: rgba(100, 150, 200, 0.7)"></span>
+                    <span>Valores dos Registradores Vetoriais</span>
                 </div>
             `;
         }
