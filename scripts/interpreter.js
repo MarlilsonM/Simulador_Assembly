@@ -71,6 +71,10 @@ class Interpreter {
         regr6Element.textContent = (this.registers.r6 || 0).toString(16).padStart(2, '0').toUpperCase();
         regSPElement.textContent = (this.registers.SP || 0).toString(16).padStart(2, '0').toUpperCase();
         
+        // Atualiza o SP em formato hexadecimal
+        regSPElement.textContent = '0x' + this.registers.SP.toString(16).padStart(3, '0').toUpperCase();
+
+
         // Atualiza as flags
         flagZElement.textContent = this.registers.FLAGS === 0 ? 'TRUE' : 'FALSE';
         flagFElement.textContent = this.registers.FLAG ? 'TRUE' : 'FALSE';
@@ -258,7 +262,11 @@ class Interpreter {
         if (options.memory) this.updateMemoryUI();
         if (options.stack) this.updateStackUI();
         
-        if (window.visualization) window.visualization.updateVisualization();
+        if (window.visualizationInstance) {
+            window.visualizationInstance.updateVisualization();
+        } else {
+            console.log('Instância de visualização não encontrada em updateUI');
+        }
     }
 
     executeStep() {

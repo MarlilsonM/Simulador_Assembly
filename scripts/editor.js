@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(style);
 
     setTimeout(() => {
-        console.log('CodeMirror inicializado');
         window.dispatchEvent(new Event('editorReady'));
     }, 100);
 

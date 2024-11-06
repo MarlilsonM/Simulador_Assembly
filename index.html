@@ -112,7 +112,7 @@
                                 <td id="reg-r4">00</td>
                                 <td id="reg-r5">00</td>
                                 <td id="reg-r6">00</td>
-                                <td id="reg-SP">00</td>
+                                <td id="reg-SP" class="sp-register">00</td>
                                 <td id="flag-Z">FALSE</td>
                                 <td id="flag-F">FALSE</td>
                             </tr>
@@ -160,7 +160,12 @@
     
         <section id="visualization">
             <h2>Visualização da Execução</h2>
-            <canvas id="execution-canvas" width="600" height="400" aria-label="Visualização gráfica da execução"></canvas>
+            <div class="chart-container">
+                <canvas id="execution-canvas-registers" width="200" height="50" aria-label="Visualização gráfica dos registradores"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="execution-canvas-sp" width="200" height="50" aria-label="Visualização gráfica do Stack Pointer"></canvas>
+            </div>
         </section>
     </main>
 

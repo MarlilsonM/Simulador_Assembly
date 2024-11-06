@@ -6,35 +6,41 @@ document.addEventListener('DOMContentLoaded', () => {
     let isRunning = false;
     let initialized = false;
 
-    window.addEventListener('editorReady', () => {
-        if (initialized) return;
+    try {
+        // Primeiro, instancie o interpretador
+        window.interpreter = new Interpreter();
+        
+        // Agora, instancie o debugger, passando o interpretador como parâmetro
+        window.debugger = new Debugger(window.interpreter);
+        window.interpreter.debugger = window.debugger;
+
+        // Instanciar a visualização e passar o interpretador como parâmetro
+        if (window.interpreter) {
+            window.visualizationInstance = new Visualization(window.interpreter);
+        } else {
+            console.error('Interpretador não encontrado ao criar Visualization');
+        }
+        
+        // Inicialize o debugger
+        window.debugger.initialize();
+        
         initialized = true;
+    } catch (error) {
+        console.error('Erro durante a inicialização:', error);
+    }
 
-        console.log('Evento editorReady recebido');
+    window.addEventListener('editorReady', () => {
+});
 
-        try {
-            // Primeiro, instancie o interpretador
-            console.log('Inicializando interpretador');
-            window.interpreter = new Interpreter();
-            
-            // Agora, instancie o debugger, passando o interpretador como parâmetro
-            console.log('Inicializando debugger');
-            window.debugger = new Debugger(window.interpreter);
-            window.interpreter.debugger = window.debugger;
-
-            // Instanciar a visualização e passar o interpretador como parâmetro
-            console.log('Inicializando visualização');
-            window.visualization = new Visualization(window.interpreter);
-            
-            // Inicialize o debugger
-            console.log('Chamando initialize do debugger');
-            window.debugger.initialize();
-            
-            console.log('Inicialização completa');
-        } catch (error) {
-            console.error('Erro durante a inicialização:', error);
+    document.addEventListener('themeChanged', () => {
+        if (window.visualizationInstance && typeof window.visualizationInstance.updateVisualization === 'function') {
+            window.visualizationInstance.updateVisualization();
+        } else {
+            console.log('Visualization não encontrada ou método updateVisualization não existe');
+            console.log('window.visualizationInstance:', window.visualizationInstance);
         }
     });
+    
 
     // Controle de execução do código
     document.getElementById('play-btn').addEventListener('click', () => {
@@ -87,10 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('reset-btn').addEventListener('click', () => {
-        if (!window.interpreter || !window.visualization) return;
+        if (!window.interpreter || !window.visualizationInstance) return;
         window.interpreter.reset();
         isRunning = false;  // Permite nova execução após resetar
-        window.visualization.updateVisualization();  // Atualizar a visualização
+        window.visualizationInstance.updateVisualization();  // Atualizar a visualização
     });
 
     // Controle de mudanças de velocidade e largura de bits
