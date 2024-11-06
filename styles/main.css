@@ -77,6 +77,27 @@ body {
     --output-success-color: #6a9955;
 }
 
+.CodeMirror-gutters {
+    cursor: pointer;
+    border-right: 1px solid #ddd;
+    background-color: #f7f7f7;
+    padding-right: 5px;
+}
+
+.breakpoint {
+    color: #822;
+    font-size: 16px;
+    padding: 0 5px;
+}
+
+.CodeMirror-gutter.breakpoints {
+    width: 20px;
+}
+
+.highlighted-line {
+    background-color: #e6f3ff;
+}
+
 /* Layout */
 #controls {
     display: flex;
@@ -238,6 +259,40 @@ body {
     z-index: 1;
 }
 
+.instruction-line, .data-line {
+    font-family: monospace;
+    line-height: 1.4;
+    margin-bottom: 2px;
+}
+
+.line-number {
+    color: var(--address-color);
+    display: inline-block;
+}
+
+.instruction .opcode {
+    color: var(--instruction-color);
+    font-weight: bold;
+}
+
+.instruction {
+    color: var(--instruction-color);
+}
+
+.instruction .args {
+    color: var(--data-color);
+    margin-left: 8px;
+}
+
+.instruction.end {
+    color: #ff4444;
+    font-weight: bold;
+}
+
+.data-value {
+    color: var(--data-color);
+}
+
 #instructions-content,
 #data-content {
     font-family: monospace;
@@ -245,19 +300,6 @@ body {
     word-wrap: break-word;
     max-height: 100px;
     overflow-y: auto;
-}
-
-.address {
-    color: var(--address-color);
-    margin-right: 5px;
-}
-
-.instruction {
-    color: var(--instruction-color);
-}
-
-.data {
-    color: var(--data-color);
 }
 
 /* Estilização da barra de rolagem */
@@ -403,12 +445,19 @@ select {
 }
 
 /* Painéis */
-#debug-panel, #editor-container, #visualization {
+#editor-container, #visualization {
     background-color: var(--background-color);
     border-radius: 12px;
     box-shadow: var(--box-shadow);
     padding: var(--spacing-medium);
     margin-bottom: 0;
+}
+
+#debug-panel {
+    background-color: var(--output-background-color);
+    color: var(--output-text-color);
+    border-radius: 5px;
+    height: auto;
 }
 
 #output-panel {
@@ -428,7 +477,7 @@ select {
     flex-shrink: 0;
 }
 
-.output-header h2 {
+.output-header h2, #debug-panel h2 {
     margin: 0;
 }
 
@@ -700,12 +749,6 @@ select {
         width: 100%;
         height: 32px;
         padding: 4px 8px;
-    }
-
-    #add-breakpoint-btn {
-        padding: var(--spacing-small) var(--spacing-medium);
-        border-radius: 5px;
-        height: auto;
     }
 
     /* Caixa de opções */

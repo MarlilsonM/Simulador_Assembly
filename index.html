@@ -155,15 +155,6 @@
                         </div>
                     </div>
                 </div>
-                <div id="breakpoints">
-                    <h3>Breakpoints</h3>
-                    <ul id="breakpoints-list" aria-label="Lista de breakpoints"></ul>
-                    <div class="breakpoint-input-container">
-                        <label for="breakpoint-input" class="visually-hidden">Número da linha para breakpoint</label>
-                        <input type="number" id="breakpoint-input" placeholder="Nº da linha" aria-labelledby="breakpoint-label">
-                        <button id="add-breakpoint-btn" aria-label="Adicionar Breakpoint">Adicionar Breakpoint</button>
-                    </div>
-                </div>
             </aside>
         </section> 
     
@@ -177,22 +168,23 @@
         <p>&copy; 2023 Simulador de Assembly. Todos os direitos reservados.</p>
     </footer>
 
-    <!-- Scripts -->
-    <script src="scripts/script.js"></script>
-    <script src="scripts/theme-toggle.js"></script>
-    <script src="codemirror/codemirror.js"></script>
-    <script src="codemirror/mode/assembly/assembly.js"></script>
-    <script src="codemirror/addon/edit/matchbrackets.js"></script>
-    <script src="codemirror/addon/hint/show-hint.js"></script>
+    <!-- CodeMirror e seus componentes -->
+    <script src="codemirror/codemirror.js" defer></script>
+    <script src="codemirror/mode/assembly/assembly.js" defer></script>
+    <script src="codemirror/addon/edit/matchbrackets.js" defer></script>
+    <script src="codemirror/addon/hint/show-hint.js" defer></script>
+
+    <!-- Chart.js -->
     <script type="module">
-        import { Chart, registerables } from 'https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.js';
+        import { Chart, registerables } from 'https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.min.js';
         Chart.register(...registerables);
         window.Chart = Chart;
     </script>
-    <script src="scripts/editor.js"></script>
-    <script type="module" src="scripts/interpreter.js"></script>
-    <script type="module" src="scripts/debugger.js"></script>
-    <script type="module" src="scripts/visualization.js"></script>
+
+    <!-- Scripts personalizados -->
+    <script src="scripts/editor.js" defer></script>
+    <script src="scripts/script.js" defer></script>
+    <script src="scripts/theme-toggle.js" defer></script>
     <script type="module" src="scripts/main.js"></script>
 </body>
 </html>

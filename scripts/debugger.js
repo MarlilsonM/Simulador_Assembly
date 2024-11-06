@@ -1,151 +1,57 @@
 class Debugger {
     constructor(interpreter) {
+        console.log('Debugger sendo construído');
         this.interpreter = interpreter;
         this.breakpoints = new Set();
-
-        const addBreakpointBtn = document.getElementById('add-breakpoint-btn');
-        const breakpointInput = document.getElementById('breakpoint-input');
-
-        if (addBreakpointBtn && breakpointInput) {
-            addBreakpointBtn.addEventListener('click', () => {
-                const lineNumber = parseInt(breakpointInput.value);
-                if (!isNaN(lineNumber)) {
-                    this.addBreakpoint(lineNumber);
-                }
-            });
-        }
-    }
-
-    addBreakpoint(lineNumber) {
-        this.breakpoints.add(lineNumber);
-        this.updateBreakpointsList();
-            }
-
-    removeBreakpoint(lineNumber) {
-        this.breakpoints.delete(lineNumber);
-        this.updateBreakpointsList();
-            }
-
-    updatePanel() {
-        const instructionsContent = document.getElementById('instructions-content');
-        const dataContent = document.getElementById('data-content');
+    }    
         
-        if (!instructionsContent || !dataContent) {
+    initialize() {
+        console.log('Inicializando Debugger');
+    
+        if (!window.editor) {
+            console.error('Editor não está disponível');
             return;
         }
         
-        // Atualiza instruções
-        let instructionsHtml = '';
-        for (let i = 0; i < this.interpreter.programLength; i++) {
-            const instruction = this.interpreter.memory[i];
-            if (instruction === 'END' || instruction === 'END:' || 
-                instruction === '.END' || instruction === 'HALT') {
-                instructionsHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
-                break;
-            }
-            instructionsHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
-        }
-        instructionsContent.innerHTML = instructionsHtml;
-        
-        // Atualiza dados
-        let dataHtml = '';
-        let hasData = false;
-        for (let i = this.interpreter.programLength; i < this.interpreter.memory.length; i++) {
-            if (this.interpreter.memory[i] !== 0 && this.interpreter.memory[i] !== '0') {
-                dataHtml += `<div><span class="address">${i}:</span><span class="data">${this.interpreter.memory[i]}</span></div>`;
-                hasData = true;
-            }
-        }
-        
-        if (!hasData) {
-            dataHtml = '<div>(Sem dados)</div>';
-        }
-        dataContent.innerHTML = dataHtml;
+        // Adiciona evento de clique na gutter do CodeMirror
+        console.log('Adicionando evento gutterClick');
+        window.editor.on("gutterClick", (cm, line, gutter) => {
+            console.log('Gutter clicado:', line, gutter);
+            // Permite cliques em qualquer gutter para adicionar breakpoints
+            this.toggleBreakpoint(line + 1);
+        });
     }
 
-    updatePanel() {
-        const instructionsContent = document.getElementById('instructions-content');
-        const dataContent = document.getElementById('data-content');
+    toggleBreakpoint(lineNumber) {
+        console.log('Tentando alternar breakpoint na linha:', lineNumber);
+        const line = lineNumber - 1; // Ajusta para 0-based index
+        const info = window.editor.lineInfo(line);
         
-        if (!instructionsContent || !dataContent) {
-            return;
-        }
-        
-        // Atualiza instruções
-        let instructionsHtml = '';
-        for (let i = 0; i < this.interpreter.programLength; i++) {
-            const instruction = this.interpreter.memory[i];
-            if (instruction === 'END' || instruction === 'END:' || 
-                instruction === '.END' || instruction === 'HALT') {
-                instructionsHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
-                break;
-            }
-            instructionsHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
-        }
-        instructionsContent.innerHTML = instructionsHtml;
-        
-        // Atualiza dados
-        let dataHtml = '';
-        let hasData = false;
-        for (let i = this.interpreter.programLength; i < this.interpreter.memory.length; i++) {
-            if (this.interpreter.memory[i] !== 0 && this.interpreter.memory[i] !== '0') {
-                dataHtml += `<div><span class="address">${i}:</span><span class="data">${this.interpreter.memory[i]}</span></div>`;
-                hasData = true;
-            }
-        }
-        
-        if (!hasData) {
-            dataHtml = '<div>(Sem dados)</div>';
-        }
-        dataContent.innerHTML = dataHtml;
-    }
-
-    getValueType(value) {
-        if (typeof value === 'number') {
-            return Number.isInteger(value) ? 'Inteiro' : 'Ponto Flutuante';
-        } else if (typeof value === 'string') {
-            return 'String';
-        } else if (value === undefined || value === null) {
-            return 'Indefinido';
+        if (info.gutterMarkers && info.gutterMarkers.breakpoints) {
+            // Remove o breakpoint
+            window.editor.setGutterMarker(line, "breakpoints", null);
+            this.breakpoints.delete(lineNumber);
+            console.log('Breakpoint removido da linha:', lineNumber);
         } else {
-            return 'Outro';
+            // Adiciona o breakpoint
+            const marker = document.createElement("div");
+            marker.style.color = "#822";
+            marker.innerHTML = "●";
+            marker.className = "breakpoint";
+            marker.title = "Breakpoint: linha " + lineNumber;
+            window.editor.setGutterMarker(line, "breakpoints", marker);
+            this.breakpoints.add(lineNumber);
+            console.log('Breakpoint adicionado na linha:', lineNumber);
         }
+    }
+
+
+    hasBreakpoint(line) {
+        return this.breakpoints.has(line + 1);
     }
 
     shouldPause() {
         return this.breakpoints.has(this.interpreter.currentInstruction + 1);
-    }
-
-    updateBreakpointsList() {
-        const breakpointsList = document.getElementById('breakpoints-list');
-        breakpointsList.innerHTML = '';
-
-        this.breakpoints.forEach(lineNumber => {
-            const li = document.createElement('li');
-            li.className = 'breakpoint-item'; // Aplica a classe de estilo
-    
-            li.textContent = `Linha ${lineNumber}`;
-            
-            // Cria o ícone de remoção
-            const removeIcon = document.createElement('span');
-            removeIcon.className = 'remove-icon';
-            removeIcon.textContent = '❌'; // Ícone de remoção
-            
-            // Adiciona evento de clique ao ícone de remoção
-            removeIcon.addEventListener('click', (event) => {
-                event.stopPropagation(); // Previne que o clique no ícone remova o item da lista
-                this.removeBreakpoint(lineNumber);
-            });
-    
-            // Adiciona o ícone ao item de lista
-            li.appendChild(removeIcon);
-            
-            // Adiciona o item de lista ao contêiner de breakpoints
-            breakpointsList.appendChild(li);
-    
-            // Adiciona evento de clique ao item de lista para remover o breakpoint ao clicar no texto
-            li.addEventListener('click', () => this.removeBreakpoint(lineNumber));
-        });
     }
 }
 

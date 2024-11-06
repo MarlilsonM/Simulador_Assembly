@@ -97,35 +97,39 @@ class Interpreter {
     }
 
     updateMemoryUI() {
-        const memoryElement = document.getElementById('memory-content');
-        if (memoryElement) {
-            let memoryContent = 'Memória:\n';
-            
-            // Primeiro, mostra as instruções do programa até END
+        const instructionsContent = document.getElementById('instructions-content');
+        const dataContent = document.getElementById('data-content');
+    
+        if (instructionsContent && dataContent) {
+            // Seção de Instruções
+            let instructionsHtml = '';
             for (let i = 0; i < this.programLength; i++) {
-                if (this.memory[i] === 'END' || this.memory[i] === 'END:' || 
-                    this.memory[i] === '.END' || this.memory[i] === 'HALT') {
-                    memoryContent += `[${i}] ${this.memory[i]}\n`;
+                const instruction = this.memory[i];
+                if (instruction === 'END' || instruction === 'END:' || 
+                    instruction === '.END' || instruction === 'HALT') {
+                    instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction end">${instruction}</span></div>`;
                     break;
                 }
-                memoryContent += `[${i}] ${this.memory[i]}\n`;
+                const parts = instruction.split(' ');
+                const opcode = parts[0];
+                const args = parts.slice(1).join(' ');
+                instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction"><span class="opcode">${opcode}</span> <span class="args">${args}</span></span></div>`;
             }
-            
-            // Depois, mostra apenas os dados não-zero na área de dados
-            memoryContent += '\nDados:\n';
+            instructionsContent.innerHTML = instructionsHtml;
+    
+            // Seção de Dados
+            let dataHtml = '';
             let hasData = false;
             for (let i = this.programLength; i < this.memory.length; i++) {
                 if (this.memory[i] !== 0 && this.memory[i] !== '0') {
-                    memoryContent += `[${i}] ${this.memory[i]}\n`;
+                    dataHtml += `<div class="data-line"><span class="line-number">[${i}]</span> <span class="data-value">${this.memory[i]}</span></div>`;
                     hasData = true;
                 }
             }
-            
             if (!hasData) {
-                memoryContent += '(Sem dados)\n';
+                dataHtml = '<div class="data-line">(Sem dados)</div>';
             }
-            
-            memoryElement.textContent = memoryContent;
+            dataContent.innerHTML = dataHtml;
         }
     }
 
@@ -254,13 +258,18 @@ class Interpreter {
         if (options.memory) this.updateMemoryUI();
         if (options.stack) this.updateStackUI();
         
-        if (this.debugger) this.debugger.updatePanel();
         if (window.visualization) window.visualization.updateVisualization();
     }
 
     executeStep() {
         if (!this.memory || this.programLength === 0) {
             this.updateOutput("Nenhum programa carregado.", "warning");
+            return false;
+        }
+
+        if (this.debugger && this.debugger.hasBreakpoint(this.currentInstruction)) {
+            this.stop();
+            this.updateOutput("Breakpoint encontrado na linha " + (this.currentInstruction + 1), "info");
             return false;
         }
 
