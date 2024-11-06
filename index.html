@@ -75,9 +75,13 @@
                 </div>
     
                 <section id="output-panel">
-                    <h2>Saída do Programa</h2>
-                    <pre id="program-output" aria-live="polite"></pre>
-                </section> 
+                    <div class="output-header">
+                        <h2>Saída do Programa</h2>
+                    </div>
+                    <div class="output-content">
+                        <div id="program-output"></div>
+                    </div>
+                </section>
             </div> 
             
             <aside id="debug-panel" role="complementary" aria-label="Painel de depuração">
@@ -134,9 +138,22 @@
                 </div>
                 <div id="detailed-stack"></div>
                 
-                <div id="memory">
-                    <h3>Memória</h3>
-                    <pre id="memory-content" aria-label="Conteúdo da memória"></pre>
+                <div id="memory-panel">
+                    <div class="memory-header">
+                        <h2>Memória</h2>
+                    </div>
+                    <div class="memory-content">
+                        <div class="memory-sections">
+                            <div class="memory-section">
+                                <h4>Instruções</h4>
+                                <div id="instructions-content"></div>
+                            </div>
+                            <div class="memory-section">
+                                <h4>Dados</h4>
+                                <div id="data-content"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="breakpoints">
                     <h3>Breakpoints</h3>

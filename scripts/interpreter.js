@@ -158,9 +158,27 @@ class Interpreter {
         this.updateMemoryUI();
     }
 
-    updateOutput(message) {
+    updateOutput(message, type = 'info') {
+        const outputContent = document.querySelector('.output-content');
         const outputElement = document.getElementById('program-output');
-        outputElement.textContent += message + '\n'; // Adiciona a mensagem e pula para a próxima linha
+        if (!outputContent || !outputElement) return;
+    
+        const timestamp = new Date().toLocaleTimeString();
+        const formattedMessage = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+        
+        const messageElement = document.createElement('div');
+        messageElement.className = `output-message ${type}`;
+        messageElement.textContent = formattedMessage;
+        
+        outputElement.appendChild(messageElement);
+    
+        // Scroll para o final do conteúdo
+        setTimeout(() => {
+            outputContent.scrollTo({
+                top: outputContent.scrollHeight,
+                behavior: 'smooth'
+            });
+        }, 0);
     }
 
     parseLabels(programLength) {
@@ -242,6 +260,11 @@ class Interpreter {
 
     executeStep() {
         if (!this.memory || this.programLength === 0) {
+            this.updateOutput("Nenhum programa carregado.", "warning");
+            return false;
+        }
+
+        if (!this.memory || this.programLength === 0) {
                         return false;
         }
     
@@ -297,6 +320,23 @@ class Interpreter {
     
         if (!['JMP', 'JE', 'JNE', 'JG', 'JL', 'CALL', 'RET'].includes(instruction)) {
             this.currentInstruction++;
+        }
+
+        if (this.currentInstruction >= this.programLength) {
+            this.stop();
+            this.clearHighlight();
+            this.updateOutput('Programa finalizado com sucesso.', 'success');
+            return false;
+        }
+
+        try {
+            this.validateArgs(instruction, args);
+            this.executeInstruction(instruction, args);
+            this.updateOutput(`Executada instrução: ${instruction} ${args.join(', ')}`, 'info');
+        } catch (error) {
+            this.updateOutput(`Erro: ${error.message}`, 'error');
+            this.stop();
+            return false;
         }
     
         this.updateUI();

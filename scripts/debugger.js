@@ -27,94 +27,77 @@ class Debugger {
             }
 
     updatePanel() {
-        const memoryElement = document.getElementById('memory-content');
-        const breakpointsElement = document.getElementById('breakpoints-list');
-    
-        if (!memoryElement || !breakpointsElement) {
+        const instructionsContent = document.getElementById('instructions-content');
+        const dataContent = document.getElementById('data-content');
+        
+        if (!instructionsContent || !dataContent) {
             return;
         }
-    
-        // Atualiza a visualização da memória
-        let memoryHtml = '<div class="memory-section"><h4>Instruções:</h4>';
         
-        // Mostra instruções até END
+        // Atualiza instruções
+        let instructionsHtml = '';
         for (let i = 0; i < this.interpreter.programLength; i++) {
             const instruction = this.interpreter.memory[i];
             if (instruction === 'END' || instruction === 'END:' || 
                 instruction === '.END' || instruction === 'HALT') {
-                memoryHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
+                instructionsHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
                 break;
             }
-            memoryHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
+            instructionsHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
         }
-        memoryHtml += '</div>';
-    
-        // Adiciona seção de dados não-zero
-        memoryHtml += '<div class="memory-section"><h4>Dados:</h4>';
+        instructionsContent.innerHTML = instructionsHtml;
+        
+        // Atualiza dados
+        let dataHtml = '';
         let hasData = false;
         for (let i = this.interpreter.programLength; i < this.interpreter.memory.length; i++) {
             if (this.interpreter.memory[i] !== 0 && this.interpreter.memory[i] !== '0') {
-                memoryHtml += `<div><span class="address">${i}:</span><span class="data">${this.interpreter.memory[i]}</span></div>`;
+                dataHtml += `<div><span class="address">${i}:</span><span class="data">${this.interpreter.memory[i]}</span></div>`;
                 hasData = true;
             }
         }
-    
+        
         if (!hasData) {
-            memoryHtml += '<div>(Sem dados)</div>';
+            dataHtml = '<div>(Sem dados)</div>';
         }
-        memoryHtml += '</div>';
-    
-        memoryElement.innerHTML = memoryHtml;
-    
-        // Atualiza a lista de breakpoints
-        let breakpointsHtml = '';
-        this.breakpoints.forEach(line => {
-            breakpointsHtml += `<div>Linha ${line}</div>`;
-        });
-        breakpointsElement.innerHTML = breakpointsHtml || '<div>(Sem breakpoints)</div>';
+        dataContent.innerHTML = dataHtml;
     }
 
-    updateDetailedStack() {
-        const stackElement = document.getElementById('detailed-stack');
-        if (!stackElement) return;
-
-        let stackContent = '<h3>Pilha Detalhada</h3>';
-        stackContent += '<table><tr><th>Endereço</th><th>Valor</th><th>Tipo</th></tr>';
-
-        const sp = this.interpreter.registers.SP;
-        for (let i = 999; i >= sp; i--) {
-            const value = this.interpreter.memory[i];
-            const type = this.getValueType(value);
-            const isSP = i === sp ? ' (SP)' : '';
-            stackContent += `<tr>
-                <td>${i}${isSP}</td>
-                <td>${value}</td>
-                <td>${type}</td>
-            </tr>`;
+    updatePanel() {
+        const instructionsContent = document.getElementById('instructions-content');
+        const dataContent = document.getElementById('data-content');
+        
+        if (!instructionsContent || !dataContent) {
+            return;
         }
-
-        stackContent += '</table>';
-        stackElement.innerHTML = stackContent;
-
-        // Adicionar visualização dos registradores vetoriais
-        let vectorContent = '<h3>Registradores Vetoriais</h3>';
-        vectorContent += '<table><tr><th>Registrador</th><th>Valores</th></tr>';
-
-        for (let i = 0; i < 4; i++) {
-            const values = this.interpreter.vectorRegisters[`v${i}`];
-            vectorContent += `<tr>
-                <td>v${i}</td>
-                <td>[${values.join(', ')}]</td>
-            </tr>`;
+        
+        // Atualiza instruções
+        let instructionsHtml = '';
+        for (let i = 0; i < this.interpreter.programLength; i++) {
+            const instruction = this.interpreter.memory[i];
+            if (instruction === 'END' || instruction === 'END:' || 
+                instruction === '.END' || instruction === 'HALT') {
+                instructionsHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
+                break;
+            }
+            instructionsHtml += `<div><span class="address">${i}:</span><span class="instruction">${instruction}</span></div>`;
         }
-
-        vectorContent += '</table>';
-
-        // Adicione este conteúdo ao elemento HTML apropriado
-        const vectorElement = document.getElementById('vector-registers');
-        if (vectorElement) {
-            vectorElement.innerHTML = vectorContent;
+        instructionsContent.innerHTML = instructionsHtml;
+        
+        // Atualiza dados
+        let dataHtml = '';
+        let hasData = false;
+        for (let i = this.interpreter.programLength; i < this.interpreter.memory.length; i++) {
+            if (this.interpreter.memory[i] !== 0 && this.interpreter.memory[i] !== '0') {
+                dataHtml += `<div><span class="address">${i}:</span><span class="data">${this.interpreter.memory[i]}</span></div>`;
+                hasData = true;
+            }
         }
+        
+        if (!hasData) {
+            dataHtml = '<div>(Sem dados)</div>';
+        }
+        dataContent.innerHTML = dataHtml;
     }
 
     getValueType(value) {

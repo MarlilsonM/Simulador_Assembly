@@ -21,11 +21,25 @@
     --transition-speed: 0.3s;
     --scrollbar-track-color: #f1f1f1;
     --scrollbar-thumb-color: #888;
+    --address-color: #000000;
+    --instruction-color: #0066cc;
+    --data-color: #009900;
+    --border-color: #ccc;
 
     /* Cores para o modo escuro */
     --dark-background-color: #121212;
     --dark-text-color: #ffffff;
     --dark-primary-color: #00bfa5;
+
+    /*Variáveis de saída */
+    --output-background-color: #f8f8f8;
+    --output-text-color: #333;
+    --output-info-color: #0066cc;
+    --output-error-color: #cc0000;
+    --output-error-bg-color: #ffeeee;
+    --output-warning-color: #cc6600;
+    --output-warning-bg-color: #fff6e6;
+    --output-success-color: #006600;
 }
 
 /* Estilos globais */
@@ -35,7 +49,7 @@ body {
     line-height: var(--line-height-base);
     color: var(--text-color);
     background-color: var(--background-color);
-    margin: 60px 0 0 0;
+    margin: 50px 0 0 0;
     overflow-x: hidden;
     transition: background-color var(--transition-speed), color var(--transition-speed);
 }
@@ -47,6 +61,20 @@ body {
     --primary-color: var(--dark-primary-color);
     --scrollbar-track-color: #2c3e50;
     --scrollbar-thumb-color: #7f8c8d;
+    --address-color: #e9e5e5;
+    --instruction-color: #4d9fff;
+    --data-color: #66ff66;
+    --border-color: #555;
+
+    /*Variáveis de saída */
+    --output-background-color: #1e1e1e;
+    --output-text-color: #d4d4d4;
+    --output-info-color: #569cd6;
+    --output-error-color: #f44747;
+    --output-error-bg-color: #352a2a;
+    --output-warning-color: #ff8c00;
+    --output-warning-bg-color: #352c1b;
+    --output-success-color: #6a9955;
 }
 
 /* Layout */
@@ -164,45 +192,87 @@ body {
 }
 
 /*Estilo para memória*/
-#memory {
-    max-height: 400px; /* Ajuste este valor conforme necessário */
-    overflow-y: auto;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
+#memory-panel {
+    display: flex;
+    flex-direction: column;
     background-color: var(--background-color);
+    border-radius: 5px;
+    height: 200px;
+    overflow: hidden;
+}
+
+.memory-header h2 {
+    margin: 0;
+}
+
+.memory-header {
+    padding-top: 10px;
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
 #memory-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    scroll-behavior: smooth;
+}
+
+.memory-sections {
+    display: flex;
+    gap: 20px;
+}
+
+.memory-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.memory-section h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+    padding: 5px 0;
+    z-index: 1;
+}
+
+#instructions-content,
+#data-content {
     font-family: monospace;
     white-space: pre-wrap;
     word-wrap: break-word;
-    color: var(--text-color);
-    padding: 10px;
+    max-height: 100px;
+    overflow-y: auto;
 }
 
-#memory-content .instruction {
-    color: var(--instruction-color);
-}
-
-#memory-content .data {
-    color: var(--data-color);
-}
-
-#memory-content .address {
+.address {
     color: var(--address-color);
     margin-right: 5px;
 }
 
-/* Estilo para a barra de rolagem */
-#memory::-webkit-scrollbar {
+.instruction {
+    color: var(--instruction-color);
+}
+
+.data {
+    color: var(--data-color);
+}
+
+/* Estilização da barra de rolagem */
+#instructions-content::-webkit-scrollbar,
+#data-content::-webkit-scrollbar {
     width: 10px;
 }
 
-#memory::-webkit-scrollbar-track {
+#instructions-content::-webkit-scrollbar-track,
+#data-content::-webkit-scrollbar-track {
     background: var(--scrollbar-track-color);
 }
 
-#memory::-webkit-scrollbar-thumb {
+#instructions-content::-webkit-scrollbar-thumb,
+#data-content::-webkit-scrollbar-thumb {
     background-color: var(--scrollbar-thumb-color);
     border-radius: 6px;
     border: 3px solid var(--scrollbar-track-color);
@@ -333,12 +403,116 @@ select {
 }
 
 /* Painéis */
-#output-panel, #debug-panel, #editor-container, #visualization {
+#debug-panel, #editor-container, #visualization {
     background-color: var(--background-color);
     border-radius: 12px;
     box-shadow: var(--box-shadow);
     padding: var(--spacing-medium);
-    margin-bottom: var(--spacing-large);
+    margin-bottom: 0;
+}
+
+#output-panel {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--output-background-color);
+    color: var(--output-text-color);
+    border-radius: 5px;
+    height: 300px;
+}
+
+.output-header {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--output-background-color);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.output-header h2 {
+    margin: 0;
+}
+
+.output-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    scroll-behavior: smooth;
+}
+
+/* Estilização da barra de rolagem */
+.output-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.output-content::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+}
+
+.output-content::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 6px;
+    border: 3px solid var(--scrollbar-track-color);
+}
+
+#program-output {
+    display: flex;
+    flex-direction: column;
+}
+
+.output-message {
+    margin-bottom: 5px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Estilização da barra de rolagem para o output-panel */
+#output-panel::-webkit-scrollbar {
+    width: 10px;
+}
+
+#output-panel::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+}
+
+#output-panel::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 6px;
+    border: 3px solid var(--scrollbar-track-color);
+}
+
+#program-output {
+    display: flex;
+    flex-direction: column;
+}
+
+.output-message {
+    margin-bottom: 5px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.output-message.info {
+    color: var(--output-info-color);
+}
+
+.output-message.error {
+    color: var(--output-error-color);
+    background-color: var(--output-error-bg-color);
+}
+
+.output-message.warning {
+    color: var(--output-warning-color);
+    background-color: var(--output-warning-bg-color);
+}
+
+.output-message.success {
+    color: var(--output-success-color);
 }
 
 /* Ajustes para o modo escuro */
