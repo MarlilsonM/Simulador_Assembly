@@ -137,12 +137,15 @@ Use o seletor de velocidade para ajustar a rapidez da execução contínua:
 ## Exemplos de Programas
 
 ### Exemplo 1: Soma Simples
+```assembly
 MOV r0, 5    ; Carrega 5 em r0
 MOV r1, 3    ; Carrega 3 em r1
 ADD r0, r1   ; Soma r1 a r0
 END
+```
 
 ### Exemplo 2: Loop com Contador
+```assembly
 MOV r0, 0    ; Inicializa contador
 MOV r1, 10   ; Limite
 loop:
@@ -150,8 +153,10 @@ ADD r0, 1    ; Incrementa o contador
 CMP r0, r1   ; Compara o contador com o limite
 JNE loop     ; Se não igual, volta para o loop
 END
+```
 
 ### Exemplo 3: Cálculo de Fatorial
+```assembly
 MOV r0, 5    ; Número para calcular o fatorial
 MOV r1, 1    ; Resultado inicial
 
@@ -162,8 +167,10 @@ CMP r0, 1    ; Compara com 1
 JNE factorial ; Se não igual a 1, continua o loop
 ; Resultado final em r1
 END
+```
 
 ### Exemplo 4: Uso de Pilha
+```assembly
 MOV r0, 10
 MOV r1, 20
 MOV r2, 30
@@ -177,8 +184,10 @@ POP r3       ; Desempilha para r3
 POP r4       ; Desempilha para r4
 POP r5       ; Desempilha para r5
 END
+```
 
 ### Exemplo 5: Operações SIMD
+```assembly
 ; Inicializa os dados na memória
 MOV [100], 1
 MOV [101], 2
@@ -202,8 +211,10 @@ VMUL v3, v0, v1   ; Multiplica os vetores elemento a elemento
 VSTORE v2, [108]  ; Armazena resultado da soma
 VSTORE v3, [112]  ; Armazena resultado da multiplicação
 END
+```
 
 ### Exemplo 6: Soma de Array
+```assembly
 ; Soma elementos de um array
 MOV r0, 0      ; Inicializa soma
 MOV r1, 100    ; Endereço base do array
@@ -219,8 +230,10 @@ CMP r3, r2     ; Compara com tamanho
 JNE loop_soma  ; Continua se não terminou
 ; Resultado em r0
 END
+```
 
 ### Exemplo 7: Busca do Maior Valor
+```assembly
 ; Inicialização do array
 MOV [100], 30
 MOV [101], 50
@@ -247,8 +260,10 @@ ADD r3, 1      ; Incrementa contador
 CMP r3, r2     ; Compara com tamanho
 JNE loop_maior ; Continua se não terminou
 END
+```
 
 ### Exemplo 8: Fibonacci
+```assembly
 ; Calcula n números da sequência de Fibonacci
 MOV r0, 0      ; Primeiro número
 MOV r1, 1      ; Segundo número
@@ -272,8 +287,10 @@ ADD r3, 1      ; Incrementa contador
 CMP r3, r2     ; Compara com limite
 JNE fib_loop   ; Continua se não terminou
 END
+```
 
 ### Exemplo 9: Ordenação Bubble Sort
+```assembly
 ; Inicialização do array
 MOV [100], 5
 MOV [101], 3
@@ -315,8 +332,10 @@ SUB r0, r1     ; Reseta r0 para o início do array
 CMP r3, 0      ; Verifica se houve alguma troca
 JNE outer_loop ; Se houve troca, repete o loop externo
 END
+```
 
 ### Exemplo 10: Multiplicação de Matrizes usando SIMD
+```assembly
 ; Versão corrigida com operações vetoriais
 SETMATSIZE 4  ; Define o tamanho da matriz para 4x4
 
@@ -355,8 +374,10 @@ VADD v0, v2, v3  ; v0 = [1*5+1*7, 2*6+2*8, 3*7+3*5, 4*8+4*6]
 ; Armazenar o resultado final na memória (ordem correta dos argumentos)
 VSTORE v0, [500]
 END
+```
 
 ### Exemplo 11: Cálculo de Média Móvel
+```assembly
 ; Calcula média móvel de 3 elementos
 ; Primeiro, vamos inicializar alguns valores no array fonte para teste
 MOV [100], 10   ; Primeiro elemento
@@ -409,8 +430,10 @@ ADD r3, 1      ; Próximo índice
 CMP r3, r2     ; Compara com tamanho
 JNE media_loop ; Continua se não terminou
 END
+```
 
 ### Exemplo 12: Manipulação de Pilha Avançada
+```assembly
 ; Exemplo de uso avançado da pilha
 MOV r0, 10
 MOV r1, 20
@@ -439,8 +462,10 @@ POP r2
 POP r1
 POP r0
 END
+```
 
 ### Exemplo 13: Processamento Condicional com SIMD
+```assembly
 ; Define o tamanho da matriz/vetor
 SETMATSIZE 4    ; Define para operar com 4 elementos
 
@@ -478,6 +503,7 @@ LOAD r4, [112]  ; Primeiro resultado da multiplicação
 LOAD r5, [113]  ; Segundo resultado da multiplicação
 LOAD r6, [114]  ; Terceiro resultado da multiplicação
 LOAD r7, [115]  ; Quarto resultado da multiplicação
+```
 
 ### Dicas de Uso
 - Use comentários (;) para documentar seu código.
