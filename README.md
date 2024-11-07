@@ -35,6 +35,7 @@ O Simulador Assembly é uma ferramenta educacional avançada que permite aos usu
 2. Use os botões de controle para executar, pausar ou avançar passo a passo no seu programa.
 3. Defina breakpoints clicando na margem esquerda do editor.
 4. Observe as mudanças nos registradores, memória e pilha na visualização gráfica.
+5. Para mais exemplos acesse o manual: https://github.com/MarlilsonM/Simulador_Assembly/blob/main/docs/manual.md
 
 ### Conjunto de Instruções
 
