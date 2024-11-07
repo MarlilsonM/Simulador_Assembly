@@ -40,25 +40,25 @@ O Simulador Assembly é uma ferramenta educacional avançada que permite aos usu
 
 O simulador suporta um amplo conjunto de instruções, incluindo:
 
-*Instruções de Movimentação de Dados*
+**Instruções de Movimentação de Dados**
 - *MOV* destino, fonte
 - *LOAD* destino, [endereço]
 - *STORE* [endereço], fonte
 
-*Instruções Aritméticas*
+**Instruções Aritméticas**
 - *ADD* destino, fonte
 - *SUB* destino, fonte
 - *MUL* destino, fonte
 - *DIV* destino, fonte
 
-*Instruções Lógicas*
+**Instruções Lógicas**
 - *AND* destino, fonte
 - *OR* destino, fonte
 - *XOR* destino, fonte
 - *NOT* destino
 - *CMP* op1, op2
 
-*Instruções de Salto Condicional*
+**Instruções de Salto Condicional**
 - *JMP* label
 - *JE* label
 - *JNE* label
@@ -77,7 +77,7 @@ O simulador suporta um amplo conjunto de instruções, incluindo:
 - *JA* label
 - *JAE* label
 
-*Instruções de Pilha*
+**Instruções de Pilha**
 - *PUSH* valor
 - *POP* destino
 - *DUP*
