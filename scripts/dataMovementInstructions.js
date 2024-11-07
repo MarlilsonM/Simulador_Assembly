@@ -4,7 +4,6 @@ class DataMovementInstructions {
     }
 
     execute(instruction, args) {
-        console.log(`DEBUG - Executando: ${instruction} com argumentos: ${args}`);
         
         switch (instruction.toUpperCase()) {
             case 'MOV':
@@ -24,7 +23,6 @@ class DataMovementInstructions {
         }
 
         const [dest, src] = args;
-        console.log(`DEBUG - MOV: Destino: ${dest}, Fonte: ${src}`);
 
         // Movimentação para memória
         if (dest.includes('[')) {
@@ -43,7 +41,6 @@ class DataMovementInstructions {
             throw new Error(`Endereço de memória inválido: ${address}`);
         }
 
-        console.log(`DEBUG - MOV para memória: Endereço: [${address}], Valor: ${value}`);
         this.interpreter.memory[address] = value;
         this.interpreter.updateMemoryUI();
         return { instruction: 'MOV', args: [`[${address}]`, value], result: value };
@@ -59,17 +56,14 @@ class DataMovementInstructions {
         if (typeof src === 'string' && src.includes('[')) {
             const address = this.parseMemoryAddress(src);
             value = this.interpreter.memory[address];
-            console.log(`DEBUG - MOV de memória: Endereço: [${address}], Valor: ${value}`);
         }
         // Verifica se é um registrador
         else if (this.interpreter.registers.hasOwnProperty(src)) {
             value = this.interpreter.registers[src];
-            console.log(`DEBUG - MOV de registrador: ${src}, Valor: ${value}`);
         }
         // Trata como valor direto
         else {
             value = this.parseValue(src);
-            console.log(`DEBUG - MOV valor direto: ${src}, Valor: ${value}`);
         }
     
         this.interpreter.registers[dest] = value;
@@ -97,7 +91,6 @@ class DataMovementInstructions {
             throw new Error(`Valor inválido na memória: ${memoryAddress} (Valor: ${value})`);
         }
     
-        console.log(`DEBUG - LOAD: Registrador: ${dest}, Endereço: [${memoryAddress}], Valor: ${value}`);
         this.interpreter.registers[dest] = value;
         this.interpreter.updateRegistersUI();
         return { instruction: 'LOAD', args: [dest, `[${memoryAddress}]`], result: value };
@@ -120,16 +113,13 @@ class DataMovementInstructions {
         let value;
         if (this.interpreter.registers.hasOwnProperty(src)) {
             value = this.interpreter.registers[src];
-            console.log(`DEBUG - STORE de registrador: ${src}, Valor: ${value}`);
         } else {
             // Se não for um registrador, trata como valor direto
             value = this.parseValue(src);
-            console.log(`DEBUG - STORE valor direto: ${src}, Valor: ${value}`);
         }
     
         this.interpreter.memory[memoryAddress] = value;
         this.interpreter.updateMemoryUI();
-        console.log(`DEBUG - STORE: Endereço: [${memoryAddress}], Valor: ${value}`);
         return { instruction: 'STORE', args: [`[${memoryAddress}]`, src], result: value };
     }
 
@@ -168,7 +158,6 @@ class DataMovementInstructions {
     
         // Remove espaços em branco e colchetes
         const cleanAddress = address.replace(/[\[\]\s]/g, '');
-        console.log(`DEBUG - Analisando endereço de memória: ${cleanAddress}`);
     
         // Verifica se é uma expressão com soma (ex: r0+r2)
         if (cleanAddress.includes('+')) {

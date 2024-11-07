@@ -47,7 +47,6 @@ class Interpreter {
     }
 
     updateRegistersUI() {
-        console.log('DEBUG - Atualizando UI dos registradores:', this.registers);
         
         // Verifica se os elementos HTML existem antes de atualizar
         const regr0Element = document.getElementById('reg-r0');
@@ -112,7 +111,6 @@ class Interpreter {
     }
 
     updateMemoryUI() {
-        console.log('DEBUG - Atualizando UI da memória');
         const instructionsContent = document.getElementById('instructions-content');
         const dataContent = document.getElementById('data-content');
     
@@ -164,7 +162,6 @@ class Interpreter {
     }
 
     loadProgram(program) {
-        console.log('DEBUG - Carregando programa');
         if (!program || program.trim() === '') {
             return;
         }
@@ -376,28 +373,6 @@ class Interpreter {
             this.validateArgs(instruction, args);
             const result = this.executeInstruction(instruction, args);
             
-            // Adicione logs aqui para verificar o estado dos registradores
-            console.log('Estado dos registradores após executar:', {
-                r0: this.registers.r0,
-                r1: this.registers.r1,
-                r2: this.registers.r2,
-                r3: this.registers.r3,
-                r4: this.registers.r4,
-                r5: this.registers.r5,
-                r6: this.registers.r6,
-                SP: this.registers.SP,
-                PC: this.registers.PC,
-                FLAGS: this.registers.FLAGS,
-                FLAG: this.registers.FLAG
-            });
-
-            console.log('DEBUG - Após execução:', {
-                instruction,
-                args,
-                result,
-                registers: { ...this.registers }
-            });
-            
             // Se for uma instrução de salto e tiver nextInstruction, use-o
             if (result && result.nextInstruction !== undefined) {
                 this.currentInstruction = result.nextInstruction;
@@ -491,7 +466,6 @@ class Interpreter {
     executeInstruction(instruction, args) {
         try {
             let result;
-            console.log(`DEBUG - Executando: ${instruction} ${args.join(', ')}`);
             switch (instruction.toUpperCase()) {
                 case 'NOP':
                     result = { instruction: 'NOP', args: [], result: 'No operation' };
@@ -624,7 +598,6 @@ class Interpreter {
     }
 
     reset() {
-        console.log('DEBUG - Resetando o interpretador');
         this.memory = new Array(1000).fill(0);
         this.registers = {
             r0: 0,
