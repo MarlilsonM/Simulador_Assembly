@@ -6,6 +6,11 @@ import SIMDInstructions from './simdInstructions.js';
 
 class Interpreter {
     constructor() {
+        this.config = {
+            matrixSize: 2,  // Tamanho padrão 2x2
+            maxVectorSize: 4  // Tamanho máximo do vetor SIMD
+        };
+
         this.memory = new Array(1000).fill(0);
         this.registers = {
             r0: 0,
@@ -22,12 +27,11 @@ class Interpreter {
         };
 
         this.vectorRegisters = {
-            v0: new Float32Array(4),
-            v1: new Float32Array(4),
-            v2: new Float32Array(4),
-            v3: new Float32Array(4)
+            v0: new Float32Array(this.config.maxVectorSize),
+            v1: new Float32Array(this.config.maxVectorSize),
+            v2: new Float32Array(this.config.maxVectorSize),
+            v3: new Float32Array(this.config.maxVectorSize)
         };
-
 
         this.STACK_LIMIT = 100;
         this.currentInstruction = 0;
@@ -42,7 +46,9 @@ class Interpreter {
         this.simd = new SIMDInstructions(this);
     }
 
-    updateRegistersUI(registers) {
+    updateRegistersUI() {
+        console.log('DEBUG - Atualizando UI dos registradores:', this.registers);
+        
         // Verifica se os elementos HTML existem antes de atualizar
         const regr0Element = document.getElementById('reg-r0');
         const regr1Element = document.getElementById('reg-r1');
@@ -58,7 +64,7 @@ class Interpreter {
         if (!regr0Element || !regr1Element || !regr2Element || !regr3Element || 
             !regr4Element || !regr5Element || !regr6Element || !regSPElement || 
             !flagZElement || !flagFElement) {
-                        return;
+            return;
         }
 
         // Garante que os valores dos registradores sejam números antes de converter
@@ -73,7 +79,6 @@ class Interpreter {
         
         // Atualiza o SP em formato hexadecimal
         regSPElement.textContent = '0x' + this.registers.SP.toString(16).padStart(3, '0').toUpperCase();
-
 
         // Atualiza as flags
         flagZElement.textContent = this.registers.FLAGS === 0 ? 'TRUE' : 'FALSE';
@@ -97,10 +102,17 @@ class Interpreter {
                 `;
             }
         }
+    }
 
+    setMatrixSize(size) {
+        if (size > this.config.maxVectorSize) {
+            throw new Error(`Tamanho de matriz ${size} excede o máximo permitido de ${this.config.maxVectorSize}`);
+        }
+        this.config.matrixSize = size;
     }
 
     updateMemoryUI() {
+        console.log('DEBUG - Atualizando UI da memória');
         const instructionsContent = document.getElementById('instructions-content');
         const dataContent = document.getElementById('data-content');
     
@@ -152,6 +164,7 @@ class Interpreter {
     }
 
     loadProgram(program) {
+        console.log('DEBUG - Carregando programa');
         if (!program || program.trim() === '') {
             return;
         }
@@ -253,7 +266,7 @@ class Interpreter {
 
     highlightCurrentLine() {
         if (!window.editor) {
-                        return;
+            return;
         }
     
         // Remove o destaque da linha anterior
@@ -261,7 +274,8 @@ class Interpreter {
             try {
                 window.editor.removeLineClass(this.lastHighlightedLine, 'background', 'highlighted-line');
             } catch (error) {
-                            }
+                console.error('DEBUG - Error removing highlight:', error);
+            }
         }
     
         // Adiciona destaque à linha atual
@@ -270,7 +284,8 @@ class Interpreter {
                 window.editor.addLineClass(this.currentInstruction, 'background', 'highlighted-line');
                 this.lastHighlightedLine = this.currentInstruction;
             } catch (error) {
-                            }
+                console.error('DEBUG - Error adding highlight:', error);
+            }
         }
     }
 
@@ -280,7 +295,8 @@ class Interpreter {
                 window.editor.removeLineClass(this.lastHighlightedLine, 'background', 'highlighted-line');
                 this.lastHighlightedLine = undefined;
             } catch (error) {
-                            }
+                console.error('DEBUG - Error clearing highlight:', error);
+            }
         }
     }
 
@@ -297,7 +313,6 @@ class Interpreter {
     }
 
     executeStep() {
-    
         if (!this.memory || this.programLength === 0) {
             this.updateOutput("Nenhum programa carregado.", "warning");
             return false;
@@ -383,16 +398,11 @@ class Interpreter {
                 registers: { ...this.registers }
             });
             
-            const isJump = [
-                'JMP', 'JE', 'JNE', 'JG', 'JGE', 
-                'JL', 'JLE', 'JZ', 'JNZ', 'JC', 
-                'JNC', 'JO', 'JNO', 'JB', 'JBE', 
-                'JA', 'JAE'
-            ].includes(instruction);
-            
-            if (isJump && result && result.nextInstruction !== undefined) {
+            // Se for uma instrução de salto e tiver nextInstruction, use-o
+            if (result && result.nextInstruction !== undefined) {
                 this.currentInstruction = result.nextInstruction;
             } else {
+                // Caso contrário, vá para a próxima instrução
                 this.currentInstruction++;
             }
         
@@ -481,7 +491,7 @@ class Interpreter {
     executeInstruction(instruction, args) {
         try {
             let result;
-            console.log(`DEBUG - Executing: ${instruction} ${args.join(', ')}`);
+            console.log(`DEBUG - Executando: ${instruction} ${args.join(', ')}`);
             switch (instruction.toUpperCase()) {
                 case 'NOP':
                     result = { instruction: 'NOP', args: [], result: 'No operation' };
@@ -537,6 +547,18 @@ class Interpreter {
                 case 'VSTORE':
                     result = this.simd.execute(instruction, args);
                     break;
+                case 'SETMATSIZE':
+                    const size = parseInt(args[0]);
+                    if (isNaN(size) || size < 1 || size > this.config.maxVectorSize) {
+                        throw new Error(`Tamanho de matriz inválido: ${args[0]}`);
+                    }
+                    this.setMatrixSize(size);
+                    result = { 
+                        instruction: 'SETMATSIZE', 
+                        args: [size], 
+                        result: `Tamanho da matriz definido para ${size}x${size}` 
+                    };
+                    break;
                 default:
                     throw new Error(`Instrução desconhecida: ${instruction}`);
             }
@@ -558,7 +580,7 @@ class Interpreter {
 
     isValidLine(line) {
         if (typeof line !== 'string' || line.trim() === '') {
-                        this.running = false;
+            this.running = false;
             return false;
         }
         return true;
@@ -599,9 +621,10 @@ class Interpreter {
         if (this.currentInstruction >= this.programLength) {
             this.clearHighlight();
         }
-            }
+    }
 
     reset() {
+        console.log('DEBUG - Resetando o interpretador');
         this.memory = new Array(1000).fill(0);
         this.registers = {
             r0: 0,
@@ -636,8 +659,7 @@ class Interpreter {
         this.updateMemoryUI();
         this.clearOutput();
         this.clearHighlight();
-        
-            }
+    }
 
     clearOutput() {
         const outputElement = document.getElementById('program-output');

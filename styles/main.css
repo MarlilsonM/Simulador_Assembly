@@ -138,7 +138,7 @@ body {
 }
 
 #editor-container, #debug-panel {
-    flex: 1 1 300px;
+    flex: 1 1 auto;
 }
 
 /*Visuais extras */
@@ -499,7 +499,7 @@ select {
     background-color: var(--output-background-color);
     color: var(--output-text-color);
     border-radius: 5px;
-    height: 300px;
+    height: 200px;
 }
 
 .output-header {

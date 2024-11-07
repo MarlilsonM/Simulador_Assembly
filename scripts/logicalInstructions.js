@@ -6,8 +6,9 @@ class LogicalInstructions {
     execute(instruction, args) {        
         // Converte para maiúsculo e remove espaços
         const cleanInstruction = instruction.toUpperCase().trim();
+        console.log(`DEBUG - Executando instrução: ${cleanInstruction} com argumentos: ${args}`);
 
-        switch (instruction.toUpperCase()) {
+        switch (cleanInstruction) {
             case 'JMP': return this.jmp(args);
             case 'JE': return this.je(args);
             case 'JNE': return this.jne(args);
@@ -44,6 +45,7 @@ class LogicalInstructions {
         }
     
         this.interpreter.currentInstruction = this.interpreter.labels[label];
+        console.log(`DEBUG - JMP para ${label}, nova posição: ${this.interpreter.currentInstruction}`);
         return { instruction: 'JMP', args: [label], result: `Salto para ${label}` };
     }
 
@@ -51,6 +53,9 @@ class LogicalInstructions {
         if (args.length !== 1) {
             throw new Error('JE requer um argumento (label)');
         }
+        const [label] = args;
+        console.log(`DEBUG - JE: FLAGS=${this.interpreter.registers.FLAGS}, label=${label}`);
+        
         if (this.interpreter.registers.FLAGS === 0) {
             return this.jmp(args);
         }
@@ -63,24 +68,25 @@ class LogicalInstructions {
             throw new Error('JNE requer um argumento (label)');
         }
         const [label] = args;
+        console.log(`DEBUG - JNE: FLAGS=${this.interpreter.registers.FLAGS}, label=${label}`);
         
-        // JNE deve pular quando FLAGS é 0 (valores diferentes)
-        if (this.interpreter.registers.FLAGS === 0) {
+        if (this.interpreter.registers.FLAGS !== 1) {
             if (!this.interpreter.labels.hasOwnProperty(label)) {
                 throw new Error(`Label não encontrada: ${label}`);
             }
-            
-            const jumpToIndex = this.interpreter.labels[label];
             return { 
                 instruction: 'JNE', 
                 args: [label], 
                 result: `Saltando para ${label}`,
-                nextInstruction: jumpToIndex
+                nextInstruction: this.interpreter.labels[label]
             };
         }
         
-        this.interpreter.currentInstruction++;
-        return { instruction: 'JNE', args, result: 'Condição não atendida, continuando' };
+        return { 
+            instruction: 'JNE', 
+            args: [label], 
+            result: 'Condição não atendida, continuando'
+        };
     }
 
     jg(args) {
@@ -103,6 +109,8 @@ class LogicalInstructions {
             }
             
             const jumpToIndex = this.interpreter.labels[label];
+            this.interpreter.currentInstruction = jumpToIndex; // Salta para a label
+            console.log(`DEBUG - JG: Salto para ${label}, nova posição: ${this.interpreter.currentInstruction}`);
             return { 
                 instruction: 'JG', 
                 args: [label], 
@@ -110,6 +118,7 @@ class LogicalInstructions {
                 nextInstruction: jumpToIndex
             };
         } else {
+            console.log(`DEBUG - JG: Condição não atendida, continuando`);
             return { 
                 instruction: 'JG', 
                 args: [label], 
@@ -139,6 +148,7 @@ class LogicalInstructions {
 
             const jumpToIndex = this.interpreter.labels[label];
             this.interpreter.currentInstruction = jumpToIndex; // Salta para a label
+            console.log(`DEBUG - JGE: Salto para ${label}, nova posição: ${this.interpreter.currentInstruction}`);
             return { 
                 instruction: 'JGE', 
                 args: [label], 
@@ -147,6 +157,7 @@ class LogicalInstructions {
             };
         } else {
             this.interpreter.currentInstruction++; // Continua para a próxima instrução
+            console.log(`DEBUG - JGE: Condição não atendida, continuando`);
             return { 
                 instruction: 'JGE', 
                 args: [label], 
@@ -159,6 +170,9 @@ class LogicalInstructions {
         if (args.length !== 1) {
             throw new Error('JL requer um argumento (label)');
         }
+        const [label] = args;
+        console.log(`DEBUG - JL: FLAG=${this.interpreter.registers.FLAG}, label=${label}`);
+        
         if (this.interpreter.registers.FLAG === true) {
             return this.jmp(args);
         }
@@ -172,35 +186,33 @@ class LogicalInstructions {
         }
         
         const [label] = args;
-        // JLE salta se for menor (FLAG = true) OU igual (FLAGS = 1)
-        const shouldJump = this.interpreter.registers.FLAG === true || 
-                         this.interpreter.registers.FLAGS === 1;
-        
-        console.log('DEBUG JLE:', {
-            FLAGS: this.interpreter.registers.FLAGS,
+        const shouldJump = this.interpreter.registers.FLAG || 
+                      this.interpreter.registers.FLAGS === 1;
+
+        console.log('DEBUG - JLE:', {
             FLAG: this.interpreter.registers.FLAG,
+            FLAGS: this.interpreter.registers.FLAGS,
             shouldJump: shouldJump
         });
-    
+
         if (shouldJump) {
             if (!this.interpreter.labels.hasOwnProperty(label)) {
                 throw new Error(`Label não encontrada: ${label}`);
             }
             
-            const jumpToIndex = this.interpreter.labels[label];
             return { 
                 instruction: 'JLE', 
                 args: [label], 
-                result: `Salto para ${label} (condição atendida)`,
-                nextInstruction: jumpToIndex
-            };
-        } else {
-            return { 
-                instruction: 'JLE', 
-                args: [label], 
-                result: 'Condição não atendida, continuando'
+                result: `Saltando para ${label}`,
+                nextInstruction: this.interpreter.labels[label]
             };
         }
+        
+        return { 
+            instruction: 'JLE', 
+            args: [label], 
+            result: 'Condição não atendida, continuando'
+        };
     }
 
     jz(args) {
@@ -208,6 +220,7 @@ class LogicalInstructions {
             throw new Error('JZ requer um argumento (label)');
         }
         const [label] = args;
+        console.log(`DEBUG - JZ: FLAGS=${this.interpreter.registers.FLAGS}, label=${label}`);
         
         if (this.interpreter.registers.FLAGS === 0) {
             return this.jmp(args);
@@ -221,6 +234,7 @@ class LogicalInstructions {
             throw new Error('JNZ requer um argumento (label)');
         }
         const [label] = args;
+        console.log(`DEBUG - JNZ: FLAGS=${this.interpreter.registers.FLAGS}, label=${label}`);
         
         if (this.interpreter.registers.FLAGS !== 0) {
             return this.jmp(args);
@@ -230,10 +244,11 @@ class LogicalInstructions {
     }
 
     jc(args) {
-        if (args.length !== 1) {
+        if (args.length !==  1) {
             throw new Error('JC requer um argumento (label)');
         }
         const [label] = args;
+        console.log(`DEBUG - JC: CARRY=${this.interpreter.registers.CARRY}, label=${label}`);
         
         if (this.interpreter.registers.CARRY === 1) { // Supondo que você tenha uma flag de carry
             return this.jmp(args);
@@ -247,6 +262,7 @@ class LogicalInstructions {
             throw new Error('JNC requer um argumento (label)');
         }
         const [label] = args;
+        console.log(`DEBUG - JNC: CARRY=${this.interpreter.registers.CARRY}, label=${label}`);
         
         if (this.interpreter.registers.CARRY === 0) { // Supondo que você tenha uma flag de carry
             return this.jmp(args);
@@ -260,6 +276,7 @@ class LogicalInstructions {
             throw new Error('JO requer um argumento (label)');
         }
         const [label] = args;
+        console.log(`DEBUG - JO: OVERFLOW=${this.interpreter.registers.OVERFLOW}, label=${label}`);
         
         if (this.interpreter.registers.OVERFLOW === 1) { // Supondo que você tenha uma flag de overflow
             return this.jmp(args);
@@ -273,12 +290,13 @@ class LogicalInstructions {
             throw new Error('JNO requer um argumento (label)');
         }
         const [label] = args;
+        console.log(`DEBUG - JNO: OVERFLOW=${this.interpreter.registers.OVERFLOW}, label=${label}`);
         
         if (this.interpreter.registers.OVERFLOW === 0) { // Supondo que você tenha uma flag de overflow
             return this.jmp(args);
         }
         this.interpreter.currentInstruction++;
-        return { instruction: 'JNO', args, result: ' Condição não atendida, continuando' };
+        return { instruction: 'JNO', args, result: 'Condição não atendida, continuando' };
     }
 
     jbe(args) {
@@ -286,6 +304,7 @@ class LogicalInstructions {
             throw new Error('JBE requer um argumento (label)');
         }
         const [label] = args;
+        console.log(`DEBUG - JBE: FLAGS=${this.interpreter.registers.FLAGS}, CARRY=${this.interpreter.registers.CARRY}, label=${label}`);
 
         // JBE salta se FLAGS == 0 (zero) ou CARRY == 1 (menor ou igual)
         if (this.interpreter.registers.FLAGS === 0 || this.interpreter.registers.CARRY === 1) {
@@ -300,6 +319,7 @@ class LogicalInstructions {
             throw new Error('JA requer um argumento (label)');
         }
         const [label] = args;
+        console.log(`DEBUG - JA: FLAGS=${this.interpreter.registers.FLAGS}, CARRY=${this.interpreter.registers.CARRY}, label=${label}`);
 
         // JA salta se FLAGS > 0 e CARRY == 0 (maior)
         if (this.interpreter.registers.FLAGS > 0 && this.interpreter.registers.CARRY === 0) {
@@ -314,6 +334,7 @@ class LogicalInstructions {
             throw new Error('JAE requer um argumento (label)');
         }
         const [label] = args;
+        console.log(`DEBUG - JAE: FLAGS=${this.interpreter.registers.FLAGS}, CARRY=${this.interpreter.registers.CARRY}, label=${label}`);
 
         // JAE salta se FLAGS >= 0 ou CARRY == 0 (maior ou igual)
         if (this.interpreter.registers.FLAGS >= 0 || this.interpreter.registers.CARRY === 0) {
@@ -328,6 +349,7 @@ class LogicalInstructions {
             throw new Error('JB requer um argumento (label)');
         }
         const [label] = args;
+        console.log(`DEBUG - JB: CARRY=${this.interpreter.registers.CARRY}, label=${label}`);
 
         // JB salta se CARRY == 1 (menor)
         if (this.interpreter.registers.CARRY === 1) {
@@ -343,7 +365,7 @@ class LogicalInstructions {
         }
         const [label] = args;
         const returnAddress = this.interpreter.currentInstruction + 1;
-    
+
         if (this.interpreter.registers['SP'] <= 0) {
             throw new Error('Stack overflow');
         }
@@ -351,6 +373,7 @@ class LogicalInstructions {
         this.interpreter.registers['SP']--;
         this.interpreter.memory[this.interpreter.registers['SP']] = returnAddress;
         const jmpResult = this.jmp([label]);
+        console.log(`DEBUG - CALL: Chamada para ${label}, retorno salvo em SP=${this.interpreter.registers['SP']}`);
         return { 
             instruction: 'CALL', 
             args: [label], 
@@ -371,6 +394,7 @@ class LogicalInstructions {
         }
 
         this.interpreter.currentInstruction = returnAddress;
+        console.log(`DEBUG - RET: Retorno para instrução ${returnAddress}`);
         return { instruction: 'RET', args: [], result: `Retorno para instrução ${returnAddress}` };
     }
 }

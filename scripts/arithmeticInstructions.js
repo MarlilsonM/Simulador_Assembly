@@ -9,6 +9,8 @@ class ArithmeticInstructions {
             throw new Error('Instrução ou argumentos inválidos');
         }
 
+        console.log(`DEBUG - Executando: ${instruction} com argumentos: ${args}`);
+        
         switch (instruction.toUpperCase()) {
             case 'ADD': return this.add(args);
             case 'SUB': return this.sub(args);
@@ -31,6 +33,8 @@ class ArithmeticInstructions {
     }
 
     getRegisterOrValue(arg) {
+        console.log(`DEBUG - Obtendo valor para: ${arg}`);
+        
         if (this.interpreter.registers.hasOwnProperty(arg)) {
             return this.getRegisterValue(arg);
         } else {
@@ -38,12 +42,15 @@ class ArithmeticInstructions {
             if (isNaN(value)) {
                 throw new Error(`Valor inválido: ${arg}`);
             }
+            console.log(`DEBUG - Valor obtido: ${value}`);
             return value;
         }
     }
 
     getRegisterValue(register) {
         const value = parseFloat(this.interpreter.registers[register]);
+        console.log(`DEBUG - Valor do registrador ${register}: ${value}`);
+        
         if (isNaN(value)) {
             throw new Error(`Valor inválido no registrador ${register}`);
         }
@@ -70,6 +77,8 @@ class ArithmeticInstructions {
         this.validateRegister(dest);
         const destValue = this.getRegisterValue(dest);
         const srcValue = this.getRegisterOrValue(src);
+        console.log(`DEBUG - ADD: ${destValue} + ${srcValue}`);
+        
         const result = destValue + srcValue;
         this.interpreter.registers[dest] = result;
         this.updateFlags(result);
@@ -81,6 +90,8 @@ class ArithmeticInstructions {
         this.validateRegister(dest);
         const destValue = this.getRegisterValue(dest);
         const srcValue = this.getRegisterOrValue(src);
+        console.log(`DEBUG - SUB: ${destValue} - ${srcValue}`);
+        
         const result = destValue - srcValue;
         this.interpreter.registers[dest] = result;
         this.updateFlags(result);
@@ -92,6 +103,8 @@ class ArithmeticInstructions {
         this.validateRegister(dest);
         const destValue = this.getRegisterValue(dest);
         const srcValue = this.getRegisterOrValue(src);
+        console.log(`DEBUG - MUL: ${destValue} * ${srcValue}`);
+        
         const result = destValue * srcValue;
         this.interpreter.registers[dest] = result;
         this.updateFlags(result);
@@ -106,6 +119,8 @@ class ArithmeticInstructions {
         if (srcValue === 0) {
             throw new Error('Divisão por zero');
         }
+        console.log(`DEBUG - DIV: ${destValue} / ${srcValue}`);
+        
         const result = destValue / srcValue;
         this.interpreter.registers[dest] = result;
         this.updateFlags(result);
@@ -117,6 +132,8 @@ class ArithmeticInstructions {
         this.validateRegister(dest);
         const destValue = this.getRegisterValue(dest);
         const srcValue = this.getRegisterOrValue(src);
+        console.log(`DEBUG - AND: ${destValue} & ${srcValue}`);
+        
         const result = destValue & srcValue;
         this.interpreter.registers[dest] = result;
         this.updateFlags(result);
@@ -128,6 +145,8 @@ class ArithmeticInstructions {
         this.validateRegister(dest);
         const destValue = this.getRegisterValue(dest);
         const srcValue = this.getRegisterOrValue(src);
+        console.log(`DEBUG - OR: ${destValue} | ${srcValue}`);
+        
         const result = destValue | srcValue;
         this.interpreter.registers[dest] = result;
         this.updateFlags(result);
@@ -139,6 +158,8 @@ class ArithmeticInstructions {
         this.validateRegister(dest);
         const destValue = this.getRegisterValue(dest);
         const srcValue = this.getRegisterOrValue(src);
+        console.log(`DEBUG - XOR: ${destValue} ^ ${srcValue}`);
+        
         const result = destValue ^ srcValue;
         this.interpreter.registers[dest] = result;
         this.updateFlags(result);
@@ -149,6 +170,8 @@ class ArithmeticInstructions {
         const [dest] = args;
         this.validateRegister(dest);
         const result = ~this.getRegisterValue(dest);
+        console.log(`DEBUG - NOT: ~${dest} = ${result}`);
+        
         this.interpreter.registers[dest] = result;
         this.updateFlags(result);
         return { instruction: 'NOT', args, result };

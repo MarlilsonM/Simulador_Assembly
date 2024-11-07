@@ -55,7 +55,7 @@ O Simulador de Assembly é uma ferramenta educacional avançada que permite aos 
 ## Conjunto de Instruções
 
 ### Instruções de Movimentação de Dados
-- `MOV destino, fonte`: Move dados entre registradores ou da memória para um registrador.
+- `MOV destino, fonte`: Move dados entre registradores ou entre registrador e memória.
 - `LOAD destino, [endereço]`: Carrega um valor da memória para um registrador.
 - `STORE [endereço], fonte`: Armazena um valor de um registrador na memória.
 
@@ -70,14 +70,28 @@ O Simulador de Assembly é uma ferramenta educacional avançada que permite aos 
 - `OR destino, fonte`: Realiza operação OR bit a bit.
 - `XOR destino, fonte`: Realiza operação XOR bit a bit.
 - `NOT destino`: Inverte os bits do destino.
+- `CMP op1, op2`: Compara op1 com op2 e define flags.
 
-### Instruções de Controle de Fluxo
-- `JMP label`: Salta incondicionalmente para a label especificada.
+### Instruções de Salto Condicional
+- `JMP label`: Salto incondicional.
 - `JE label`: Salta se igual (Zero Flag = 1).
 - `JNE label`: Salta se não igual (Zero Flag = 0).
-- `JG label`: Salta se maior (Greater Flag = 1).
-- `JL label`: Salta se menor (Less Flag = 1).
-- `CMP op1, op2`: Compara op1 com op2 e define flags.
+- `JG label`: Salta se maior.
+- `JGE label`: Salta se maior ou igual.
+- `JL label`: Salta se menor.
+- `JLE label`: Salta se menor ou igual.
+- `JZ label`: Salta se zero.
+- `JNZ label`: Salta se não zero.
+- `JC label`: Salta se carry.
+- `JNC label`: Salta se não carry.
+- `JO label`: Salta se overflow.
+- `JNO label`: Salta se não overflow.
+- `JB label`: Salta se abaixo (Below).
+- `JBE label`: Salta se abaixo ou igual.
+- `JA label`: Salta se acima (Above).
+- `JAE label`: Salta se acima ou igual.
+
+### Instruções de Subrotina
 - `CALL label`: Chama uma subrotina.
 - `RET`: Retorna de uma subrotina.
 
@@ -88,7 +102,8 @@ O Simulador de Assembly é uma ferramenta educacional avançada que permite aos 
 - `SWAP`: Troca os dois elementos no topo da pilha.
 - `ROT`: Rotaciona os três elementos no topo da pilha.
 
-### Instruções SIMD
+### Instruções SIMD (Single Instruction, Multiple Data)
+- `SETMATSIZE tamanho`: Define o tamanho da matriz/vetor para operações SIMD.
 - `VADD v_dest, v_src1, v_src2`: Soma vetorial.
 - `VMUL v_dest, v_src1, v_src2`: Multiplicação vetorial.
 - `VDIV v_dest, v_src1, v_src2`: Divisão vetorial.
@@ -239,18 +254,19 @@ MOV r0, 0      ; Primeiro número
 MOV r1, 1      ; Segundo número
 MOV r2, 10     ; Quantidade de números
 MOV r3, 2      ; Contador
-MOV r4, 200    ; Endereço inicial para armazenar
+MOV r4, 100    ; Endereço inicial para armazenar (mudado para 100)
 
-STORE [r4], r0 ; Armazena primeiro número
+; Tente diferentes formas de armazenar na memória
+MOV [r4], r0   ; Tenta armazenar usando MOV
 ADD r4, 1
-STORE [r4], r1 ; Armazena segundo número
+MOV [r4], r1
 ADD r4, 1
 
 fib_loop:
 MOV r5, r1     ; Guarda n-1
 ADD r1, r0     ; Novo número
 MOV r0, r5     ; Atualiza n-2
-STORE [r4], r1 ; Armazena novo número
+MOV [r4], r1   ; Tenta armazenar usando MOV
 ADD r4, 1
 ADD r3, 1      ; Incrementa contador
 CMP r3, r2     ; Compara com limite
@@ -259,99 +275,139 @@ END
 
 ### Exemplo 9: Ordenação Bubble Sort
 ; Inicialização do array
-MOV [100], 5   ; Primeiro elemento
-MOV [101], 3   ; Segundo elemento
-MOV [102], 8   ; Terceiro elemento
-MOV [103], 1   ; Quarto elemento
-MOV [104], 4   ; Quinto elemento
+MOV [100], 5
+MOV [101], 3
+MOV [102], 8
+MOV [103], 1
+MOV [104], 4
 
-; Bubble Sort de um array
+; Bubble Sort
 MOV r0, 100    ; Endereço base do array
 MOV r1, 5      ; Tamanho do array
-SUB r1, 1      ; Tamanho - 1 para comparações
+SUB r1, 1      ; r1 = tamanho - 1 (número de comparações)
 
 outer_loop:
-MOV r2, 0      ; Índice interno
+MOV r2, 0      ; Índice para o loop interno
 MOV r3, 0      ; Flag de troca
 
 inner_loop:
-LOAD r4, [r0 + r2]     ; Elemento atual
-LOAD r5, [r0 + r2 + 1] ; Próximo elemento
+MOV r4, [r0]   ; Carrega o elemento atual
+ADD r0, 1      ; Avança para o próximo elemento
+MOV r5, [r0]   ; Carrega o próximo elemento
+SUB r0, 1      ; Volta para o elemento atual
 CMP r4, r5
-JLE no_swap            ; Pula se já estiver ordenado
+JLE no_swap    ; Se r4 <= r5, não precisa trocar
 
-; Troca elementos
-STORE [r0 + r2], r5    ; Armazena o próximo elemento na posição atual
-STORE [r0 + r2 + 1], r4 ; Armazena o elemento atual na próxima posição
-MOV r3, 1              ; Marca que houve troca
+; Troca os elementos
+MOV [r0], r5
+ADD r0, 1
+MOV [r0], r4
+SUB r0, 1
+MOV r3, 1      ; Marca que houve troca
 
 no_swap:
-ADD r2, 1              ; Próximo índice
-CMP r2, r1             ; Compara com limite
-JNE inner_loop         ; Continua loop interno
-CMP r3, 0              ; Verifica se houve trocas
-JNE outer_loop         ; Continua se houve trocas
+ADD r2, 1      ; Incrementa o índice interno
+ADD r0, 1      ; Avança para o próximo par de elementos
+CMP r2, r1
+JNE inner_loop ; Continua o loop interno se r2 != r1
+
+SUB r0, r1     ; Reseta r0 para o início do array
+CMP r3, 0      ; Verifica se houve alguma troca
+JNE outer_loop ; Se houve troca, repete o loop externo
 END
 
 ### Exemplo 10: Multiplicação de Matrizes usando SIMD
-; Multiplicação de matrizes 2x2 usando SIMD
-; Matriz 1 em [300-303], Matriz 2 em [304-307]
-; Resultado em [308-311]
+; Versão corrigida com operações vetoriais
+SETMATSIZE 4  ; Define o tamanho da matriz para 4x4
 
-; Carrega primeira linha da matriz 1
-VLOAD v0, [300]
+; Matriz 1 (2x2):
+MOV [300], 1
+MOV [301], 2
+MOV [302], 3
+MOV [303], 4
 
-; Carrega primeira coluna da matriz 2
-MOV r0, 304
-MOV r1, 306
-LOAD r2, [r0]
-LOAD r3, [r1]
-STORE [400], r2
-STORE [401], r3
-VLOAD v1, [400]
+; Matriz 2 (2x2):
+MOV [304], 5
+MOV [305], 6
+MOV [306], 7
+MOV [307], 8
 
-; Multiplica e soma
-VMUL v2, v0, v1
-; Resultado parcial em v2
+; Carregar as matrizes em registradores vetoriais
+VLOAD v0, [300]  ; v0 = [1, 2, 3, 4]
+VLOAD v1, [304]  ; v1 = [5, 6, 7, 8]
 
-; Carrega segunda coluna da matriz 2
-ADD r0, 1
-ADD r1, 1
-LOAD r2, [r0]
-LOAD r3, [r1]
-STORE [400], r2
-STORE [401], r3
-VLOAD v1, [400]
+; Calcular a primeira linha da matriz resultante
+VMUL v2, v0, v1  ; v2 = [1*5, 2*6, 3*7, 4*8]
 
-; Multiplica e soma
-VMUL v3, v0, v1
-; Resultado final da primeira linha em v2, v3
+; Reorganizar v1 para multiplicar com a segunda coluna da matriz 2
+MOV [400], 7
+MOV [401], 8
+MOV [402], 5
+MOV [403], 6
+VLOAD v3, [400]  ; v3 = [7, 8, 5, 6]
 
-; Repete para segunda linha
-VLOAD v0, [302]
-; ... (processo similar)
+; Calcular a segunda linha da matriz resultante
+VMUL v3, v0, v3  ; v3 = [1*7, 2*8, 3*5, 4*6]
+
+; Somar os resultados parciais para obter a matriz final
+VADD v0, v2, v3  ; v0 = [1*5+1*7, 2*6+2*8, 3*7+3*5, 4*8+4*6]
+
+; Armazenar o resultado final na memória (ordem correta dos argumentos)
+VSTORE v0, [500]
 END
 
 ### Exemplo 11: Cálculo de Média Móvel
 ; Calcula média móvel de 3 elementos
+; Primeiro, vamos inicializar alguns valores no array fonte para teste
+MOV [100], 10   ; Primeiro elemento
+MOV [101], 20   ; Segundo elemento
+MOV [102], 30   ; Terceiro elemento
+MOV [103], 40   ; Quarto elemento
+MOV [104], 50   ; Quinto elemento
+MOV [105], 60   ; Sexto elemento
+MOV [106], 70   ; Sétimo elemento
+MOV [107], 80   ; Oitavo elemento
+MOV [108], 90   ; Nono elemento
+MOV [109], 100  ; Décimo elemento
+
+; Agora o código principal
 MOV r0, 100    ; Endereço fonte
 MOV r1, 200    ; Endereço destino
 MOV r2, 10     ; Tamanho do array
 MOV r3, 2      ; Contador (começa em 2 para ter 3 elementos)
 
 media_loop:
-LOAD r4, [r0+r3]   ; Elemento atual
-LOAD r5, [r0+r3-1] ; Elemento anterior
-LOAD r6, [r0+r3-2] ; Dois elementos atrás
+; Calcula endereço do elemento atual
+MOV r4, r0     ; Copia endereço base
+ADD r4, r3     ; Adiciona offset
+LOAD r5, [r4]  ; Carrega elemento atual
 
-ADD r4, r5         ; Soma os três
-ADD r4, r6
-DIV r4, 3          ; Divide por 3 para média
+; Calcula endereço do elemento anterior
+MOV r4, r0     ; Reset endereço base
+ADD r4, r3     ; Adiciona offset
+SUB r4, 1      ; Subtrai 1 para elemento anterior
+LOAD r6, [r4]  ; Carrega elemento anterior
 
-STORE [r1+r3-2], r4 ; Armazena resultado
-ADD r3, 1           ; Próximo índice
-CMP r3, r2          ; Compara com tamanho
-JNE media_loop      ; Continua se não terminou
+; Calcula endereço do elemento dois atrás
+MOV r4, r0     ; Reset endereço base
+ADD r4, r3     ; Adiciona offset
+SUB r4, 2      ; Subtrai 2 para dois elementos atrás
+LOAD r4, [r4]  ; Carrega elemento dois atrás
+
+; Calcula a média
+ADD r5, r6     ; Soma primeiro com segundo
+ADD r5, r4     ; Soma com terceiro
+DIV r5, 3      ; Divide por 3 para média
+
+; Calcula endereço de destino e armazena
+MOV r4, r1     ; Endereço destino base
+ADD r4, r3     ; Adiciona offset
+SUB r4, 2      ; Ajusta para posição correta
+MOV [r4], r5   ; Armazena resultado (usando MOV em vez de STORE)
+
+ADD r3, 1      ; Próximo índice
+CMP r3, r2     ; Compara com tamanho
+JNE media_loop ; Continua se não terminou
 END
 
 ### Exemplo 12: Manipulação de Pilha Avançada
@@ -385,18 +441,43 @@ POP r0
 END
 
 ### Exemplo 13: Processamento Condicional com SIMD
+; Define o tamanho da matriz/vetor
+SETMATSIZE 4    ; Define para operar com 4 elementos
+
+; Inicializa dados na memória
+MOV [100], 1    ; Primeiro vetor
+MOV [101], 2
+MOV [102], 3
+MOV [103], 4
+
+MOV [104], 5    ; Segundo vetor
+MOV [105], 6
+MOV [106], 7
+MOV [107], 8
+
 ; Processa array com condicionais usando SIMD
-VLOAD v0, [100]    ; Carrega 4 elementos
-VLOAD v1, [104]    ; Carrega próximos 4
+VLOAD v0, [100]    ; Carrega 4 elementos (1,2,3,4)
+VLOAD v1, [104]    ; Carrega próximos 4 elementos (5,6,7,8)
 
 ; Compara e processa
-VADD v2, v0, v1    ; Soma vetores
-VMUL v3, v2, v0    ; Multiplica resultado
+VADD v2, v0, v1    ; Soma vetores (1+5, 2+6, 3+7, 4+8) = (6,8,10,12)
+VMUL v3, v2, v0    ; Multiplica resultado (6*1, 8*2, 10*3, 12*4) = (6,16,30,48)
 
 ; Armazena resultados
-VSTORE [108], v2
-VSTORE [112], v3
+VSTORE v2, [108]   ; Armazena resultados da soma
+VSTORE v3, [112]   ; Armazena resultados da multiplicação
 END
+
+; Verificação dos resultados (opcional)
+LOAD r0, [108]  ; Primeiro resultado da soma
+LOAD r1, [109]  ; Segundo resultado da soma
+LOAD r2, [110]  ; Terceiro resultado da soma
+LOAD r3, [111]  ; Quarto resultado da soma
+
+LOAD r4, [112]  ; Primeiro resultado da multiplicação
+LOAD r5, [113]  ; Segundo resultado da multiplicação
+LOAD r6, [114]  ; Terceiro resultado da multiplicação
+LOAD r7, [115]  ; Quarto resultado da multiplicação
 
 ### Dicas de Uso
 - Use comentários (;) para documentar seu código.
