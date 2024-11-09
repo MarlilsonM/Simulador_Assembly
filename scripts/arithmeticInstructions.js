@@ -1,9 +1,25 @@
+/**
+ * Classe que implementa instruções aritméticas para um interpretador de assembly.
+ * As instruções suportadas incluem adição, subtração, multiplicação, divisão,
+ * operações lógicas e comparação.
+ */
 class ArithmeticInstructions {
+    /**
+     * Construtor da classe.
+     * @param {Interpreter} interpreter - Instância do interpretador que contém os registradores e a lógica de execução.
+     */
     constructor(interpreter) {
         this.interpreter = interpreter;
-        this.maxValue = Math.pow(2, interpreter.bitWidth) - 1;
+        this.maxValue = Math.pow(2, interpreter.bitWidth) - 1; // Define o valor máximo com base na largura de bits.
     }
 
+    /**
+     * Executa uma instrução aritmética com os argumentos fornecidos.
+     * @param {string} instruction - A instrução a ser executada (ex: 'ADD', 'SUB', etc.).
+     * @param {Array} args - Os argumentos para a instrução.
+     * @returns {Object} Resultado da execução da instrução.
+     * @throws {Error} Se a instrução ou os argumentos forem inválidos.
+     */
     execute(instruction, args) {
         if (!instruction || !args) {
             throw new Error('Instrução ou argumentos inválidos');
@@ -24,14 +40,24 @@ class ArithmeticInstructions {
         }
     }
 
+    /**
+     * Valida se o registrador fornecido existe nos registradores do interpretador.
+     * @param {string} reg - O nome do registrador a ser validado.
+     * @throws {Error} Se o registrador for inválido.
+     */
     validateRegister(reg) {
         if (!this.interpreter.registers.hasOwnProperty(reg)) {
             throw new Error(`Registrador inválido: ${reg}`);
         }
     }
 
+    /**
+     * Obtém o valor de um registrador ou converte um argumento para um número.
+     * @param {string} arg - O argumento que pode ser um registrador ou um valor numérico.
+     * @returns {number} O valor do registrador ou o valor numérico.
+     * @throws {Error} Se o argumento não for um registrador válido ou um número.
+     */
     getRegisterOrValue(arg) {
-        
         if (this.interpreter.registers.hasOwnProperty(arg)) {
             return this.getRegisterValue(arg);
         } else {
@@ -43,6 +69,12 @@ class ArithmeticInstructions {
         }
     }
 
+    /**
+     * Obtém o valor de um registrador específico.
+     * @param {string} register - O nome do registrador.
+     * @returns {number} O valor do registrador.
+     * @throws {Error} Se o valor do registrador for inválido.
+     */
     getRegisterValue(register) {
         const value = parseFloat(this.interpreter.registers[register]);
         
@@ -52,6 +84,10 @@ class ArithmeticInstructions {
         return value;
     }
 
+    /**
+     * Atualiza as flags do interpretador com base no resultado de uma operação.
+     * @param {number} result - O resultado da operação aritmética.
+     */
     updateFlags(result) {
         // Flag Zero (Z)
         this.interpreter.registers.FLAGS = result === 0 ? 1 : 0;
@@ -67,6 +103,11 @@ class ArithmeticInstructions {
         }
     }
 
+    /**
+     * Executa a instrução de adição.
+     * @param {Array} args - Argumentos da instrução (destino e fonte).
+     * @returns {Object} Resultado da operação de adição.
+     */
     add(args) {
         const [dest, src] = args;
         this.validateRegister(dest);
@@ -79,6 +120,11 @@ class ArithmeticInstructions {
         return { instruction: 'ADD', args, result };
     }
 
+    /**
+     * Executa a instrução de subtração.
+     * @param {Array} args - Argumentos da instrução (destino e fonte).
+     * @returns {Object} Resultado da operação de subtração.
+     */
     sub(args) {
         const [dest, src] = args;
         this.validateRegister(dest);
@@ -91,6 +137,11 @@ class ArithmeticInstructions {
         return { instruction: 'SUB', args, result };
     }
 
+    /**
+     * Executa a instrução de multiplicação.
+     * @param {Array} args - Argumentos da instrução (destino e fonte).
+     * @returns {Object} Resultado da operação de multiplicação.
+     */
     mul(args) {
         const [dest, src] = args;
         this.validateRegister(dest);
@@ -103,6 +154,12 @@ class ArithmeticInstructions {
         return { instruction: 'MUL', args, result };
     }
 
+    /**
+     * Executa a instrução de divisão.
+     * @param {Array} args - Argumentos da instrução (destino e fonte).
+     * @returns {Object} Resultado da operação de divisão.
+     * @throws {Error} Se houver tentativa de divisão por zero.
+     */
     div(args) {
         const [dest, src] = args;
         this.validateRegister(dest);
@@ -118,6 +175,11 @@ class ArithmeticInstructions {
         return { instruction: 'DIV', args, result };
     }
 
+    /**
+     * Executa a instrução AND.
+     * @param {Array} args - Argumentos da instrução (destino e fonte).
+     * @returns {Object} Resultado da operação AND.
+     */
     and(args) {
         const [dest, src] = args;
         this.validateRegister(dest);
@@ -130,6 +192,11 @@ class ArithmeticInstructions {
         return { instruction: 'AND', args, result };
     }
 
+    /**
+     * Executa a instrução OR.
+     * @param {Array} args - Argumentos da instrução (destino e fonte).
+     * @returns {Object} Resultado da operação OR.
+     */
     or(args) {
         const [dest, src] = args;
         this.validateRegister(dest);
@@ -142,6 +209,11 @@ class ArithmeticInstructions {
         return { instruction: 'OR', args, result };
     }
 
+    /**
+     * Executa a instrução XOR.
+     * @param {Array} args - Argumentos da instrução (destino e fonte).
+     * @returns {Object} Resultado da operação XOR.
+     */
     xor(args) {
         const [dest, src] = args;
         this.validateRegister(dest);
@@ -154,6 +226,11 @@ class ArithmeticInstructions {
         return { instruction: 'XOR', args, result };
     }
 
+    /**
+     * Executa a instrução NOT.
+     * @param {Array} args - Argumentos da instrução (destino).
+     * @returns {Object} Resultado da operação NOT.
+     */
     not(args) {
         const [dest] = args;
         this.validateRegister(dest);
@@ -164,6 +241,11 @@ class ArithmeticInstructions {
         return { instruction: 'NOT', args, result };
     }
 
+    /**
+     * Executa a instrução de comparação.
+     * @param {Array} args - Argumentos da instrução (dois registradores a serem comparados).
+     * @returns {Object} Resultado da operação de comparação.
+     */
     cmp(args) {
         const [reg1, reg2] = args;
         this.validateRegister(reg1);

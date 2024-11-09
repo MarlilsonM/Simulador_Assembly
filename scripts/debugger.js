@@ -1,32 +1,50 @@
+/**
+ * debugger.js
+ * 
+ * @description
+ * Implementa funcionalidades de depuração para o simulador Assembly.
+ * Gerencia breakpoints e controla a execução passo a passo do programa.
+ * 
+ * @class Debugger
+ */
 class Debugger {
+    /**
+     * @constructor
+     * @param {Interpreter} interpreter - Instância do interpretador
+     */
     constructor(interpreter) {
         this.interpreter = interpreter;
         this.breakpoints = new Set();
-    }    
-        
-    initialize() {    
+    }
+
+    /**
+     * @method initialize
+     * @description Inicializa o debugger e configura os eventos do editor
+     */
+    initialize() {
         if (!window.editor) {
             console.error('Editor não está disponível');
             return;
         }
         
-        // Adiciona evento de clique na gutter do CodeMirror
         window.editor.on("gutterClick", (cm, line, gutter) => {
-            // Permite cliques em qualquer gutter para adicionar breakpoints
             this.toggleBreakpoint(line + 1);
         });
     }
 
+    /**
+     * @method toggleBreakpoint
+     * @description Adiciona ou remove um breakpoint em uma linha específica
+     * @param {number} lineNumber - Número da linha para alternar o breakpoint
+     */
     toggleBreakpoint(lineNumber) {
-        const line = lineNumber - 1; // Ajusta para 0-based index
+        const line = lineNumber - 1;
         const info = window.editor.lineInfo(line);
         
         if (info.gutterMarkers && info.gutterMarkers.breakpoints) {
-            // Remove o breakpoint
             window.editor.setGutterMarker(line, "breakpoints", null);
             this.breakpoints.delete(lineNumber);
         } else {
-            // Adiciona o breakpoint
             const marker = document.createElement("div");
             marker.style.color = "#822";
             marker.innerHTML = "●";
@@ -37,11 +55,21 @@ class Debugger {
         }
     }
 
-
+    /**
+     * @method hasBreakpoint
+     * @description Verifica se existe um breakpoint em uma linha específica
+     * @param {number} line - Número da linha a ser verificada
+     * @returns {boolean} - Verdadeiro se existe um breakpoint na linha
+     */
     hasBreakpoint(line) {
         return this.breakpoints.has(line + 1);
     }
 
+    /**
+     * @method shouldPause
+     * @description Verifica se a execução deve pausar na linha atual
+     * @returns {boolean} - Verdadeiro se deve pausar na instrução atual
+     */
     shouldPause() {
         return this.breakpoints.has(this.interpreter.currentInstruction + 1);
     }

@@ -1,8 +1,23 @@
+/**
+ * Classe que implementa instruções de pilha para um interpretador de assembly.
+ * As instruções suportadas incluem PUSH, POP, DUP, SWAP e ROT.
+ */
 class StackInstructions {
+    /**
+     * Construtor da classe.
+     * @param {Interpreter} interpreter - Instância do interpretador que contém os registradores e a lógica de execução.
+     */
     constructor(interpreter) {
         this.interpreter = interpreter;
     }
 
+    /**
+     * Executa uma instrução de pilha com os argumentos fornecidos.
+     * @param {string} instruction - A instrução a ser executada (ex: 'PUSH', 'POP', etc.).
+     * @param {Array} args - Os argumentos para a instrução.
+     * @returns {Object} Resultado da execução da instrução.
+     * @throws {Error} Se a instrução for desconhecida.
+     */
     execute(instruction, args) {
         switch (instruction.toUpperCase()) {
             case 'PUSH':
@@ -20,6 +35,12 @@ class StackInstructions {
         }
     }
 
+    /**
+     * Executa a instrução PUSH para empilhar um valor do registrador na pilha.
+     * @param {Array} args - Argumentos da instrução (registrador de origem).
+     * @returns {Object} Resultado da operação PUSH.
+     * @throws {Error} Se o registrador for inválido ou se ocorrer um overflow na pilha.
+     */
     push(args) {
         if (args.length !== 1) {
             throw new Error('PUSH requer um argumento');
@@ -44,6 +65,12 @@ class StackInstructions {
         };
     }
 
+    /**
+     * Executa a instrução POP para desempilhar um valor da pilha para um registrador.
+     * @param {Array} args - Argumentos da instrução (registrador de destino).
+     * @returns {Object} Resultado da operação POP.
+     * @throws {Error} Se o registrador for inválido ou se ocorrer um underflow na pilha.
+     */
     pop(args) {
         if (args.length !== 1) {
             throw new Error('POP requer um argumento');
@@ -69,6 +96,11 @@ class StackInstructions {
         };
     }
 
+    /**
+     * Executa a instrução DUP para duplicar o valor no topo da pilha.
+     * @returns {Object} Resultado da operação DUP.
+     * @throws {Error} Se ocorrer um overflow na pilha ou se a pilha estiver vazia.
+     */
     dup() {
         const sp = this.interpreter.registers['SP'];
         
@@ -92,6 +124,11 @@ class StackInstructions {
         };
     }
 
+    /**
+     * Executa a instrução SWAP para trocar os dois valores no topo da pilha.
+     * @returns {Object} Resultado da operação SWAP.
+     * @throws {Error} Se não houver elementos suficientes na pilha para realizar a troca.
+     */
     swap() {
         const sp = this.interpreter.registers['SP'];
         
@@ -111,6 +148,11 @@ class StackInstructions {
         };
     }
 
+    /**
+     * Executa a instrução ROT para rotacionar os três valores no topo da pilha.
+     * @returns {Object} Resultado da operação ROT.
+     * @throws {Error} Se não houver elementos suficientes na pilha para realizar a rotação.
+     */
     rot() {
         const sp = this.interpreter.registers['SP'];
         

@@ -1,10 +1,24 @@
+/**
+ * Classe que implementa instruções de movimentação de dados para um interpretador de assembly.
+ * As instruções suportadas incluem MOV, LOAD e STORE.
+ */
 class DataMovementInstructions {
+    /**
+     * Construtor da classe.
+     * @param {Interpreter} interpreter - Instância do interpretador que contém os registradores e a lógica de execução.
+     */
     constructor(interpreter) {
         this.interpreter = interpreter;
     }
 
+    /**
+     * Executa uma instrução de movimentação de dados com os argumentos fornecidos.
+     * @param {string} instruction - A instrução a ser executada (ex: 'MOV', 'LOAD', 'STORE').
+     * @param {Array} args - Os argumentos para a instrução.
+     * @returns {Object} Resultado da execução da instrução.
+     * @throws {Error} Se a instrução for desconhecida.
+     */
     execute(instruction, args) {
-        
         switch (instruction.toUpperCase()) {
             case 'MOV':
                 return this.mov(args);
@@ -17,6 +31,12 @@ class DataMovementInstructions {
         }
     }
 
+    /**
+     * Executa a instrução MOV para mover dados entre registradores ou para a memória.
+     * @param {Array} args - Argumentos da instrução (destino e fonte).
+     * @returns {Object} Resultado da operação MOV.
+     * @throws {Error} Se o número de argumentos for inválido.
+     */
     mov(args) {
         if (args.length !== 2) {
             throw new Error('MOV requer dois argumentos');
@@ -33,6 +53,13 @@ class DataMovementInstructions {
         return this.movToRegister(dest, src);
     }
 
+    /**
+     * Movimenta um valor para um endereço de memória.
+     * @param {string} dest - O endereço de memória de destino.
+     * @param {string} src - O valor ou registrador de origem.
+     * @returns {Object} Resultado da operação MOV para memória.
+     * @throws {Error} Se o endereço de memória for inválido.
+     */
     movToMemory(dest, src) {
         const address = this.parseMemoryAddress(dest);
         const value = this.parseValue(src);
@@ -46,6 +73,13 @@ class DataMovementInstructions {
         return { instruction: 'MOV', args: [`[${address}]`, value], result: value };
     }
 
+    /**
+     * Movimenta um valor para um registrador.
+     * @param {string} dest - O registrador de destino.
+     * @param {string} src - O valor ou registrador de origem.
+     * @returns {Object} Resultado da operação MOV para registrador.
+     * @throws {Error} Se o registrador de destino for inválido.
+     */
     movToRegister(dest, src) {
         if (!this.interpreter.registers.hasOwnProperty(dest)) {
             throw new Error(`Registrador de destino inválido: ${dest}`);
@@ -71,6 +105,12 @@ class DataMovementInstructions {
         return { instruction: 'MOV', args: [dest, src], result: value };
     }
 
+    /**
+     * Executa a instrução LOAD para carregar um valor da memória para um registrador.
+     * @param {Array} args - Argumentos da instrução (registrador de destino e endereço de memória).
+     * @returns {Object} Resultado da operação LOAD.
+     * @throws {Error} Se o número de argumentos for inválido ou se o endereço de memória for inválido.
+     */
     load(args) {
         if (args.length !== 2) {
             throw new Error('LOAD requer dois argumentos');
@@ -96,6 +136,12 @@ class DataMovementInstructions {
         return { instruction: 'LOAD', args: [dest, `[${memoryAddress}]`], result: value };
     }
 
+    /**
+     * Executa a instrução STORE para armazenar um valor de um registrador na memória.
+     * @param {Array} args - Argumentos da instrução (registrador de origem e endereço de memória).
+     * @returns {Object} Resultado da operação STORE.
+     * @throws {Error} Se o número de argumentos for inválido ou se o endereço de memória for inválido.
+     */
     store(args) {
         if (args.length !== 2) {
             throw new Error('STORE requer dois argumentos');
@@ -123,6 +169,12 @@ class DataMovementInstructions {
         return { instruction: 'STORE', args: [`[${memoryAddress}]`, src], result: value };
     }
 
+    /**
+     * Analisa um valor e o converte para um número, se necessário.
+     * @param {string|number} value - O valor a ser analisado.
+     * @returns {number} O valor convertido.
+     * @throws {Error} Se o valor for inválido.
+     */
     parseValue(value) {
         // Se for um registrador, retorna o valor do registrador
         if (typeof value === 'string' && this.interpreter.registers.hasOwnProperty(value)) {
@@ -137,6 +189,12 @@ class DataMovementInstructions {
         return parsed;
     }
 
+    /**
+     * Obtém o valor de um registrador ou converte um argumento para um número.
+     * @param {string} arg - O argumento que pode ser um registrador ou um valor numérico.
+     * @returns {number} O valor do registrador ou o valor numérico.
+     * @throws {Error} Se o argumento não for um registrador válido ou um número.
+     */
     getRegisterOrValue(arg) {
         // Se for um registrador, retorna seu valor
         if (this.interpreter.registers.hasOwnProperty(arg)) {
@@ -151,6 +209,12 @@ class DataMovementInstructions {
         return value;
     }
 
+    /**
+     * Analisa um endereço de memória e o converte para um índice numérico.
+     * @param {string} address - O endereço de memória a ser analisado.
+     * @returns {number} O índice numérico correspondente ao endereço de memória.
+     * @throws {Error} Se o formato do endereço for inválido.
+     */
     parseMemoryAddress(address) {
         if (typeof address !== 'string') {
             throw new Error(`Formato de endereço inválido: ${address}`);

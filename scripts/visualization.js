@@ -1,4 +1,16 @@
+/**
+ * visualization.js
+ * 
+ * @description
+ * Esta classe gerencia a visualização gráfica dos registradores, registradores vetoriais
+ * e do Stack Pointer no simulador Assembly. Utiliza a biblioteca Chart.js para criar
+ * gráficos interativos que representam o estado atual da máquina simulada.
+ */
 class Visualization {
+    /**
+     * @constructor
+     * @param {Interpreter} interpreter - Instância do interpretador
+     */
     constructor(interpreter) {
         this.interpreter = interpreter;
         this.canvasRegisters = document.getElementById('execution-canvas-registers');
@@ -28,6 +40,10 @@ class Visualization {
         this.setupInteractiveEvents();
     }
 
+    /**
+     * Configura eventos interativos para os elementos da visualização.
+     * Adiciona tooltips aos registradores e cria legendas para os gráficos.
+     */
     setupInteractiveEvents() {
         // Adiciona tooltips nos registradores
         const registers = document.querySelectorAll('[id^="reg-"]');
@@ -46,6 +62,10 @@ class Visualization {
         this.canvasSP.parentNode.appendChild(legendSP);
     }
 
+    /**
+     * Atualiza todos os gráficos de visualização.
+     * Coleta dados dos registradores, atualiza o histórico e renderiza os gráficos.
+     */
     updateVisualization() {
         const registers = this.interpreter.registers;
         const regularLabels = Object.keys(registers).filter(reg => reg.match(/^r[0-6]$/));
@@ -68,6 +88,11 @@ class Visualization {
         this.updateLegend();
     }
 
+    /**
+     * Atualiza o gráfico dos registradores vetoriais.
+     * Cria um gráfico de barras mostrando os valores dos registradores v0-v3.
+     * Suporta modo claro/escuro e fornece tooltips informativos.
+     */
     updateVectorRegistersChart() {
         if (this.chartVectorRegisters) {
             this.chartVectorRegisters.destroy();
@@ -153,6 +178,12 @@ class Visualization {
         this.ctxVectorRegisters.canvas.style.backgroundColor = backgroundColor;
     }
 
+    /**
+     * Atualiza o gráfico dos registradores regulares.
+     * Cria um gráfico de barras mostrando os valores dos registradores r0-r6.
+     * @param {string[]} labels - Array com os nomes dos registradores
+     * @param {number[]} data - Array com os valores dos registradores
+     */
     updateRegistersChart(labels, data) {
         if (this.chartRegisters) {
             this.chartRegisters.destroy();
@@ -253,6 +284,11 @@ class Visualization {
         this.ctxRegisters.canvas.style.backgroundColor = backgroundColor;
     }
     
+    /**
+     * Atualiza o gráfico do Stack Pointer.
+     * Cria um gráfico de linha mostrando as mudanças no SP ao longo do tempo.
+     * Exibe valores em formato hexadecimal e indica aumentos/diminuições.
+     */
     updateSPChart() {
         const spData = this.history.map(h => this.initialSP - h.values.SP);
         const labels = this.history.map((_, index) => index);
@@ -355,6 +391,11 @@ class Visualization {
         this.ctxSP.canvas.style.backgroundColor = backgroundColor;
     }
     
+    /**
+     * Atualiza as legendas dos gráficos.
+     * Cria e atualiza legendas para os gráficos de registradores e SP.
+     * Suporta modo claro/escuro e mantém consistência visual.
+     */
     updateLegend() {
         const legendRegisters = this.canvasRegisters.parentNode.querySelector('.visualization-legend');
         const legendSP = this.canvasSP.parentNode.querySelector('.visualization-legend');

@@ -1,3 +1,11 @@
+/**
+ * main.js
+ * 
+ * Este arquivo é o ponto de entrada principal para o simulador de Assembly.
+ * Ele inicializa os componentes principais (Interpretador, Debugger, Visualização)
+ * e configura os event listeners para a interface do usuário.
+ */
+
 import Interpreter from './interpreter.js';
 import Debugger from './debugger.js';
 import Visualization from './visualization.js';
@@ -6,22 +14,24 @@ document.addEventListener('DOMContentLoaded', () => {
     let isRunning = false;
     let initialized = false;
 
+    /**
+     * Inicializa os componentes principais do simulador.
+     */
     try {
-        // Primeiro, instancie o interpretador
+        // Inicializa o interpretador
         window.interpreter = new Interpreter();
         
-        // Agora, instancie o debugger, passando o interpretador como parâmetro
+        // Inicializa o debugger e o associa ao interpretador
         window.debugger = new Debugger(window.interpreter);
         window.interpreter.debugger = window.debugger;
 
-        // Instanciar a visualização e passar o interpretador como parâmetro
+        // Inicializa a visualização
         if (window.interpreter) {
             window.visualizationInstance = new Visualization(window.interpreter);
         } else {
             console.error('Interpretador não encontrado ao criar Visualization');
         }
         
-        // Inicialize o debugger
         window.debugger.initialize();
         
         initialized = true;
@@ -29,9 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Erro durante a inicialização:', error);
     }
 
+    // Event listener para quando o editor estiver pronto
     window.addEventListener('editorReady', () => {
-});
+        // Código a ser executado quando o editor estiver pronto
+    });
 
+    /**
+     * Atualiza a visualização quando o tema é alterado.
+     */
     document.addEventListener('themeChanged', () => {
         if (window.visualizationInstance && typeof window.visualizationInstance.updateVisualization === 'function') {
             window.visualizationInstance.updateVisualization();
@@ -41,17 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-
-    // Controle de execução do código
+    /**
+     * Configura o event listener para o botão de execução.
+     */
     document.getElementById('play-btn').addEventListener('click', () => {
-        if (!window.interpreter) return; // Verifica se o interpretador está inicializado
+        if (!window.interpreter) return;
 
         if (isRunning) { 
             window.interpreter.stop();
             isRunning = false;
         }
         
-        // Reset completo antes de uma nova execução
         window.interpreter.reset();
         
         const code = window.editor.getValue();
@@ -61,18 +76,23 @@ document.addEventListener('DOMContentLoaded', () => {
         window.interpreter.run(speed);
     });
 
+    /**
+     * Configura o event listener para o botão de pausa.
+     */
     document.getElementById('pause-btn').addEventListener('click', () => {
         if (!window.interpreter) return;
         window.interpreter.stop();
-        isRunning = false;  // Permite nova execução após pausar
+        isRunning = false;
     });
 
+    /**
+     * Configura o event listener para o botão de execução passo a passo.
+     */
     document.getElementById('step-btn').addEventListener('click', () => {
         if (!window.interpreter) return;
         
         const code = window.editor.getValue();
         
-        // Só carrega o programa se ainda não estiver carregado ou se for a primeira execução
         if (!window.interpreter.running || window.interpreter.currentInstruction === 0) {
             window.interpreter.loadProgram(code);
             window.interpreter.running = true;
@@ -82,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const result = window.interpreter.executeStep();
                             
-                // Se chegou ao fim do programa
                 if (!result) {
                     window.interpreter.running = false;
                 }
@@ -92,17 +111,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    /**
+     * Configura o event listener para o botão de reset.
+     */
     document.getElementById('reset-btn').addEventListener('click', () => {
         if (!window.interpreter || !window.visualizationInstance) return;
         window.interpreter.reset();
-        isRunning = false;  // Permite nova execução após resetar
-        window.visualizationInstance.updateVisualization();  // Atualizar a visualização
+        isRunning = false;
+        window.visualizationInstance.updateVisualization();
     });
 
-    // Controle de mudanças de velocidade e largura de bits
+    /**
+     * Configura o event listener para a mudança de velocidade.
+     */
     document.getElementById('speed-select').addEventListener('change', (event) => {
+        // Lógica para mudança de velocidade
     });
 
+    /**
+     * Configura o event listener para a mudança de largura de bits.
+     */
     document.getElementById('bit-width-select').addEventListener('change', (event) => {
         if (!window.interpreter) return;
         const bitWidth = parseInt(event.target.value, 10);

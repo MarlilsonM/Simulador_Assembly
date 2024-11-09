@@ -4,14 +4,23 @@ import DataMovementInstructions from './dataMovementInstructions.js';
 import StackInstructions from './stackInstructions.js';
 import SIMDInstructions from './simdInstructions.js';
 
+/**
+ * Classe que representa um interpretador de assembly.
+ * Gerencia a execução de um programa assembly, incluindo a manipulação de memória,
+ * registradores e instruções aritméticas, lógicas, de movimentação de dados, de pilha e SIMD.
+ */
 class Interpreter {
+    /**
+     * Construtor da classe.
+     * Inicializa a memória, registradores, e as instâncias das instruções.
+     */
     constructor() {
         this.config = {
             matrixSize: 2,  // Tamanho padrão 2x2
             maxVectorSize: 4  // Tamanho máximo do vetor SIMD
         };
 
-        this.memory = new Array(1000).fill(0);
+        this.memory = new Array(1000).fill(0); // Inicializa a memória com 1000 posições
         this.registers = {
             r0: 0,
             r1: 0,
@@ -23,9 +32,10 @@ class Interpreter {
             SP: 999, // Stack Pointer (ponteiro da pilha)
             PC: 0, // Program Counter (contador de programa)
             FLAGS: 0, // Registrador de flags para armazenar resultados de comparações e condições
-            FLAG: false
+            FLAG: false // Flag adicional
         };
 
+        // Inicializa os registradores vetoriais
         this.vectorRegisters = {
             v0: new Float32Array(this.config.maxVectorSize),
             v1: new Float32Array(this.config.maxVectorSize),
@@ -33,9 +43,9 @@ class Interpreter {
             v3: new Float32Array(this.config.maxVectorSize)
         };
 
-        this.STACK_LIMIT = 100;
-        this.currentInstruction = 0;
-        this.running = false;
+        this.STACK_LIMIT = 100; // Limite para a pilha
+        this.currentInstruction = 0; // Instrução atual a ser executada
+        this.running = false; // Flag para verificar se o interpretador está em execução
         this.bitWidth = 8; // Padrão para 8 bits
 
         // Instâncias dos módulos de instruções
@@ -46,8 +56,10 @@ class Interpreter {
         this.simd = new SIMDInstructions(this);
     }
 
+    /**
+     * Atualiza a interface do usuário para exibir os valores dos registradores.
+     */
     updateRegistersUI() {
-        
         // Verifica se os elementos HTML existem antes de atualizar
         const regr0Element = document.getElementById('reg-r0');
         const regr1Element = document.getElementById('reg-r1');
@@ -63,7 +75,7 @@ class Interpreter {
         if (!regr0Element || !regr1Element || !regr2Element || !regr3Element || 
             !regr4Element || !regr5Element || !regr6Element || !regSPElement || 
             !flagZElement || !flagFElement) {
-            return;
+            return; // Se algum elemento não existir, não faz nada
         }
 
         // Garante que os valores dos registradores sejam números antes de converter
@@ -74,9 +86,6 @@ class Interpreter {
         regr4Element.textContent = (this.registers.r4 || 0).toString(16).padStart(2, '0').toUpperCase();
         regr5Element.textContent = (this.registers.r5 || 0).toString(16).padStart(2, '0').toUpperCase();
         regr6Element.textContent = (this.registers.r6 || 0).toString(16).padStart(2, '0').toUpperCase();
-        regSPElement.textContent = (this.registers.SP || 0).toString(16).padStart(2, '0').toUpperCase();
-        
-        // Atualiza o SP em formato hexadecimal
         regSPElement.textContent = '0x' + this.registers.SP.toString(16).padStart(3, '0').toUpperCase();
 
         // Atualiza as flags
@@ -103,6 +112,11 @@ class Interpreter {
         }
     }
 
+    /**
+     * Define o tamanho da matriz para operações SIMD.
+     * @param {number} size - O novo tamanho da matriz.
+     * @throws {Error} Se o tamanho exceder o máximo permitido.
+     */
     setMatrixSize(size) {
         if (size > this.config.maxVectorSize) {
             throw new Error(`Tamanho de matriz ${size} excede o máximo permitido de ${this.config.maxVectorSize}`);
@@ -110,17 +124,20 @@ class Interpreter {
         this.config.matrixSize = size;
     }
 
+    /**
+     * Atualiza a interface do usuário para exibir o conteúdo da memória.
+     */
     updateMemoryUI() {
         const instructionsContent = document.getElementById('instructions-content');
         const dataContent = document.getElementById('data-content');
-    
+
         if (instructionsContent && dataContent) {
             // Seção de Instruções
             let instructionsHtml = '';
             for (let i = 0; i < this.programLength; i++) {
                 const instruction = this.memory[i];
                 if (!instruction) continue; // Pula instruções undefined ou null
-    
+
                 if (typeof instruction === 'object' && instruction.type === 'label') {
                     instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction label">${instruction.name}:</span></div>`;
                 } else if (typeof instruction === 'string') {
@@ -139,7 +156,7 @@ class Interpreter {
                 }
             }
             instructionsContent.innerHTML = instructionsHtml;
-    
+
             // Seção de Dados
             let dataHtml = '';
             let hasData = false;
@@ -156,14 +173,22 @@ class Interpreter {
         }
     }
 
+    /**
+     * Define a largura de bits para operações.
+     * @param {number} bitWidth * A nova largura de bits a ser definida.
+     */
     setBitWidth(bitWidth) {
         this.bitWidth = bitWidth;
         this.maxValue = (1 << bitWidth) - 1; // Calcula o valor máximo para a largura de bits
     }
 
+    /**
+     * Carrega um programa assembly na memória do interpretador.
+     * @param {string} program - O código do programa a ser carregado.
+     */
     loadProgram(program) {
         if (!program || program.trim() === '') {
-            return;
+            return; // Se o programa estiver vazio, não faz nada
         }
         
         // Reset inicial
@@ -205,9 +230,14 @@ class Interpreter {
         // Define o tamanho do programa como a última instrução válida + 1
         this.programLength = lastValidIndex + 1;
         
-        this.updateMemoryUI();
+        this.updateMemoryUI(); // Atualiza a interface do usuário
     }
 
+    /**
+     * Atualiza a saída do programa na interface do usuário.
+     * @param {string} message - A mensagem a ser exibida.
+     * @param {string} type - O tipo da mensagem (info, warning, error, etc.).
+     */
     updateOutput(message, type = 'info') {
         const outputContent = document.querySelector('.output-content');
         const outputElement = document.getElementById('program-output');
@@ -231,6 +261,11 @@ class Interpreter {
         }, 0);
     }
 
+    /**
+     * Analisa e processa as labels no programa.
+     * @param {number} programLength - O comprimento do programa.
+     * @returns {Object} Um objeto contendo as labels e seus índices.
+     */
     parseLabels(programLength) {
         const labels = {};
         for (let index = 0; index < programLength; index++) {
@@ -248,6 +283,9 @@ class Interpreter {
         return labels;
     }
 
+    /**
+     * Atualiza a interface do usuário para exibir o conteúdo da pilha.
+     */
     updateStackUI() {
         const stackElement = document.getElementById('memory-content');
         if (stackElement) {
@@ -261,9 +299,12 @@ class Interpreter {
         }
     }
 
+    /**
+     * Destaca a linha atual no editor de código.
+     */
     highlightCurrentLine() {
         if (!window.editor) {
-            return;
+            return; // Se o editor não estiver disponível, não faz nada
         }
     
         // Remove o destaque da linha anterior
@@ -286,6 +327,9 @@ class Interpreter {
         }
     }
 
+    /**
+     * Limpa o destaque da linha atual no editor de código.
+     */
     clearHighlight() {
         if (this.lastHighlightedLine !== undefined && window.editor) {
             try {
@@ -297,6 +341,10 @@ class Interpreter {
         }
     }
 
+    /**
+     * Atualiza a interface do usuário com base nas opções fornecidas.
+     * @param {Object} options - Opções para atualizar a UI (registradores, memória, pilha).
+     */
     updateUI(options = { registers: true, memory: true, stack: true }) {
         if (options.registers) this.updateRegistersUI();
         if (options.memory) this.updateMemoryUI();
@@ -309,6 +357,10 @@ class Interpreter {
         }
     }
 
+    /**
+     * Executa um passo da execução do programa.
+     * @returns {boolean} Verdadeiro se a execução foi bem-sucedida, falso caso contrário.
+     */
     executeStep() {
         if (!this.memory || this.programLength === 0) {
             this.updateOutput("Nenhum programa carregado.", "warning");
@@ -391,7 +443,12 @@ class Interpreter {
             return false;
         }
     }
-    
+
+    /**
+     * Verifica se a linha atual é o fim do programa.
+     * @param {string} line - A linha a ser verificada.
+     * @returns {boolean} Verdadeiro se a linha indica o fim do programa, falso caso contrário.
+     */
     isEndOfProgram(line) {
         // Verifica se line é undefined, null, ou não é uma string
         if (line == null || typeof line !== 'string') {
@@ -406,6 +463,12 @@ class Interpreter {
                trimmedLine === '';
     }
 
+    /**
+     * Valida os argumentos fornecidos para uma instrução.
+     * @param {string} instruction - A instrução a ser validada.
+     * @param {Array} args - Os argumentos a serem validados.
+     * @throws {Error} Se o número de argumentos estiver incorreto.
+     */
     validateArgs(instruction, args) {
         const argCounts = {
             MOV: 2,
@@ -463,6 +526,13 @@ class Interpreter {
         }
     }
     
+    /**
+     * Executa a instrução fornecida com os argumentos dados.
+     * @param {string} instruction - A instrução a ser executada.
+     * @param {Array} args - Os argumentos para a instrução.
+     * @returns {Object} O resultado da execução da instrução.
+     * @throws {Error} Se ocorrer um erro durante a execução da instrução.
+     */
     executeInstruction(instruction, args) {
         try {
             let result;
@@ -552,17 +622,26 @@ class Interpreter {
         }
     }
 
+    /**
+     * Verifica se a linha atual é válida para execução.
+     * @param {string} line - A linha a ser verificada.
+     * @returns {boolean} Verdadeiro se a linha for válida, falso caso contrário.
+     */
     isValidLine(line) {
         if (typeof line !== 'string' || line.trim() === '') {
             this.running = false;
-            return false;
+            return false; // Linha inválida
         }
-        return true;
+        return true; // Linha válida
     }
     
+    /**
+     * Inicia a execução do programa em um loop.
+     * @param {string} speed - A velocidade da execução ('fast', 'medium', 'slow').
+     */
     run(speed) {
         if (!this.memory || this.programLength === 0) {
-            return false;
+            return false; // Nenhum programa carregado
         }
     
         this.running = true;
@@ -570,35 +649,41 @@ class Interpreter {
         
         const runStep = () => {
             if (!this.running) {
-                return;
+                return; // Se não estiver em execução, sai
             }
             
             if (this.debugger && this.debugger.shouldPause()) {
-                this.stop();
+                this.stop(); // Pausa se o depurador solicitar
                 return;
             }
             
-            const shouldContinue = this.executeStep();
+            const shouldContinue = this.executeStep(); // Executa um passo
             
             if (shouldContinue && this.running) {
-                setTimeout(runStep, interval);
+                setTimeout(runStep, interval); // Continua a execução
             } else {
-                this.stop();
+                this.stop(); // Para a execução
             }
         };
     
-        runStep();
+        runStep(); // Inicia a execução
     }
 
+    /**
+     * Para a execução do programa.
+     */
     stop() {
-        this.running = false;
+        this.running = false; // Define a execução como parada
         if (this.currentInstruction >= this.programLength) {
-            this.clearHighlight();
+            this.clearHighlight(); // Limpa o destaque se o programa terminou
         }
     }
 
+    /**
+     * Reseta o estado do interpretador, limpando memória e registradores.
+     */
     reset() {
-        this.memory = new Array(1000).fill(0);
+        this.memory = new Array(1000).fill(0); // Limpa a memória
         this.registers = {
             r0: 0,
             r1: 0,
@@ -610,14 +695,14 @@ class Interpreter {
             SP: 999, // Stack Pointer volta para o topo
             PC: 0,   // Program Counter
             FLAGS: 0, // Flags
-            FLAG: false
+            FLAG: false // Flag adicional
         };
-        this.currentInstruction = 0;
-        this.running = false;
-        this.programLength = 0;
+        this.currentInstruction = 0; // Reseta a instrução atual
+        this.running = false; // Para a execução
+        this.programLength = 0; // Reseta o comprimento do programa
     
         for (let key in this.vectorRegisters) {
-            this.vectorRegisters[key].fill(0);
+            this.vectorRegisters[key].fill(0); // Limpa os registradores vetoriais
         }
         
         // Recriar as instâncias das classes de instruções
@@ -634,6 +719,9 @@ class Interpreter {
         this.clearHighlight();
     }
 
+    /**
+     * Limpa a saída do programa na interface do usuário.
+     */
     clearOutput() {
         const outputElement = document.getElementById('program-output');
         if (outputElement) {
