@@ -4,7 +4,9 @@
  * @description
  * Este script configura o editor de código CodeMirror para o simulador Assembly.
  * Ele inicializa o editor com configurações específicas para assembly e adiciona
- * suporte para breakpoints.
+ * suporte para autocompletar e breakpoints.
+ * 
+ * @module Editor
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     /**
      * Inicializa o editor CodeMirror com configurações específicas.
+     * 
+     * @function
+     * @returns {CodeMirror} O editor CodeMirror inicializado.
      */
     window.editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
         mode: 'gas', // Define o modo como assembly
@@ -22,13 +27,57 @@ document.addEventListener('DOMContentLoaded', () => {
         matchBrackets: true, // Destaca colchetes correspondentes
         autoCloseBrackets: true, // Fecha colchetes automaticamente
         gutters: ["CodeMirror-linenumbers", "breakpoints"],  // Adiciona suporte a breakpoints
-        extraKeys: {
-            "Ctrl-Space": "autocomplete" // Ativa autocompletar com Ctrl+Space
-        }
+    });
+
+    let autocompleteTimeout;
+
+    // Adiciona um evento de input para acionar o autocompletar
+    window.editor.on('inputRead', (cm, change) => {
+        clearTimeout(autocompleteTimeout); // Limpa o timeout anterior
+        autocompleteTimeout = setTimeout(() => {
+            CodeMirror.commands.autocomplete(cm); // Aciona a função de autocompletar
+        }, 300); // Ajuste o tempo conforme necessário
     });
 
     /**
+     * Registra um helper de autocompletar para o modo "gas".
+     * 
+     * @function
+     * @param {CodeMirror} cm - Instância do editor CodeMirror.
+     * @returns {Object} Objeto contendo a lista de sugestões de autocompletar.
+     */
+    CodeMirror.registerHelper("hint", "gas", function(cm) {
+        var wordList = [
+            "NOP", "ADD", "SUB", "MUL", "DIV",
+            "AND", "OR", "XOR", "NOT", "CMP",
+            "MOV", "LOAD", "STORE",
+            "JMP", "JE", "JNE", "JG", "JGE",
+            "JZ", "JNZ", "JC", "JNC", "JO",
+            "JNO", "JL", "JLE", "JBE", "JA",
+            "JAE", "JB",
+            "CALL", "RET",
+            "PUSH", "POP", "DUP", "SWAP", "ROT", 
+            "VADD", "VMUL", "VDIV", "VLOAD", "VSTORE",
+            "SETMATSIZE"
+        ];
+        var cursor = cm.getCursor();
+        var token = cm.getTokenAt(cursor);
+        var start = token.start;
+        var end = cursor.ch;
+
+        return {
+            list: wordList.filter(function(word) {
+                return word.toUpperCase().startsWith(token.string.toUpperCase()); // Filtra palavras que começam com o texto atual
+            }),
+            from: CodeMirror.Pos(cursor.line, start), // Posição inicial da sugestão
+            to: CodeMirror.Pos(cursor.line, end) // Posição final da sugestão
+        };
+    });
+    
+    /**
      * Adiciona estilos CSS para a gutter de breakpoints.
+     * 
+     * @function
      */
     const style = document.createElement('style');
     style.textContent = `
@@ -41,6 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Dispara um evento personalizado 'editorReady' quando o editor está pronto.
+     * 
+     * @function
      */
     setTimeout(() => {
         window.dispatchEvent(new Event('editorReady'));
