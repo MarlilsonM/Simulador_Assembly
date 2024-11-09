@@ -47,6 +47,11 @@ END`);
         }, 300); // Ajuste o tempo conforme necessário
     });
 
+    // Adiciona um evento de toque para acionar o autocompletar
+    window.editor.on('touchstart', (cm) => {
+        CodeMirror.commands.autocomplete(cm); // Aciona a função de autocompletar
+    });
+
     /**
      * Registra um helper de autocompletar para o modo "gas".
      * 
