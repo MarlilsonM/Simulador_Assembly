@@ -77,6 +77,42 @@ body {
     --output-success-color: #6a9955;
 }
 
+[data-theme="dark"] .CodeMirror {
+    background-color: #121212; /* Cor de fundo do editor no modo escuro */
+    color: #ffffff; /* Cor do texto no modo escuro */
+}
+
+[data-theme="dark"] .CodeMirror .CodeMirror-cursor {
+    border-left: 1px solid #ffffff; /* Cor do cursor no modo escuro */
+}
+
+/* Ajustes adicionais para o modo escuro */
+[data-theme="dark"] .CodeMirror .cm-comment {
+    color: #a0a0a0; /* Cor dos comentários no modo escuro */
+}
+
+[data-theme="dark"] .CodeMirror .cm-string {
+    color: #ffcc00; /* Cor das strings no modo escuro */
+}
+
+[data-theme="dark"] .CodeMirror-gutters {
+    background-color: #1e1e1e; /* Cor de fundo da barra de números das linhas */
+    border-right: 1px solid #333; /* Borda à direita da barra */
+}
+
+[data-theme="dark"] .CodeMirror-linenumber {
+    color: #ffffff; /* Cor dos números das linhas */
+}
+
+[data-theme="dark"] .CodeMirror-guttermarker {
+    color: #ffcc00; /* Cor dos marcadores de gutter (ex: breakpoints) */
+}
+
+[data-theme="dark"] .CodeMirror-guttermarker-subtle {
+    color: #a0a0a0; /* Cor dos marcadores sutis */
+}
+
+
 .CodeMirror-gutters {
     cursor: pointer;
     border-right: 1px solid #ddd;

@@ -29,6 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
         gutters: ["CodeMirror-linenumbers", "breakpoints"],  // Adiciona suporte a breakpoints
     });
 
+    window.editor.setValue(`; Este é um exemplo de código Assembly
+MOV r0, 5          ; Move 5 para o registrador r0
+MOV r1, 10         ; Move 10 para o registrador r1
+ADD r0, r1         ; Adiciona r0 e r1
+SUB r1, r0         ; Subtrai r0 de r1
+; Fim do programa
+END`);
+
     let autocompleteTimeout;
 
     // Adiciona um evento de input para acionar o autocompletar
