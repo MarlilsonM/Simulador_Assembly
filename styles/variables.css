@@ -1,0 +1,61 @@
+:root {
+    /* Cores do Modo Claro (inspirado na Steam) */
+    --primary-color: #171A21; /* Preto suave */
+    --secondary-color: #2B2D31; /* Cinza escuro */
+    --background-color: #F0F0F0; /* Branco muito suave */
+    --text-color: #2C2F33; /* Texto em cinza escuro */
+    --primary-color-button: #9B59B6; /* Azul claro */
+    --secondary-color-button: #5C636A; /* Cinza médio */
+    --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --font-family: 'Arial', sans-serif; /* Fonte limpa */
+    --font-size-base: 1rem;
+    --font-size-small: 0.875rem;
+    --font-size-large: 1.25rem;
+    --line-height-base: 1.6;
+    --spacing-small: 0.5rem;
+    --spacing-medium: 1rem;
+    --spacing-large: 1.5rem;
+    --transition-speed: 0.3s;
+    --scrollbar-track-color: #E0E0E0; /* Cinza claro */
+    --scrollbar-thumb-color: #4B9CD3; /* Azul claro */
+    --address-color: #4B9CD3; /* Azul claro */
+    --instruction-color: #FFC107; /* Amarelo */
+    --data-color: #28A745; /* Verde */
+    --border-color: #CED4DA; /* Cinza claro */
+    --hover-background-color: #D1D1D1; /* Cinza claro para hover */
+
+    /* Variáveis de saída */
+    --output-background-color: #fffffff3; /* Branco */
+    --output-text-color: #2C2F33; /* Texto em cinza escuro */
+    --output-info-color: #4B9CD3; /* Azul claro */
+    --output-error-color: #FF5C5C; /* Vermelho suave */
+    --output-error-bg-color: #FFE4E1; /* Fundo de erro suave */
+    --output-warning-color: #FFC107; /* Amarelo */
+    --output-warning-bg-color: #FFF3CD; /* Fundo de aviso suave */
+    --output-success-color: #28A745; /* Verde */
+}
+
+/* Modo escuro (inspirado no Discord) */
+[data-theme="dark"] {
+    /* Cores do Modo Escuro */
+    --background-color: #2C2F33; /* Cinza escuro (fundo) */
+    --hover-background-color: #23272A; /* Cinza mais escuro para hover */
+    --text-color: #FFFFFF; /* Branco */
+    --primary-color: #171A21; /* Azul do Discord */
+    --scrollbar-track-color: #2C2F33; /* Fundo da barra de rolagem */
+    --scrollbar-thumb-color: #7289DA; /* Azul do Discord */
+    --address-color: #B9BBBE; /* Cinza claro (para endereços) */
+    --instruction-color: #FFD700; /* Amarelo dourado (mais próximo do tom do Discord) */
+    --data-color: #43B581; /* Verde do Discord */
+    --border-color: #40444B; /* Cinza escuro (para bordas) */
+
+    /* Variáveis de saída */
+    --output-background-color: #1E2124; /* Cinza escuro */
+    --output-text-color: #FFFFFF; /* Branco */
+    --output-info-color: #FFFFFF; /* Azul do Discord */
+    --output-error-color: #FF5C5C; /* Vermelho suave */
+    --output-error-bg-color: #721C24; /* Fundo de erro escuro */
+    --output-warning-color: #FFC107; /* Amarelo */
+    --output-warning-bg-color: #856404; /* Fundo de aviso escuro */
+    --output-success-color: #28A745; /* Verde */
+}

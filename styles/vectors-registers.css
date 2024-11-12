@@ -1,0 +1,80 @@
+.vector-register {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.vector-register td {
+    border: 1px solid var(--text-color);
+    padding: 4px;
+    text-align: center;
+}
+
+#tab-vector-registers table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#tab-vector-registers th, #tab-vector-registers td {
+    border: 1px solid var(--text-color);
+    text-align: center;
+}
+
+#tab-vector-registers th {
+    background-color: var(--background-color);
+}
+
+#detailed-stack table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#detailed-stack th, #detailed-stack td {
+    border: 1px solid var(--text-color);
+    padding: 8px;
+    text-align: left;
+}
+
+#detailed-stack th {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    font-weight: bold;
+}
+
+#detailed-stack tr:nth-child(even) {
+    background-color: rgba(128, 128, 128, 0.1);
+}
+
+#detailed-stack tr:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+/* Tabela de registradores */
+.sp-register {
+    background-color: rgba(255, 223, 186, 0.5);
+    font-weight: bold;
+    border: 1px solid var(--output-warning-bg-color);
+}
+
+#registers table,
+#tab-vector-registers table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#registers th, #registers td, #tab-vector-registers th, #tab-vector-registers td {
+    border: 1px solid #ccc;
+    padding: var(--spacing-small);
+    text-align: center;
+}
+
+#registers th,
+#tab-vector-registers th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#tab-vector-registers td {
+    font-family: var(--font-family);
+    white-space: nowrap;
+}

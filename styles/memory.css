@@ -1,0 +1,107 @@
+/*Estilo para memória*/
+#memory-panel {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background-color);
+    border-radius: 5px;
+    height: auto;
+    overflow: hidden;
+}
+
+.memory-header h2 {
+    margin: 0;
+}
+
+.memory-header {
+    padding-top: 10px;
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+#memory-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0;
+    scroll-behavior: smooth;
+}
+
+.memory-sections {
+    display: flex;
+    gap: 20px;
+}
+
+.memory-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.memory-section h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+    padding: 5px 0;
+    z-index: 1;
+}
+
+.instruction-line, .data-line {
+    font-family: var(--font-family);
+    line-height: 1.4;
+    margin-bottom: 2px;
+}
+
+.line-number {
+    color: var(--address-color);
+    display: inline-block;
+}
+
+.instruction .opcode {
+    color: var(--instruction-color);
+    font-weight: bold;
+}
+
+.instruction {
+    color: var(--instruction-color);
+}
+
+.instruction .args {
+    color: var(--data-color);
+    margin-left: 8px;
+}
+
+.instruction.end {
+    color: #ff4444;
+    font-weight: bold;
+}
+
+.data-value {
+    color: var(--data-color);
+}
+
+#instructions-content,
+#data-content {
+    font-family: (var(--font-family));
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+/* Estilização da barra de rolagem */
+#instructions-content::-webkit-scrollbar,
+#data-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+#instructions-content::-webkit-scrollbar-track,
+#data-content::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+}
+
+#instructions-content::-webkit-scrollbar-thumb,
+#data-content::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 6px;
+    border: 3px solid var(--scrollbar-track-color);
+}

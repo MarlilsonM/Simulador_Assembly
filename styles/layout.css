@@ -1,0 +1,26 @@
+/* Layout */
+#controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: var(--primary-color);
+    padding: 0 var(--spacing-large);
+    box-shadow: var(--box-shadow);
+    z-index: 10;
+    transition: background-color var(--transition-speed);
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+}
+
+.theme-group {
+    margin-right: var(--spacing-large);
+}

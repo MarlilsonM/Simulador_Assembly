@@ -1,0 +1,116 @@
+/* Modo escuro */
+
+/* Modo escuro codeMirror */
+[data-theme="dark"] .CodeMirror {
+    background-color: var(--background-color); /* Cor de fundo do editor no modo escuro */
+    color: var(--text-color); /* Cor do texto no modo escuro */
+}
+
+[data-theme="dark"] .CodeMirror .CodeMirror-cursor {
+    border-left: 1px solid var(--text-color); /* Cor do cursor no modo escuro */
+}
+
+/* Ajustes adicionais para o modo escuro */
+[data-theme="dark"] .CodeMirror .cm-comment {
+    color: #a0a0a0; /* Cor dos comentários no modo escuro */
+}
+
+[data-theme="dark"] .CodeMirror .cm-string {
+    color: var(--instruction-color); /* Cor das strings no modo escuro */
+}
+
+[data-theme="dark"] .CodeMirror-gutters {
+    background-color: #1e1e1e; /* Cor de fundo da barra de números das linhas */
+    border-right: 1px solid #333; /* Borda à direita da barra */
+}
+
+[data-theme="dark"] .CodeMirror-linenumber {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .CodeMirror-guttermarker {
+    color: var(--instruction-color); 
+}
+
+[data-theme="dark"] .CodeMirror-guttermarker-subtle {
+    color: #a0a0a0; 
+}
+
+/* Controls */
+[data-theme="dark"] #controls {
+    background-color: var(--primary-color);
+}
+
+/* Estilos específicos para o modo escuro */
+[data-theme="dark"] #detailed-stack th {
+    background-color: var(--background-color);
+}
+
+[data-theme="dark"] #detailed-stack tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] #detailed-stack tr:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Ajustes para o modo escuro dos painéis */
+[data-theme="dark"] #output-panel,
+[data-theme="dark"] #debug-panel,
+[data-theme="dark"] #editor-container,
+[data-theme="dark"] #visualization {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .output-content {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+/* Ajustes para o modo escuro dos botões extras */
+[data-theme="dark"] button {
+    background-color: var(--primary-color-button);
+    color: var(--text-color); 
+}
+
+[data-theme="dark"] .theme-toggle {
+    background-color: var(--primary-color-button);
+}
+
+[data-theme="dark"] button:hover,
+[data-theme="dark"] button:focus {
+    background-color: var(--secondary-color);
+}
+
+[data-theme="dark"] select {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .tab-button {
+    background-color: var(--secondary-color-button);
+}
+
+[data-theme="dark"] .tab-button:hover {
+    background-color: var(--hover-background-color);
+}
+
+[data-theme="dark"] .tab-button.active {
+    background-color: var(--primary-color-button);
+}
+
+/* Ajuste para modo escuro se necessário */
+[data-theme="dark"] #options-btn {
+    background-color: var(--primary-color-button);
+}
+
+[data-theme="dark"] #options-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Modo escuro para options-box */
+[data-theme="dark"] .options-box {
+    background-color: var(--background-color);
+    border-color: rgba(255, 255, 255, 0.1);
+}

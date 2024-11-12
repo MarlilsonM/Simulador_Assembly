@@ -1,0 +1,143 @@
+/* Painéis */
+
+/* Editor */
+#editor-panel {
+    flex: 7;
+    padding-right: 5px;
+}
+
+#editor-container, #debug-panel {
+    flex: 1 1 auto;
+}
+
+#editor-container, #visualization {
+    background-color: var(--background-color);
+    border-radius: 12px;
+    box-shadow: var(--box-shadow);
+    padding: var(--spacing-medium);
+    margin-bottom: 0;
+}
+
+#debug-panel {
+    background-color: var(--output-background-color);
+    color: var(--output-text-color);
+    border-radius: 5px;
+    height: auto;
+    padding-left: 5px;
+    max-height: 632px;
+}
+
+/* Saída */
+
+#output-panel {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--output-background-color);
+    color: var(--output-text-color);
+    border-radius: 5px;
+    height: 200px;
+}
+
+.output-header {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--output-background-color);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.output-header h2, #debug-panel h2 {
+    margin: 0;
+}
+
+.output-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    scroll-behavior: smooth;
+}
+
+/* Estilização da barra de rolagem */
+.output-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.output-content::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+}
+
+.output-content::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 6px;
+    border: 3px solid var(--scrollbar-track-color);
+}
+
+#program-output {
+    display: flex;
+    flex-direction: column;
+}
+
+.output-message {
+    margin-bottom: 5px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: var(--font-family);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Estilização da barra de rolagem para o output-panel */
+#output-panel::-webkit-scrollbar {
+    width: 10px;
+}
+
+#output-panel::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+}
+
+#output-panel::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 6px;
+    border: 3px solid var(--scrollbar-track-color);
+}
+
+#program-output {
+    display: flex;
+    flex-direction: column;
+}
+
+.output-message {
+    margin-bottom: 5px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.output-message.info {
+    color: var(--output-info-color);
+}
+
+.output-message.error {
+    color: var(--output-error-color);
+    background-color: var(--output-error-bg-color);
+}
+
+.output-message.warning {
+    color: var(--output-warning-color);
+    background-color: var(--output-warning-bg-color);
+}
+
+.output-message.success {
+    color: var(--output-success-color);
+}
+
+/* Debug */
+
+#container-editor-debug {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-medium);
+    padding: var(--spacing-medium);
+}

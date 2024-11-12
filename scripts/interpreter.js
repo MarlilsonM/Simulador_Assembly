@@ -43,6 +43,9 @@ class Interpreter {
             v3: new Float32Array(this.config.maxVectorSize)
         };
 
+        this.vectorRegistersInitialized = false;
+        this.updateRegistersUI();
+
         this.STACK_LIMIT = 100; // Limite para a pilha
         this.currentInstruction = 0; // Instrução atual a ser executada
         this.running = false; // Flag para verificar se o interpretador está em execução
@@ -54,6 +57,8 @@ class Interpreter {
         this.dataMovement = new DataMovementInstructions(this);
         this.stack = new StackInstructions(this);
         this.simd = new SIMDInstructions(this);
+
+
     }
 
     /**
@@ -92,22 +97,29 @@ class Interpreter {
         flagZElement.textContent = this.registers.FLAGS === 0 ? 'TRUE' : 'FALSE';
         flagFElement.textContent = this.registers.FLAG ? 'TRUE' : 'FALSE';
 
+        // Atualiza os registradores vetoriais
         for (let i = 0; i < 4; i++) {
             const vregElement = document.getElementById(`vreg-v${i}`);
             if (vregElement) {
                 const values = this.vectorRegisters[`v${i}`];
-                vregElement.innerHTML = `
-                    <table class="vector-register">
-                        <tr>
-                            <td>${values[0].toFixed(2)}</td>
-                            <td>${values[1].toFixed(2)}</td>
-                        </tr>
-                        <tr>
-                            <td>${values[2].toFixed(2)}</td>
-                            <td>${values[3].toFixed(2)}</td>
-                        </tr>
-                    </table>
-                `;
+
+                if (this.vectorRegistersInitialized) {
+                    vregElement.innerHTML = `
+                        <table class="vector-register">
+                            <tr>
+                                <td>${values[0].toFixed(2)}</td>
+                                <td>${values[1].toFixed(2)}</td>
+                            </tr>
+                            <tr>
+                                <td>${values[2].toFixed(2)}</td>
+                                <td>${values[3].toFixed(2)}</td>
+                            </tr>
+                        </table>
+                    `;
+                } else {
+                    // Exibe '--' se os registradores não foram inicializados
+                    vregElement.innerHTML = '<table class="vector-register"><tr><td>--</td><td>--</td></tr><tr><td>--</td><td>--</td></tr></table>';
+                }
             }
         }
     }
@@ -209,6 +221,17 @@ class Interpreter {
         
         // Remove linhas vazias após processamento das labels
         this.memory = this.memory.filter(line => line !== '' && line !== undefined);
+
+        // Inicializa os registradores vetoriais como um Float32Array com zeros
+        this.vectorRegisters = {
+            v0: new Float32Array(this.config.maxVectorSize),
+            v1: new Float32Array(this.config.maxVectorSize),
+            v2: new Float32Array(this.config.maxVectorSize),
+            v3: new Float32Array(this.config.maxVectorSize)
+        };
+
+        // Define que os registradores vetoriais foram inicializados
+        this.vectorRegistersInitialized = true;
     
         // Calcula o comprimento real do programa
         let lastValidIndex = -1;
