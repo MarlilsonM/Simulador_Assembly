@@ -406,24 +406,29 @@ class Interpreter {
     
         // Obtém a linha atual da memória
         const currentLine = this.memory[this.currentInstruction];
+        console.log(`Executando linha ${this.currentInstruction + 1}: ${currentLine}`);
     
         // Se a linha atual for uma label, pule para a próxima instrução
         if (currentLine && currentLine.type === 'label') {
+            console.log(`Linha ${this.currentInstruction + 1} é uma label. Pulando.`);
             this.currentInstruction++;
             return true;
         }
     
         // Verifica se a linha atual é válida
         if (!currentLine || typeof currentLine !== 'string') {
+            console.log(`Linha ${this.currentInstruction + 1} é inválida ou vazia. Pulando.`);
             this.currentInstruction++;
             return true;
         }
     
         // Remove comentários e espaços em branco da linha
         let line = currentLine.split(';')[0].trim();
+        console.log(`Linha processada: ${line}`);
     
         // Verifica se a linha é vazia ou se é o fim do programa
         if (line === '' || this.isEndOfProgram(line)) {
+            console.log(`Linha ${this.currentInstruction + 1} é vazia ou fim do programa. Parando.`);
             this.stop();
             this.clearHighlight();
             this.updateOutput('Programa finalizado');
@@ -436,6 +441,7 @@ class Interpreter {
         
         // Se não houver correspondência, pula para a próxima linha
         if (!match) {
+            console.log(`Linha ${this.currentInstruction + 1} não corresponde a uma instrução válida. Pulando.`);
             this.currentInstruction++;
             return true;
         }
@@ -450,6 +456,7 @@ class Interpreter {
             
             // Executa a instrução e obtém o resultado
             const result = this.executeInstruction(instruction, args);
+            console.log(`Resultado da instrução ${instruction}:`, result);
             
             // Se for uma instrução de salto e tiver nextInstruction, use-o
             if (result && result.nextInstruction !== undefined) {
