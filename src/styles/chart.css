@@ -31,8 +31,3 @@
     padding: 10px;
     box-shadow: var(--box-shadow);
 }
-
-.highlighted-line {
-    background-color: var(--output-text-color);
-    transition: transform var(--transition-speed);
-}

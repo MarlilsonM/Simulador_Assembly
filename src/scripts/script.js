@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.stopPropagation(); // Impede que o clique se propague para o documento
         isOptionsVisible = !isOptionsVisible;
         optionsBox.classList.toggle('visible', isOptionsVisible);
-        chevronIcon.src = isOptionsVisible ? 'icons/chevron-down.svg' : 'icons/chevron-up.svg';
+        chevronIcon.src = isOptionsVisible ? 'assets/chevron-down.svg' : 'assets/chevron-up.svg';
     });
 
     /**
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isOptionsVisible && !optionsBox.contains(event.target) && event.target !== optionsButton) {
             isOptionsVisible = false;
             optionsBox.classList.remove('visible');
-            chevronIcon.src = 'icons/chevron-up.svg';
+            chevronIcon.src = 'assets/chevron-up.svg';
         }
     });
 

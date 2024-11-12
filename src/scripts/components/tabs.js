@@ -18,7 +18,7 @@ function openTab(evt, tabName) {
 
 function openMemoryTab(evt, memoryTabName) {
     // Esconde todas as abas de memória
-    const memoryTabs = document.querySelectorAll('#instructions, #data');
+    const memoryTabs = document.querySelectorAll('#instructions, #data, #stack');
     memoryTabs.forEach(tab => {
         tab.style.display = 'none';
     });

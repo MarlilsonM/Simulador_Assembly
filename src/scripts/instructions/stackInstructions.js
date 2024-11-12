@@ -58,6 +58,8 @@ class StackInstructions {
         const sp = this.interpreter.registers['SP'];
         this.interpreter.memory[sp] = this.interpreter.registers[src];
         this.interpreter.updateMemoryUI();
+        this.animatePush(this.interpreter.registers[src], sp); // Animação de PUSH
+
         return { 
             instruction: 'PUSH', 
             args: [src], 
@@ -89,6 +91,7 @@ class StackInstructions {
         this.interpreter.registers[dest] = value;
         this.interpreter.registers['SP']++;
         this.interpreter.updateRegistersUI();
+        this.animatePop(value, sp); // Animação de POP
         return { 
             instruction: 'POP', 
             args: [dest], 
@@ -171,6 +174,30 @@ class StackInstructions {
             args: [], 
             result: `Rotacionados elementos em SP=${sp}, SP=${sp + 1}, e SP=${sp + 2}` 
         };
+    }
+
+    animatePush(value, sp) {
+        const stackList = document.getElementById('stack-list');
+        const newItem = document.createElement('li');
+        newItem.textContent = value;
+        newItem.classList.add('animate-push'); // Classe para animação
+        stackList.insertBefore(newItem, stackList.firstChild); // Insere o novo item no topo
+
+        // Remover a animação após um tempo
+        setTimeout(() => {
+            newItem.classList.remove('animate-push');
+        }, 500); // Tempo da animação
+    }
+
+    animatePop(value, sp) {
+        const stackList = document.getElementById('stack-list');
+        if (stackList.firstChild) {
+            const poppedItem = stackList.firstChild;
+            poppedItem.classList.add('animate-pop'); // Classe para animação
+            setTimeout(() => {
+                stackList.removeChild(poppedItem); // Remove o item após a animação
+            }, 500); // Tempo da animação
+        }
     }
 }
 

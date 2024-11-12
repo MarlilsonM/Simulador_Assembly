@@ -7,8 +7,8 @@
  */
 
 import Interpreter from './interpreter.js';
-import Debugger from './debugger.js';
-import Visualization from './visualization.js';
+import Debugger from './components/debugger.js';
+import Visualization from './components/visualization.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     let isRunning = false;

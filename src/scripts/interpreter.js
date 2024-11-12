@@ -1,8 +1,8 @@
-import ArithmeticInstructions from './arithmeticInstructions.js';
-import LogicalInstructions from './logicalInstructions.js';
-import DataMovementInstructions from './dataMovementInstructions.js';
-import StackInstructions from './stackInstructions.js';
-import SIMDInstructions from './simdInstructions.js';
+import ArithmeticInstructions from './instructions/arithmeticInstructions.js';
+import LogicalInstructions from './instructions/logicalInstructions.js';
+import DataMovementInstructions from './instructions/dataMovementInstructions.js';
+import StackInstructions from './instructions/stackInstructions.js';
+import SIMDInstructions from './instructions/simdInstructions.js';
 
 /**
  * Classe que representa um interpretador de assembly.
@@ -330,23 +330,21 @@ class Interpreter {
             return; // Se o editor não estiver disponível, não faz nada
         }
     
-        // Remove o destaque da linha anterior
+        // Remove o destaque da linha anterior, se houver
         if (this.lastHighlightedLine !== undefined) {
             try {
                 window.editor.removeLineClass(this.lastHighlightedLine, 'background', 'highlighted-line');
             } catch (error) {
-                console.error('DEBUG - Error removing highlight:', error);
+                console.error('Erro ao remover destaque:', error);
             }
         }
     
-        // Adiciona destaque à linha atual
-        if (this.currentInstruction < this.memory.length) {
-            try {
-                window.editor.addLineClass(this.currentInstruction, 'background', 'highlighted-line');
-                this.lastHighlightedLine = this.currentInstruction;
-            } catch (error) {
-                console.error('DEBUG - Error adding highlight:', error);
-            }
+        // Destaca a linha atual que está sendo executada
+        try {
+            window.editor.addLineClass(this.currentInstruction, 'background', 'highlighted-line');
+            this.lastHighlightedLine = this.currentInstruction; // Armazena a linha atual destacada
+        } catch (error) {
+            console.error('Erro ao adicionar destaque:', error);
         }
     }
 
@@ -385,18 +383,20 @@ class Interpreter {
      * @returns {boolean} Verdadeiro se a execução foi bem-sucedida, falso caso contrário.
      */
     executeStep() {
+        // Verifica se há um programa carregado
         if (!this.memory || this.programLength === 0) {
             this.updateOutput("Nenhum programa carregado.", "warning");
             return false;
         }
     
+        // Verifica se há um breakpoint na linha atual
         if (this.debugger && this.debugger.hasBreakpoint(this.currentInstruction)) {
             this.stop();
             this.updateOutput("Breakpoint encontrado na linha " + (this.currentInstruction + 1), "info");
             return false;
         }
-    
-        // Verifica se chegou ao fim do programa
+
+        // Verifica se chegou ao fim do programa após a execução
         if (this.currentInstruction >= this.programLength) {
             this.stop();
             this.clearHighlight();
@@ -404,49 +404,59 @@ class Interpreter {
             return false;
         }
     
+        // Obtém a linha atual da memória
         const currentLine = this.memory[this.currentInstruction];
-
+        console.log(`Executando linha ${this.currentInstruction + 1}: ${currentLine}`);
+    
         // Se a linha atual for uma label, pule para a próxima instrução
         if (currentLine && currentLine.type === 'label') {
+            console.log(`Linha ${this.currentInstruction + 1} é uma label. Pulando.`);
             this.currentInstruction++;
             return true;
         }
     
+        // Verifica se a linha atual é válida
         if (!currentLine || typeof currentLine !== 'string') {
+            console.log(`Linha ${this.currentInstruction + 1} é inválida ou vazia. Pulando.`);
             this.currentInstruction++;
             return true;
         }
     
+        // Remove comentários e espaços em branco da linha
         let line = currentLine.split(';')[0].trim();
+        console.log(`Linha processada: ${line}`);
     
+        // Verifica se a linha é vazia ou se é o fim do programa
         if (line === '' || this.isEndOfProgram(line)) {
+            console.log(`Linha ${this.currentInstruction + 1} é vazia ou fim do programa. Parando.`);
             this.stop();
             this.clearHighlight();
             this.updateOutput('Programa finalizado');
             return false;
         }
     
-        this.highlightCurrentLine();
-        this.updateUI();
-    
+        // Regex para capturar a instrução e os argumentos
         const instructionRegex = /^(\w+)\s*(.*?)$/;
         const match = line.match(instructionRegex);
         
+        // Se não houver correspondência, pula para a próxima linha
         if (!match) {
+            console.log(`Linha ${this.currentInstruction + 1} não corresponde a uma instrução válida. Pulando.`);
             this.currentInstruction++;
             return true;
         }
     
-        const instruction = match[1].toUpperCase();
-        const argsString = match[2].trim();
-        const args = argsString
-            .split(',')
-            .map(arg => arg.trim())
-            .filter(arg => arg !== '');
+        const instruction = match[1].toUpperCase(); // Obtém a instrução
+        const argsString = match[2].trim(); // Obtém a string de argumentos
+        const args = argsString.split(',').map(arg => arg.trim()).filter(arg => arg !== ''); // Processa os argumentos
     
         try {
+            // Valida os argumentos para a instrução
             this.validateArgs(instruction, args);
+            
+            // Executa a instrução e obtém o resultado
             const result = this.executeInstruction(instruction, args);
+            console.log(`Resultado da instrução ${instruction}:`, result);
             
             // Se for uma instrução de salto e tiver nextInstruction, use-o
             if (result && result.nextInstruction !== undefined) {
@@ -455,9 +465,14 @@ class Interpreter {
                 // Caso contrário, vá para a próxima instrução
                 this.currentInstruction++;
             }
-        
+    
+            // Atualiza a interface do usuário e a memória
             this.updateUI();
             this.updateMemoryUI();
+
+            // Destaca a linha atual após a execução da instrução
+            this.highlightCurrentLine();
+
             return true;
         } catch (error) {
             console.error('DEBUG - Error in executeStep:', error);

@@ -105,3 +105,52 @@
     border-radius: 6px;
     border: 3px solid var(--scrollbar-track-color);
 }
+
+/* Pilha */
+.stack-visualization {
+    margin-top: 20px;
+}
+
+.stack-visualization ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.stack-visualization li {
+    padding: 8px;
+    margin: 4px 0;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: transform 0.5s ease-in-out;
+}
+
+.animate-push {
+    animation: pushAnimation 0.5s forwards;
+}
+
+@keyframes pushAnimation {
+    0% {
+        transform: translateY(-20px );
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-pop {
+    animation: popAnimation 0.5s forwards;
+}
+
+@keyframes popAnimation {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+}
