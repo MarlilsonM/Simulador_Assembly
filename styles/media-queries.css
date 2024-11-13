@@ -4,16 +4,16 @@
         box-sizing: border-box;
     }
 
+    body {
+        margin: 0 !important;
+        overflow-x: hidden;
+        width: 100%;
+    }
+
     /*Estilos do split*/
     .split {
         display: flex;
         flex-direction: column !important;
-        width: 100%;
-    }
-
-    body {
-        margin: 0;
-        overflow-x: hidden;
         width: 100%;
     }
 
@@ -156,7 +156,7 @@
 }
 
 /* Mobile */
-@media (max-width: 768px) {
+@media (max-width: 768px) {  
     .sun-and-moon > .sun,
     .sun-and-moon > .sun-beams,
     .sun-and-moon > .moon > circle {

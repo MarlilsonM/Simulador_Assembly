@@ -710,6 +710,13 @@ class Interpreter {
         }
     }
 
+    clearStackUI() {
+        const stackList = document.getElementById('stack-list');
+        if (stackList) {
+            stackList.innerHTML = ''; // Limpa o conteúdo da lista da pilha
+        }
+    }
+
     /**
      * Reseta o estado do interpretador, limpando memória e registradores.
      */
@@ -748,6 +755,7 @@ class Interpreter {
         this.updateMemoryUI();
         this.clearOutput();
         this.clearHighlight();
+        this.clearStackUI();
     }
 
     /**

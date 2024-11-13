@@ -186,7 +186,7 @@ class StackInstructions {
         // Remover a animação após um tempo
         setTimeout(() => {
             newItem.classList.remove('animate-push');
-        }, 500); // Tempo da animação
+        }, 400); // Tempo da animação
     }
 
     animatePop(value, sp) {
@@ -196,7 +196,7 @@ class StackInstructions {
             poppedItem.classList.add('animate-pop'); // Classe para animação
             setTimeout(() => {
                 stackList.removeChild(poppedItem); // Remove o item após a animação
-            }, 500); // Tempo da animação
+            }, 400); // Tempo da animação
         }
     }
 }
