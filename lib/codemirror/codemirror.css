@@ -38,10 +38,6 @@
   width: 10px;
 }
 
-.highlighted-line {
-  background-color: #ffd900a4;
-}
-
 
 .CodeMirror-linenumbers,
 .CodeMirror-linenumber {

@@ -323,46 +323,6 @@ class Interpreter {
     }
 
     /**
-     * Destaca a linha atual no editor de código.
-     */
-    highlightCurrentLine() {
-        if (!window.editor) {
-            return; // Se o editor não estiver disponível, não faz nada
-        }
-    
-        // Remove o destaque da linha anterior, se houver
-        if (this.lastHighlightedLine !== undefined) {
-            try {
-                window.editor.removeLineClass(this.lastHighlightedLine, 'background', 'highlighted-line');
-            } catch (error) {
-                console.error('Erro ao remover destaque:', error);
-            }
-        }
-    
-        // Destaca a linha atual que está sendo executada
-        try {
-            window.editor.addLineClass(this.currentInstruction, 'background', 'highlighted-line');
-            this.lastHighlightedLine = this.currentInstruction; // Armazena a linha atual destacada
-        } catch (error) {
-            console.error('Erro ao adicionar destaque:', error);
-        }
-    }
-
-    /**
-     * Limpa o destaque da linha atual no editor de código.
-     */
-    clearHighlight() {
-        if (this.lastHighlightedLine !== undefined && window.editor) {
-            try {
-                window.editor.removeLineClass(this.lastHighlightedLine, 'background', 'highlighted-line');
-                this.lastHighlightedLine = undefined;
-            } catch (error) {
-                console.error('DEBUG - Error clearing highlight:', error);
-            }
-        }
-    }
-
-    /**
      * Atualiza a interface do usuário com base nas opções fornecidas.
      * @param {Object} options - Opções para atualizar a UI (registradores, memória, pilha).
      */
@@ -399,7 +359,6 @@ class Interpreter {
         // Verifica se chegou ao fim do programa após a execução
         if (this.currentInstruction >= this.programLength) {
             this.stop();
-            this.clearHighlight();
             this.updateOutput('Programa finalizado com sucesso.', 'success');
             return false;
         }
@@ -425,7 +384,6 @@ class Interpreter {
         // Verifica se a linha é vazia ou se é o fim do programa
         if (line === '' || this.isEndOfProgram(line)) {
             this.stop();
-            this.clearHighlight();
             this.updateOutput('Programa finalizado');
             return false;
         }
@@ -462,9 +420,6 @@ class Interpreter {
             // Atualiza a interface do usuário e a memória
             this.updateUI();
             this.updateMemoryUI();
-
-            // Destaca a linha atual após a execução da instrução
-            this.highlightCurrentLine();
 
             return true;
         } catch (error) {
@@ -705,9 +660,6 @@ class Interpreter {
      */
     stop() {
         this.running = false; // Define a execução como parada
-        if (this.currentInstruction >= this.programLength) {
-            this.clearHighlight(); // Limpa o destaque se o programa terminou
-        }
     }
 
     clearStackUI() {
@@ -754,7 +706,6 @@ class Interpreter {
         this.updateRegistersUI();
         this.updateMemoryUI();
         this.clearOutput();
-        this.clearHighlight();
         this.clearStackUI();
     }
 
