@@ -206,22 +206,15 @@ class Interpreter {
         // Reset inicial
         this.reset();
         
-        // Carrega o novo programa, removendo comentários e linhas vazias
-        let lines = program.split('\n')
-            .map(line => line.split(';')[0].trim())
-            .filter(line => line !== '' && line !== '0');
+        // Carrega o novo programa, removendo comentários, mas mantendo as linhas vazias
+        let lines = program.split('\n').map(line => line.trim());
         
-        // Armazena as linhas do programa no início da memória
-        lines.forEach((line, index) => {
-            this.memory[index] = line;
-        });
+        // Armazena as linhas do programa na memória
+        this.memory = lines; // Mantém todas as linhas, incluindo comentários e vazias
         
         // Processa as labels
         this.labels = this.parseLabels(lines.length);
         
-        // Remove linhas vazias após processamento das labels
-        this.memory = this.memory.filter(line => line !== '' && line !== undefined);
-
         // Inicializa os registradores vetoriais como um Float32Array com zeros
         this.vectorRegisters = {
             v0: new Float32Array(this.config.maxVectorSize),
@@ -229,10 +222,10 @@ class Interpreter {
             v2: new Float32Array(this.config.maxVectorSize),
             v3: new Float32Array(this.config.maxVectorSize)
         };
-
+    
         // Define que os registradores vetoriais foram inicializados
         this.vectorRegistersInitialized = true;
-    
+        
         // Calcula o comprimento real do programa
         let lastValidIndex = -1;
         let maxLabelIndex = -1;
@@ -250,8 +243,8 @@ class Interpreter {
             }
         }
         
-        // Define o tamanho do programa como a última instrução válida + 1
-        this.programLength = lastValidIndex + 1;
+        // Define o tamanho do programa como o número total de linhas
+        this.programLength = lines.length;
         
         this.updateMemoryUI(); // Atualiza a interface do usuário
     }
@@ -260,14 +253,17 @@ class Interpreter {
      * Atualiza a saída do programa na interface do usuário.
      * @param {string} message - A mensagem a ser exibida.
      * @param {string} type - O tipo da mensagem (info, warning, error, etc.).
+     * @param {number} lineNumber - O número da linha onde o comando foi executado.
      */
-    updateOutput(message, type = 'info') {
+    updateOutput(message, type = 'info', lineNumber = null) {
         const outputContent = document.querySelector('.output-content');
         const outputElement = document.getElementById('program-output');
         if (!outputContent || !outputElement) return;
     
         const timestamp = new Date().toLocaleTimeString();
-        const formattedMessage = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+        const formattedMessage = lineNumber !== null 
+            ? `[${timestamp}] ${type.toUpperCase()} (Linha ${lineNumber}): ${message}`
+            : `[${timestamp}] ${type.toUpperCase()}: ${message}`;
         
         const messageElement = document.createElement('div');
         messageElement.className = `output-message ${type}`;
@@ -344,45 +340,55 @@ class Interpreter {
      */
     executeStep() {
         // Verifica se há um programa carregado
-        if (!this.memory || this.programLength === 0) {
+        if (!this.memory || this.memory.length === 0) {
             this.updateOutput("Nenhum programa carregado.", "warning");
             return false;
         }
     
         // Verifica se há um breakpoint na linha atual
-        if (this.debugger && this.debugger.hasBreakpoint(this.currentInstruction)) {
+        if (this.debugger && this.debugger.shouldPause()) {
             this.stop();
             this.updateOutput("Breakpoint encontrado na linha " + (this.currentInstruction + 1), "info");
             return false;
         }
-
+    
         // Verifica se chegou ao fim do programa após a execução
-        if (this.currentInstruction >= this.programLength) {
+        if (this.currentInstruction >= this.memory.length) {
             this.stop();
             this.updateOutput('Programa finalizado com sucesso.', 'success');
             return false;
         }
     
         // Obtém a linha atual da memória
-        const currentLine = this.memory[this.currentInstruction];
+        let currentLine = this.memory[this.currentInstruction];
     
-        // Se a linha atual for uma label, pule para a próxima instrução
-        if (currentLine && currentLine.type === 'label') {
+        // Ignora linhas vazias e comentários, mas conta como linhas
+        while (this.currentInstruction < this.memory.length) {
+            currentLine = this.memory[this.currentInstruction];
+            // Remove comentários e espaços em branco da linha
+            let line = currentLine.split(';')[0].trim();
+    
+            // Verifica se a linha é válida
+            if (line !== '') {
+                break; // Linha válida encontrada
+            }
+    
+            // Se a linha for vazia, apenas incrementa
             this.currentInstruction++;
-            return true;
         }
     
-        // Verifica se a linha atual é válida
-        if (!currentLine || typeof currentLine !== 'string') {
-            this.currentInstruction++;
-            return true;
+        // Verifica se atingiu o final do programa
+        if (this.currentInstruction >= this.memory.length) {
+            this.stop();
+            this.updateOutput('Programa finalizado');
+            return false;
         }
     
         // Remove comentários e espaços em branco da linha
         let line = currentLine.split(';')[0].trim();
     
-        // Verifica se a linha é vazia ou se é o fim do programa
-        if (line === '' || this.isEndOfProgram(line)) {
+        // Verifica se a linha é o fim do programa
+        if (this.isEndOfProgram(line)) {
             this.stop();
             this.updateOutput('Programa finalizado');
             return false;
@@ -391,7 +397,7 @@ class Interpreter {
         // Regex para capturar a instrução e os argumentos
         const instructionRegex = /^(\w+)\s*(.*?)$/;
         const match = line.match(instructionRegex);
-        
+    
         // Se não houver correspondência, pula para a próxima linha
         if (!match) {
             this.currentInstruction++;
@@ -420,13 +426,13 @@ class Interpreter {
             // Atualiza a interface do usuário e a memória
             this.updateUI();
             this.updateMemoryUI();
-
-            return true;
+    
+            return true; // Indica que a execução foi bem-sucedida
         } catch (error) {
             console.error('DEBUG - Error in executeStep:', error);
-            this.updateOutput(`Erro: ${error.message}`, 'error');
-            this.stop();
-            return false;
+            this.updateOutput(`Erro: ${error.message}`, 'error'); // Atualiza a saída com a mensagem de erro
+            this.stop(); // Para a execução em caso de erro
+            return false; // Indica que houve um erro
         }
     }
 
@@ -594,16 +600,18 @@ class Interpreter {
             }
     
             if (result) {
-                if (typeof result === 'object' && 'instruction' in result) {
-                    this.updateOutput(`${result.instruction} ${result.args.join(', ')} = ${result.result}`, 'info');
-                } else {
-                    this.updateOutput(`Executada instrução: ${instruction} ${args.join(', ')}`, 'info');
-                }
+                // Se result for um objeto, extraia o valor desejado
+                const resultValue = typeof result === 'object' && result !== null && 'result' in result 
+                ? result.result 
+                : result; // Se não for um objeto ou não tiver a propriedade 'result', use o próprio result
+
+                // Atualiza a saída com a linha atual, combinando a instrução e o resultado
+                this.updateOutput(`Executada instrução: ${instruction} ${args.join(', ')} = ${resultValue}`, 'info', this.currentInstruction + 1);
             }
     
             return result; // Retorna o resultado em vez de true
         } catch (error) {
-            this.updateOutput(`Erro na execução de ${instruction}: ${error.message}`, 'error');
+            this.updateOutput(`Erro na execução de ${instruction}: ${error.message}`, 'error', this.currentInstruction + 1);
             throw error; // Propaga o erro em vez de retornar false
         }
     }

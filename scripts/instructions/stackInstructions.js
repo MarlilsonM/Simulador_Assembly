@@ -189,7 +189,6 @@ class StackInstructions {
         newItem.textContent = value;
         newItem.classList.add('animate-dup'); // Classe para animação
         stackList.insertBefore(newItem, stackList.firstChild); // Insere o novo item no topo
-        console.log(`Item duplicado na pilha: ${value}`);
         // Remover a animação após um tempo
         setTimeout(() => {
             newItem.classList.remove('animate-dup');
@@ -210,7 +209,6 @@ class StackInstructions {
                 item2.textContent = tempText;
                 item1.classList.remove('animate-swap');
                 item2.classList.remove('animate-swap');
-                console.log(`Itens trocados na pilha: ${item1.textContent} e ${item2.textContent}`);
             }, 400); // Tempo da animação
         }
     }
@@ -233,7 +231,6 @@ class StackInstructions {
                 item1.classList.remove('animate-rot');
                 item2.classList.remove('animate-rot');
                 item3.classList.remove('animate-rot');
-                console.log(`Itens rotacionados na pilha: ${item1.textContent}, ${item2.textContent}, ${item3.textContent}`);
             }, 400); // Tempo da animação
         }
     }
@@ -244,7 +241,6 @@ class StackInstructions {
         newItem.textContent = value;
         newItem.classList.add('animate-push'); // Classe para animação
         stackList.insertBefore(newItem, stackList.firstChild); // Insere o novo item no topo
-        console.log(`Item adicionado à pilha: ${value}`);
         // Remover a animação após um tempo
         setTimeout(() => {
             newItem.classList.remove('animate-push');
@@ -264,7 +260,6 @@ class StackInstructions {
             setTimeout(() => {
                 if (stackList.contains(poppedItem)) { // Verifica se o item ainda é um filho
                     stackList.removeChild(poppedItem); // Remove o item após a animação
-                    console.log(`Item removido da pilha: ${poppedItem.textContent}`);
                 }
             }, duration); // Usa a duração da animação baseada na escolha do usuário
         }
