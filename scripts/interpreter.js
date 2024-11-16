@@ -16,7 +16,7 @@ class Interpreter {
      */
     constructor() {
         this.config = {
-            matrixSize: 2,  // Tamanho padrão 2x2
+            matrixSize: 4,  // Tamanho padrão 2x2
             maxVectorSize: 4  // Tamanho máximo do vetor SIMD
         };
 
@@ -143,10 +143,13 @@ class Interpreter {
         const instructionsContent = document.getElementById('instructions-content');
         const dataContent = document.getElementById('data-content');
 
+        // Log para verificar o estado da memória antes de atualizar
+        console.log("Estado da memória antes da atualização da UI:", this.memory);
+
         if (instructionsContent && dataContent) {
             // Seção de Instruções
             let instructionsHtml = '';
-            for (let i = 0; i < this.programLength; i++) {
+            for (let i = 0; i < this.totalLines; i++) {
                 const instruction = this.memory[i];
                 if (!instruction) continue; // Pula instruções undefined ou null
 
@@ -168,11 +171,12 @@ class Interpreter {
                 }
             }
             instructionsContent.innerHTML = instructionsHtml;
-
+            console.log(`Tamanho do programa: ${this.programLength}`);
+            console.log("Conteúdo da memória:", this.memory);
             // Seção de Dados
             let dataHtml = '';
             let hasData = false;
-            for (let i = this.programLength; i < this.memory.length; i++) {
+            for (let i = this.totalLines; i < this.memory.length; i++) {
                 if (this.memory[i] !== 0 && this.memory[i] !== '0') {
                     dataHtml += `<div class="data-line"><span class="line-number">[${i}]</span> <span class="data-value">${this.memory[i]}</span></div>`;
                     hasData = true;
@@ -182,6 +186,7 @@ class Interpreter {
                 dataHtml = '<div class="data-line">(Sem dados)</div>';
             }
             dataContent.innerHTML = dataHtml;
+            console.log(`Exibindo dados: ${hasData}`);
         }
     }
 
@@ -209,11 +214,19 @@ class Interpreter {
         // Carrega o novo programa, removendo comentários, mas mantendo as linhas vazias
         let lines = program.split('\n').map(line => line.trim());
         
-        // Armazena as linhas do programa na memória
-        this.memory = lines; // Mantém todas as linhas, incluindo comentários e vazias
+        // Armazena as linhas do programa na memória, garantindo que sejam strings
+        this.memory.fill(0); // Limpa a memória antes de carregar
+        lines.forEach((line, index) => {
+            if (index < this.memory.length) {
+                this.memory[index] = line; // Carrega as linhas na memória
+            }
+        });
+
+        // Log para verificar o estado da memória após o carregamento
+        console.log("Estado da memória após carregar o programa:", this.memory);
         
         // Processa as labels
-        this.labels = this.parseLabels(lines.length);
+        this.labels = this.parseLabels(); // Chama parseLabels sem passar o comprimento, pois usaremos this.memory
         
         // Inicializa os registradores vetoriais como um Float32Array com zeros
         this.vectorRegisters = {
@@ -225,16 +238,16 @@ class Interpreter {
     
         // Define que os registradores vetoriais foram inicializados
         this.vectorRegistersInitialized = true;
-        
+    
         // Calcula o comprimento real do programa
         let lastValidIndex = -1;
         let maxLabelIndex = -1;
-        
+    
         // Encontra o maior índice usado por uma label
         for (let label in this.labels) {
             maxLabelIndex = Math.max(maxLabelIndex, this.labels[label]);
         }
-        
+    
         // Procura a última instrução válida, incluindo instruções após as labels
         for (let i = 0; i <= Math.max(this.memory.length - 1, maxLabelIndex + 1); i++) {
             const line = this.memory[i];
@@ -242,11 +255,16 @@ class Interpreter {
                 lastValidIndex = i;
             }
         }
-        
+    
         // Define o tamanho do programa como o número total de linhas
-        this.programLength = lines.length;
-        
-        this.updateMemoryUI(); // Atualiza a interface do usuário
+        this.programLength = this.memory.length; // Define o comprimento com base nas linhas válidas
+
+        // Armazena o total de linhas carregadas
+        this.totalLines = lines.length; // Total de linhas, incluindo comentários e vazias
+    
+        this.updateUI(); // Atualiza a interface do usuário
+    
+        console.log('Programa carregado:', this.memory);
     }
 
     /**
@@ -285,20 +303,18 @@ class Interpreter {
      * @param {number} programLength - O comprimento do programa.
      * @returns {Object} Um objeto contendo as labels e seus índices.
      */
-    parseLabels(programLength) {
+    parseLabels() {
         const labels = {};
-        for (let index = 0; index < programLength; index++) {
-            const line = this.memory[index];
+        this.memory.forEach((line, index) => {
             if (typeof line === 'string') {
                 const labelMatch = line.match(/^(\w+):/);
                 if (labelMatch) {
                     const label = labelMatch[1];
-                    labels[label] = index;
-                    // Não remova a linha da memória, apenas marque-a como uma label
-                    this.memory[index] = { type: 'label', name: label };
+                    labels[label] = index; // Armazena o índice da linha da label
                 }
             }
-        }
+        });
+        console.log("Labels detectadas e posições:", labels);
         return labels;
     }
 
@@ -358,6 +374,10 @@ class Interpreter {
             this.updateOutput('Programa finalizado com sucesso.', 'success');
             return false;
         }
+
+        // Log para verificar o estado da memória antes da execução
+        console.log("Estado atual da memória antes da execução:", this.memory);
+        console.log("Registrador SP antes da execução:", this.registers.SP);
     
         // Obtém a linha atual da memória
         let currentLine = this.memory[this.currentInstruction];
@@ -394,6 +414,12 @@ class Interpreter {
             return false;
         }
     
+        // Verifica se a linha é uma label
+        if (line.endsWith(':')) {
+            this.currentInstruction++; // Avança para a próxima linha
+            return true; // Indica que a execução foi bem-sucedida
+        }
+    
         // Regex para capturar a instrução e os argumentos
         const instructionRegex = /^(\w+)\s*(.*?)$/;
         const match = line.match(instructionRegex);
@@ -425,7 +451,6 @@ class Interpreter {
     
             // Atualiza a interface do usuário e a memória
             this.updateUI();
-            this.updateMemoryUI();
     
             return true; // Indica que a execução foi bem-sucedida
         } catch (error) {
@@ -711,8 +736,7 @@ class Interpreter {
         this.simd = new SIMDInstructions(this);
         
         // Atualizar a UI
-        this.updateRegistersUI();
-        this.updateMemoryUI();
+        this.updateUI();
         this.clearOutput();
         this.clearStackUI();
     }

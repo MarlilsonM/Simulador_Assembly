@@ -44,6 +44,9 @@ class DataMovementInstructions {
 
         const [dest, src] = args;
 
+        // Log para verificar os argumentos recebidos
+        console.log(`MOV - Destino: ${dest}, Fonte: ${src}`);
+
         // Movimentação para memória
         if (dest.includes('[')) {
             return this.movToMemory(dest, src);
@@ -51,6 +54,36 @@ class DataMovementInstructions {
         
         // Movimentação para registrador
         return this.movToRegister(dest, src);
+    }
+
+    /**
+     * Analisa um endereço de memória e o converte para um índice numérico.
+     * @param {string} address - O endereço de memória a ser analisado.
+     * @returns {number} O índice numérico correspondente ao endereço de memória.
+     * @throws {Error} Se o formato do endereço for inválido.
+     */
+    parseMemoryAddress(address) {
+        if (typeof address !== 'string') {
+            throw new Error(`Formato de endereço inválido: ${address}`);
+        }
+    
+        // Remove espaços em branco e colchetes
+        const cleanAddress = address.replace(/[\[\]\s]/g, '');
+        console.log(`Endereço limpo: ${cleanAddress}`); // Log de depuração
+
+    
+        // Verifica se é uma expressão com soma (ex: r0+r2)
+        if (cleanAddress.includes('+')) {
+            const [base, offset] = cleanAddress.split('+');
+            let baseValue = this.getRegisterOrValue(base);
+            let offsetValue = this.getRegisterOrValue(offset);
+            return baseValue + offsetValue;
+        }
+
+        console.log(`Endereço analisado: ${cleanAddress}`);
+    
+        // Se não for uma expressão, pode ser um registrador ou um valor direto
+        return this.getRegisterOrValue(cleanAddress);
     }
 
     /**
@@ -63,6 +96,18 @@ class DataMovementInstructions {
     movToMemory(dest, src) {
         const address = this.parseMemoryAddress(dest);
         const value = this.parseValue(src);
+
+        console.log(`Tentando mover ${value} para o endereço de memória: ${address}`);
+
+        // Verifique o estado da memória antes da operação
+        console.log("Estado atual da memória:", this.interpreter.memory);
+
+        // Adicione o log aqui para verificar o tamanho da memória
+        console.log(`Tamanho da memória: ${this.interpreter.memory.length}`); // Log do tamanho da memória
+        console.log(`Verificando endereço: ${address}`); // Log do endereço a ser verificado
+
+        // Verifique o estado da memória antes da operação
+        console.log("Estado atual da memória antes da operação:", this.interpreter.memory);
 
         if (address < 0 || address >= this.interpreter.memory.length) {
             throw new Error(`Endereço de memória inválido: ${address}`);
@@ -203,36 +248,11 @@ class DataMovementInstructions {
 
         // Tenta converter para número
         const value = parseInt(arg, 10);
+        console.log(`Valor convertido: ${value}`);
         if (isNaN(value)) {
             throw new Error(`Valor inválido: ${arg}`);
         }
         return value;
-    }
-
-    /**
-     * Analisa um endereço de memória e o converte para um índice numérico.
-     * @param {string} address - O endereço de memória a ser analisado.
-     * @returns {number} O índice numérico correspondente ao endereço de memória.
-     * @throws {Error} Se o formato do endereço for inválido.
-     */
-    parseMemoryAddress(address) {
-        if (typeof address !== 'string') {
-            throw new Error(`Formato de endereço inválido: ${address}`);
-        }
-    
-        // Remove espaços em branco e colchetes
-        const cleanAddress = address.replace(/[\[\]\s]/g, '');
-    
-        // Verifica se é uma expressão com soma (ex: r0+r2)
-        if (cleanAddress.includes('+')) {
-            const [base, offset] = cleanAddress.split('+');
-            let baseValue = this.getRegisterOrValue(base);
-            let offsetValue = this.getRegisterOrValue(offset);
-            return baseValue + offsetValue;
-        }
-    
-        // Se não for uma expressão, pode ser um registrador ou um valor direto
-        return this.getRegisterOrValue(cleanAddress);
     }
 }
 

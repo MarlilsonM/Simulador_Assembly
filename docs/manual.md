@@ -492,17 +492,6 @@ VMUL v3, v2, v0    ; Multiplica resultado (6*1, 8*2, 10*3, 12*4) = (6,16,30,48)
 VSTORE v2, [108]   ; Armazena resultados da soma
 VSTORE v3, [112]   ; Armazena resultados da multiplicação
 END
-
-; Verificação dos resultados (opcional)
-LOAD r0, [108]  ; Primeiro resultado da soma
-LOAD r1, [109]  ; Segundo resultado da soma
-LOAD r2, [110]  ; Terceiro resultado da soma
-LOAD r3, [111]  ; Quarto resultado da soma
-
-LOAD r4, [112]  ; Primeiro resultado da multiplicação
-LOAD r5, [113]  ; Segundo resultado da multiplicação
-LOAD r6, [114]  ; Terceiro resultado da multiplicação
-LOAD r7, [115]  ; Quarto resultado da multiplicação
 ```
 
 ### Dicas de Uso
