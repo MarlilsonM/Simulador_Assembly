@@ -58,7 +58,7 @@ class StackInstructions {
         const sp = this.interpreter.registers['SP'];
         this.interpreter.memory[sp] = this.interpreter.registers[src];
         this.interpreter.updateMemoryUI();
-        this.animatePush(this.interpreter.registers[src], sp); // Animação de PUSH
+        this.animatePush(this.interpreter.registers[src]); // Animação de PUSH
 
         return { 
             instruction: 'PUSH', 
@@ -87,11 +87,12 @@ class StackInstructions {
         }
 
         const sp = this.interpreter.registers['SP'];
-        const value = this.interpreter.memory[sp];
-        this.interpreter.registers[dest] = value;
-        this.interpreter.registers['SP']++;
+        const value = this.interpreter.memory[sp]; // Pega o valor do topo da pilha
+        this.interpreter.registers[dest] = value; // Armazena no registrador de destino
+        this.interpreter.registers['SP']++;  // Incrementa o ponteiro da pilha
         this.interpreter.updateRegistersUI();
-        this.animatePop(value, sp); // Animação de POP
+        this.animatePop(); // Animação de POP
+        
         return { 
             instruction: 'POP', 
             args: [dest], 
@@ -120,6 +121,8 @@ class StackInstructions {
         this.interpreter.memory[this.interpreter.registers['SP']] = value;
         
         this.interpreter.updateMemoryUI();
+        this.animateDup(value);
+        
         return { 
             instruction: 'DUP', 
             args: [], 
@@ -144,6 +147,8 @@ class StackInstructions {
         this.interpreter.memory[sp + 1] = temp;
         
         this.interpreter.updateMemoryUI();
+        this.animateSwap(sp, sp + 1);
+        
         return { 
             instruction: 'SWAP', 
             args: [], 
@@ -169,6 +174,8 @@ class StackInstructions {
         this.interpreter.memory[sp + 2] = temp;
         
         this.interpreter.updateMemoryUI();
+        this.animateRot(sp, sp + 1, sp + 2);
+        
         return { 
             instruction: 'ROT', 
             args: [], 
@@ -176,27 +183,90 @@ class StackInstructions {
         };
     }
 
-    animatePush(value, sp) {
+    animateDup(value) {
+        const stackList = document.getElementById('stack-list');
+        const newItem = document.createElement('li');
+        newItem.textContent = value;
+        newItem.classList.add('animate-dup'); // Classe para animação
+        stackList.insertBefore(newItem, stackList.firstChild); // Insere o novo item no topo
+        console.log(`Item duplicado na pilha: ${value}`);
+        // Remover a animação após um tempo
+        setTimeout(() => {
+            newItem.classList.remove('animate-dup');
+        }, 400); // Tempo da animação
+    }
+    
+    animateSwap(index1, index2) {
+        const stackList = document.getElementById('stack-list');
+        const item1 = stackList.children[index1];
+        const item2 = stackList.children[index2];
+    
+        if (item1 && item2) {
+            item1.classList.add('animate-swap'); // Classe para animação
+            item2.classList.add('animate-swap'); // Classe para animação
+            setTimeout(() => {
+                const tempText = item1.textContent;
+                item1.textContent = item2.textContent;
+                item2.textContent = tempText;
+                item1.classList.remove('animate-swap');
+                item2.classList.remove('animate-swap');
+                console.log(`Itens trocados na pilha: ${item1.textContent} e ${item2.textContent}`);
+            }, 400); // Tempo da animação
+        }
+    }
+    
+    animateRot(index1, index2, index3) {
+        const stackList = document.getElementById('stack-list');
+        const item1 = stackList.children[index1];
+        const item2 = stackList.children[index2];
+        const item3 = stackList.children[index3];
+    
+        if (item1 && item2 && item3) {
+            item1.classList.add('animate-rot'); // Classe para animação
+            item2.classList.add('animate-rot'); // Classe para animação
+            item3.classList.add('animate-rot'); // Classe para animação
+            setTimeout(() => {
+                const tempText = item1.textContent;
+                item1.textContent = item2.textContent;
+                item2.textContent = item3.textContent;
+                item3.textContent = tempText;
+                item1.classList.remove('animate-rot');
+                item2.classList.remove('animate-rot');
+                item3.classList.remove('animate-rot');
+                console.log(`Itens rotacionados na pilha: ${item1.textContent}, ${item2.textContent}, ${item3.textContent}`);
+            }, 400); // Tempo da animação
+        }
+    }
+
+    animatePush(value) {
         const stackList = document.getElementById('stack-list');
         const newItem = document.createElement('li');
         newItem.textContent = value;
         newItem.classList.add('animate-push'); // Classe para animação
         stackList.insertBefore(newItem, stackList.firstChild); // Insere o novo item no topo
-
+        console.log(`Item adicionado à pilha: ${value}`);
         // Remover a animação após um tempo
         setTimeout(() => {
             newItem.classList.remove('animate-push');
         }, 400); // Tempo da animação
     }
 
-    animatePop(value, sp) {
-        const stackList = document.getElementById('stack-list');
+    animatePop() {
+        const stackList = document.getElementById('stack-list'); // Obtém a lista da pilha
         if (stackList.firstChild) {
-            const poppedItem = stackList.firstChild;
-            poppedItem.classList.add('animate-pop'); // Classe para animação
+            const poppedItem = stackList.firstChild; // O item que será removido
+            poppedItem.classList.add('animate-pop'); // Adiciona a classe de animação
+
+            // Obtém a duração da animação com base na velocidade escolhida
+            const duration = window.animationDurations[window.selectedSpeed];
+
+            // Remover o item após o tempo da animação
             setTimeout(() => {
-                stackList.removeChild(poppedItem); // Remove o item após a animação
-            }, 400); // Tempo da animação
+                if (stackList.contains(poppedItem)) { // Verifica se o item ainda é um filho
+                    stackList.removeChild(poppedItem); // Remove o item após a animação
+                    console.log(`Item removido da pilha: ${poppedItem.textContent}`);
+                }
+            }, duration); // Usa a duração da animação baseada na escolha do usuário
         }
     }
 }

@@ -121,36 +121,99 @@
     margin: 4px 0;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    transition: transform 0.5s ease-in-out;
 }
 
+/* Efeito ao passar o mouse sobre os itens da pilha */
+.stack-visualization li:hover {
+    transform: scale(1.05); /* Aumenta o tamanho ao passar o mouse */
+}
+
+.stack-visualization li {
+    will-change: transform, opacity; /* Informa ao navegador que esses estilos mudarão */
+}
+
+/* Animação para PUSH */
 .animate-push {
-    animation: pushAnimation 0.5s forwards;
+    animation: pushAnimation 0.4s forwards;
 }
 
-@keyframes pushAnimation {
-    0% {
-        transform: translateY(-20px );
+/* Animação para DUP */
+.animate-dup {
+    animation: dupAnimation 0.4s forwards;
+}
+
+@keyframes dupAnimation {
+    from {
+        transform: translateY(-20px);
         opacity: 0;
     }
-    100% {
+    to {
         transform: translateY(0);
         opacity: 1;
     }
 }
 
+/* Animação para SWAP */
+.animate-swap {
+    animation: swapAnimation 0.4s forwards;
+}
+
+@keyframes swapAnimation {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Animação para ROT */
+.animate-rot {
+    animation: rotAnimation 0.4s forwards;
+}
+
+@keyframes rotAnimation {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: rotate(15deg);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes pushAnimation {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Animação para POP */
 .animate-pop {
-    animation: popAnimation 0.5s forwards;
+    animation: popAnimation 0.4s forwards; /* Aumente o tempo para 0.4s para uma transição mais suave */
 }
 
 @keyframes popAnimation {
     0% {
-        transform: translateY(0);
-        opacity: 1;
+        transform: scale(1) translateX(0); /* Começa no tamanho normal */
+        opacity: 1; /* Totalmente visível */
+    }
+    50% {
+        transform: scale(0.9) translateX(0); /* Leve aumento para dar um efeito de "explosão" */
+        opacity: 1; /* Totalmente visível */
     }
     100% {
-        transform: translateY(-20px);
-        opacity: 0;
+        transform: scale(0) translateX(0); /* Move para a direita e reduz para 0 */
+        opacity: 0; /* Torna invisível */
     }
 }

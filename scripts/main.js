@@ -121,11 +121,22 @@ document.addEventListener('DOMContentLoaded', () => {
         window.visualizationInstance.updateVisualization();
     });
 
+    // Definindo os tempos de animação
+    window.animationDurations = {
+        fast: 100,   // Tempo para animação rápida em milissegundos
+        medium: 500, // Tempo para animação média em milissegundos
+        slow: 1000   // Tempo para animação lenta em milissegundos
+    };
+
+    // Variável para armazenar a velocidade selecionada pelo usuário
+    window.selectedSpeed = 'fast'; // Valor padrão
+
+
     /**
      * Configura o event listener para a mudança de velocidade.
      */
     document.getElementById('speed-select').addEventListener('change', (event) => {
-        // Lógica para mudança de velocidade
+        window.selectedSpeed = event.target.value; // Atualiza a velocidade com base na seleção do usuário
     });
 
     /**
