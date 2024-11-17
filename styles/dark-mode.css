@@ -84,7 +84,7 @@
 }
 
 [data-theme="dark"] select {
-    background-color: var(--primary-color);
+    background-color: var(--background-color);
     color: var(--text-color);
 }
 
@@ -111,6 +111,5 @@
 
 /* Modo escuro para options-box */
 [data-theme="dark"] .options-box {
-    background-color: var(--background-color);
-    border-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--background-color-button);
 }

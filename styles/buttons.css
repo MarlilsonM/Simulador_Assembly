@@ -1,39 +1,16 @@
 /* Caixa de opções */
-.options-box {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: var(--primary-color);
-    padding: var(--spacing-medium);
-    box-shadow: var(--box-shadow);
-    z-index: 997;
-    opacity: 0;
-    visibility: hidden;
+#options-btn {
     display: none;
-    transition: all 0.3s ease;
-}
-
-.options-box.visible {
-    opacity: 1;
-    visibility: visible;
-    display: block;
 }
 
 /* Estilo para o conteúdo dentro da caixa de opções */
-.options-box .control-group {
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    gap: var(--spacing-medium);
-    padding: var(--spacing-small);
+.options-box {
+    background-color: var(--primary-color);
 }
 
 .options-box .select-wrapper {
     flex: 1;
     max-width: 30%;
-    margin: 0 10px;
 }
 
 /* Estilos padrão para texto e ícones */
@@ -120,28 +97,5 @@ select {
 
 /* Estilos base para o botão de opções */
 #options-btn {
-    position: relative;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-small);
-    background-color: var(--primary-color-button);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: var(--background-color);
-    transition: all var(--transition-speed);
-}
-
-#options-btn:hover {
-    background-color: var(--hover-background-color);
-    transform: translateY(-2px);
-}
-
-.icon-chevron {
-    width: 20px;
-    height: 20px;
-    transition: transform var(--transition-speed);
-    filter: brightness(0) invert(1);
+    display: none;
 }

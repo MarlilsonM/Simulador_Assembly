@@ -10,6 +10,10 @@
         width: 100%;
     }
 
+    #options-btn {
+        display: block;
+    }
+
     /*Estilos do split*/
     .split {
         display: flex;
@@ -120,12 +124,24 @@
         padding: var(--spacing-medium);
         box-shadow: var(--box-shadow);
         z-index: 997;
+        opacity: 0;
+        visibility: hidden;
         transform: translateY(100%);
         transition: transform 0.3s ease;
+        cursor: pointer;
     }
 
     .options-box.visible {
+        display:flex; /* Use flex para alinhar os itens */
+        flex-direction: row; /* Alinha os itens em linha */
+        justify-content: center; /* Centraliza os itens horizontalmente */
+        align-items: center; /* Centraliza os itens verticalmente */
+        opacity: 1;
+        visibility: visible;
         transform: translateY(0);
+        background-color: var(--primary-color);
+        padding: var(--spacing-small); /* Adicione um padding se necessário */
+        gap: var(--spacing-medium); /* Espaçamento entre os itens */
     }
 
     .options-box .control-group {
@@ -141,6 +157,12 @@
         flex: 1;
         max-width: 45%;
         margin: 0 10px;
+    }
+
+    .icon-chevron {
+        width: 20px;
+        height: 20px;
+        transition: transform var(--transition-speed);
     }
 
     /* Texto e ícones */
@@ -233,21 +255,16 @@
         margin: 0;
     }
 
+    .options-box.visible {
+        flex-direction: row; /* Alinha os itens em linha */
+        gap: var(--spacing-small); /* Espaçamento entre os itens */
+    }
+
     .options-box {
         position: fixed;
         bottom: 45px;
         top: auto;
         transform: translateY(100%);
-    }
-
-    .options-box.visible {
-        transform: translateY(0);
-    }
-
-    .options-box .control-group {
-        flex-direction: column;
-        width: 100%;
-        gap: 10px;
     }
 
     .options-box .select-wrapper {
@@ -260,6 +277,10 @@
 @media (max-width: 480px) {
     #controls button {
         padding: var(--spacing-small) 2px;
+    }
+
+    .options-box.visible {
+        flex-direction:column; /* Alinha os itens em linha */
     }
 
     .options-box {
