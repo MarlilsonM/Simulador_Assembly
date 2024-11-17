@@ -15,14 +15,25 @@
 
 /* Estilos globais */
 body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
     font-family: var(--font-family);
     font-size: var(--font-size-base);
     line-height: var(--line-height-base);
     color: var(--text-color);
     background-color: var(--background-color);
-    margin: 50px 0 0 0;
+    margin: 60px 0 0 0;
+    padding: 0 var(--spacing-medium);
     overflow-x: hidden;
     transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+footer {
+    margin-top: auto; /* Faz com que o footer fique sempre na parte inferior */
+    width: 100%; /* Largura total */
+    text-align: center; /* Centraliza o texto */
 }
 
 /* Ícones */

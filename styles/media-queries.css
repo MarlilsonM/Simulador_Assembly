@@ -153,6 +153,17 @@
         width: 28px;
         height: 28px;
     }
+
+    #execution-canvas-registers,
+    #execution-canvas-vector-registers,
+    #execution-canvas-sp {
+        width: 100% !important ; /* Largura total do canvas */
+        height: 100% !important; /* Altura total do canvas, mas pode ser ajustada */
+    }
+
+    .visualization-title {
+        text-align:start ;
+    }
 }
 
 /* Mobile */

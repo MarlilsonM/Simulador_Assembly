@@ -30,9 +30,8 @@
 .tab-content {
     display: none; /* Oculta o conteúdo por padrão */
     padding: 5px;
-    border: 1px solid var(--border-color);
     border-radius: 0 0 5px 5px;
-    background-color: var(--background-color);
+    background-color: var(--output-background-color);
 }
 
 #tab-vector-registers, #tab-registers {
@@ -64,19 +63,4 @@
 #tab-memory {
     min-height: 240px; /* Defina uma altura mínima que você achar adequada */
     overflow-y: auto; /* Adiciona scroll se o conteúdo exceder a altura */
-}
-
-/* Visualizador */
-#visualization {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
-}
-
-.visualization-section {
-    margin-top: 10px;
-    padding: 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    background-color: var(--background-color);
 }

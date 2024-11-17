@@ -57,6 +57,10 @@ class Visualization {
         legendRegisters.className = 'visualization-legend';
         this.canvasRegisters.parentNode.appendChild(legendRegisters);
 
+        const legendVectorRegisters = document.createElement('div');
+        legendVectorRegisters.className = 'visualization-legend';
+        this.canvasVectorRegisters.parentNode.appendChild(legendVectorRegisters);
+
         const legendSP = document.createElement('div');
         legendSP.className = 'visualization-legend';
         this.canvasSP.parentNode.appendChild(legendSP);
@@ -398,6 +402,7 @@ class Visualization {
      */
     updateLegend() {
         const legendRegisters = this.canvasRegisters.parentNode.querySelector('.visualization-legend');
+        const legendVectorRegisters = this.canvasVectorRegisters.parentNode.querySelector('.visualization-legend');
         const legendSP = this.canvasSP.parentNode.querySelector('.visualization-legend');
         const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
     
@@ -418,7 +423,6 @@ class Visualization {
             `;
         }
 
-        const legendVectorRegisters = this.canvasVectorRegisters.parentNode.querySelector('.visualization-legend');
         if (legendVectorRegisters) {
             legendVectorRegisters.innerHTML = `
                 <div class="legend-item" style="${legendStyle}">
