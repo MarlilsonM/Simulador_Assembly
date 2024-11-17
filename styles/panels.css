@@ -41,8 +41,8 @@
     
 }
 
-.der {
-    padding: 10px;
+.output-header {
+    padding: 5px;
     border-radius: 5px;
     background-color: var(--output-background-color);
     flex-shrink: 0;
@@ -80,7 +80,7 @@
     display: flex;
     flex-direction: column;
     background-color: var(--background-color);
-    height: 100%;
+    height: all;
 }
 
 .output-message {
