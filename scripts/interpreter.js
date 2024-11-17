@@ -143,9 +143,6 @@ class Interpreter {
         const instructionsContent = document.getElementById('instructions-content');
         const dataContent = document.getElementById('data-content');
 
-        // Log para verificar o estado da memória antes de atualizar
-        console.log("Estado da memória antes da atualização da UI:", this.memory);
-
         if (instructionsContent && dataContent) {
             // Seção de Instruções
             let instructionsHtml = '';
@@ -171,8 +168,6 @@ class Interpreter {
                 }
             }
             instructionsContent.innerHTML = instructionsHtml;
-            console.log(`Tamanho do programa: ${this.programLength}`);
-            console.log("Conteúdo da memória:", this.memory);
             // Seção de Dados
             let dataHtml = '';
             let hasData = false;
@@ -186,7 +181,6 @@ class Interpreter {
                 dataHtml = '<div class="data-line">(Sem dados)</div>';
             }
             dataContent.innerHTML = dataHtml;
-            console.log(`Exibindo dados: ${hasData}`);
         }
     }
 
@@ -221,9 +215,6 @@ class Interpreter {
                 this.memory[index] = line; // Carrega as linhas na memória
             }
         });
-
-        // Log para verificar o estado da memória após o carregamento
-        console.log("Estado da memória após carregar o programa:", this.memory);
         
         // Processa as labels
         this.labels = this.parseLabels(); // Chama parseLabels sem passar o comprimento, pois usaremos this.memory
@@ -263,8 +254,6 @@ class Interpreter {
         this.totalLines = lines.length; // Total de linhas, incluindo comentários e vazias
     
         this.updateUI(); // Atualiza a interface do usuário
-    
-        console.log('Programa carregado:', this.memory);
     }
 
     /**
@@ -314,7 +303,6 @@ class Interpreter {
                 }
             }
         });
-        console.log("Labels detectadas e posições:", labels);
         return labels;
     }
 
@@ -374,10 +362,6 @@ class Interpreter {
             this.updateOutput('Programa finalizado com sucesso.', 'success');
             return false;
         }
-
-        // Log para verificar o estado da memória antes da execução
-        console.log("Estado atual da memória antes da execução:", this.memory);
-        console.log("Registrador SP antes da execução:", this.registers.SP);
     
         // Obtém a linha atual da memória
         let currentLine = this.memory[this.currentInstruction];

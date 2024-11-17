@@ -38,20 +38,29 @@ class Debugger {
      * @param {number} lineNumber - Número da linha para alternar o breakpoint
      */
     toggleBreakpoint(lineNumber) {
-        const line = lineNumber - 1;
-        const info = window.editor.lineInfo(line);
-        
-        if (info.gutterMarkers && info.gutterMarkers.breakpoints) {
-            window.editor.setGutterMarker(line, "breakpoints", null);
-            this.breakpoints.delete(lineNumber);
+        const line = lineNumber - 1; // Ajusta para o índice correto
+        const lineContent = window.editor.getLine(line); // Obtém o conteúdo da linha
+    
+        // Verifica se a linha não é vazia e não é um comentário
+        if (lineContent && lineContent.trim() !== '' && !lineContent.trim().startsWith(';')) {
+            const info = window.editor.lineInfo(line);
+    
+            // Se já existe um breakpoint, remove-o
+            if (info.gutterMarkers && info.gutterMarkers.breakpoints) {
+                window.editor.setGutterMarker(line, "breakpoints", null);
+                this.breakpoints.delete(lineNumber);
+            } else {
+                // Adiciona um novo breakpoint
+                const marker = document.createElement("div");
+                marker.style.color = "#822";
+                marker.innerHTML = "●";
+                marker.className = "breakpoint";
+                marker.title = "Breakpoint: linha " + lineNumber;
+                window.editor.setGutterMarker(line, "breakpoints", marker);
+                this.breakpoints.add(lineNumber);
+            }
         } else {
-            const marker = document.createElement("div");
-            marker.style.color = "#822";
-            marker.innerHTML = "●";
-            marker.className = "breakpoint";
-            marker.title = "Breakpoint: linha " + lineNumber;
-            window.editor.setGutterMarker(line, "breakpoints", marker);
-            this.breakpoints.add(lineNumber);
+            this.interpreter.updateOutput(`Não é possível adicionar um breakpoint na linha ${lineNumber}: linha vazia ou inválida.`, "warning");
         }
     }
 
@@ -71,7 +80,21 @@ class Debugger {
      * @returns {boolean} - Verdadeiro se deve pausar na instrução atual
      */
     shouldPause() {
-        return this.breakpoints.has(this.interpreter.currentInstruction + 1);
+        const currentInstruction = this.interpreter.currentInstruction; // +1 porque o contador é zero-indexado
+        const currentLine = this.interpreter.memory[currentInstruction];
+    
+        // Se a linha atual estiver vazia, procure a última linha não vazia
+        if (!currentLine || currentLine.trim() === '') {
+            // Procura a última linha não vazia
+            for (let i = currentInstruction - 1; i >= 0; i--) {
+                const line = this.interpreter.memory[i];
+                if (line && line.trim() !== '') {
+                    return this.breakpoints.has(i + 1); // Verifica se há breakpoint na última linha não vazia
+                }
+            }
+            return false; // Nenhuma linha não vazia encontrada
+        }
+        return this.breakpoints.has(currentInstruction);
     }
 }
 
