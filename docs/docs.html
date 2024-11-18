@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação do Simulador de Assembly</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/docs.css"> <!-- CSS específico para docs.html -->
+</head>
+<body id="docs-page"> <!-- ID específico para a página de docs -->
+    <button id="menu-toggle" aria-label="Abrir Menu">☰</button>
+    <header class="sidebar" id="sidebar">
+        <div class="sidebar-button-container">
+            <ul class="sidebar-menu">
+                <li><a href="/index.html" class="sidebar-button">Simulador</a></li>
+                <li><a href="/docs/docs.html" class="sidebar-button">Documentação</a></li>
+                <li><a href="https://github.com/MarlilsonM/Simulador_Assembly" target="_blank" class="sidebar-button">GitHub</a></li>
+            </ul>
+            
+            <h2>Navegação</h2>
+            <ul class="nav">
+                <li><a href="#introducao" class="nav-link sidebar-button">Introdução</a></li>
+                <li><a href="#comandos" class="nav-link sidebar-button">Comandos Disponíveis</a></li>
+                <li><a href="#exemplos" class="nav-link sidebar-button">Exemplos Práticos</a></li>
+                <li><a href="#faq" class="nav-link sidebar-button">FAQ</a></li>
+                <li><a href="#contribuicao" class="nav-link sidebar-button">Contribuição</a></li>
+            </ul>
+        </div>
+        <div class="theme-group theme-group-docs">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Alternar modo claro/escuro">
+                <img src="/assets/sun.svg" alt="Ícone do sol" class="theme-icon" id="sun-icon">
+                <img src="/assets/moon.svg" alt="Ícone da lua" class="theme-icon" id="moon-icon">
+            </button>                       
+        </div>
+    </header>
+
+    <main id="docs-main"> <!-- ID específico para o main do docs -->
+        <div id="docs-container">
+            <h1>Documentação dos Comandos</h1>
+        <section id="introducao" class="docs-section">
+            <h2>Introdução</h2>
+            <p>Bem-vindo à documentação do nosso Simulador de Assembly! Esta documentação foi elaborada para fornecer informações abrangentes sobre os comandos disponíveis no editor de código do projeto, permitindo que você escreva, execute e depure programas em linguagem assembly de forma eficiente.</p>
+            
+            <p>Você encontrará:</p>
+            <ul>
+                <li><strong>Lista de Comandos:</strong> Uma descrição detalhada de cada comando disponível, incluindo exemplos de uso e sintaxe.</li>
+                <li><strong>Funcionalidades do Simulador:</strong> Informações sobre como utilizar as principais funcionalidades, como o editor de código, depuração e visualização de execução.</li>
+                <li><strong>Guias de Contribuição:</strong> Instruções sobre como contribuir para o projeto, sugerir melhorias ou relatar problemas.</li>
+                <li><strong>Exemplos Práticos:</strong> Exemplos de código que demonstram como utilizar os comandos e funcionalidades do simulador.</li>
+            </ul>
+        
+            <p>Se você é novo no desenvolvimento em assembly ou no uso deste simulador, recomendamos começar pela seção de exemplos práticos para se familiarizar com a sintaxe e as funcionalidades. Para qualquer dúvida ou feedback, sinta-se à vontade para entrar em contato através do nosso <a class="link-git" href="https://github.com/MarlilsonM/Simulador_Assembly" target="_blank">repositório no GitHub</a>.</p>
+        </section>
+
+        <section id="comandos" class="docs-section">
+            <h2>Comandos Disponíveis</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome do Comando</th>
+                        <th>Descrição</th>
+                        <th>Sintaxe</th>
+                        <th>Exemplo</th>
+                        <th>Notas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>MOV</td>
+                        <td>Move um valor para um registrador ou da memória.</td>
+                        <td>MOV &lt;destino&gt;, &lt;origem&gt;</td>
+                        <td>MOV r0, 5</td>
+                        <td>O valor 5 será movido para o registrador r0.</td>
+                    </tr>
+                    <tr>
+                        <td>LOAD</td>
+                        <td>Carrega um valor da memória para um registrador.</td>
+                        <td>LOAD &lt;destino&gt;, [&lt;endereço&gt;]</td>
+                        <td>LOAD r0, [10]</td>
+                        <td>O valor armazenado no endereço 10 será carregado no registrador r0.</td>
+                    </tr>
+                    <tr>
+                        <td>STORE</td>
+                        <td>Armazena um valor de um registrador ou um valor direto em um endereço específico da memória.</td>
+                        <td>STORE &lt;origem&gt;, [&lt;endereço&gt;]</td>
+                        <td>STORE r0, [10]</td>
+                        <td>O valor contido em r0 será armazenado no endereço de memória 10. Se a origem não for um registrador, um valor direto será armazenado.</td>
+                    </tr>
+                        <td>ADD</td>
+                        <td>Adiciona dois valores e armazena o resultado no registrador de destino.</td>
+                        <td>ADD &lt;destino&gt;, &lt;origem&gt;</td>
+                        <td>ADD r0, r1</td>
+                        <td>O valor de r1 será adicionado ao valor de r0 e armazenado em r0.</td>
+                    </tr>
+                    <tr>
+                        <td>SUB</td>
+                        <td>Subtrai o valor do registrador de origem do registrador de destino.</td>
+                        <td>SUB &lt;destino&gt;, &lt;origem&gt;</td>
+                        <td>SUB r0, r1</td>
+                        <td>O valor de r1 será subtraído de r0 e o resultado será armazenado em r0.</td>
+                    </tr>
+                    <tr>
+                        <td>MUL</td>
+                        <td>Multiplica dois valores e armazena o resultado no registrador de destino.</td>
+                        <td>MUL &lt;destino&gt;, &lt;origem&gt;</td>
+                        <td>MUL r0, r1</td>
+                        <td>O valor de r0 será multiplicado pelo valor de r1 e armazenado em r0.</td>
+                    </tr>
+                    <tr>
+                        <td>DIV</td>
+                        <td>Divide o valor do registrador de destino pelo valor do registrador de origem.</td>
+                        <td>DIV &lt;destino&gt;, &lt;origem&gt;</td>
+                        <td>DIV r0, r1</td>
+                        <td>O valor de r0 será dividido pelo valor de r1 e o resultado será armazenado em r0.</td>
+                    </tr>
+                    <tr>
+                        <td>AND</td>
+                        <td>Realiza a operação lógica AND entre dois registradores.</td>
+                        <td>AND &lt;destino&gt;, &lt;origem&gt;</td>
+                        <td>AND r0, r1</td>
+                        <td>O resultado da operação AND entre r0 e r1 será armazenado em r0.</td>
+                    </tr>
+                    <tr>
+                        <td>OR</td>
+                        <td>Realiza a operação lógica OR entre dois registradores.</td>
+                        <td>OR &lt;destino&gt;, &lt;origem&gt;</td>
+                        <td>OR r0, r1</td>
+                        <td>O resultado da operação OR entre r0 e r1 será armazenado em r0.</td>
+                    </tr>
+                    <tr>
+                        <td>XOR</td>
+                        <td>Realiza a operação lógica XOR entre dois registradores.</td>
+                        <td>XOR &lt;destino&gt;, &lt;origem&gt;</td>
+                        <td>XOR r0, r1</td>
+                        <td>O resultado da operação XOR entre r0 e r1 será armazenado em r0.</td>
+                    </tr>
+                    <tr>
+                        <td>NOT</td>
+                        <td>Inverte os bits do valor em um registrador.</td>
+                        <td>NOT &lt;destino&gt;</td>
+                        <td>NOT r0</td>
+                        <td>Os bits do valor em r0 serão invertidos.</td>
+                    </tr>
+                    <tr>
+                        <td>CMP</td>
+                        <td>Compara dois valores e atualiza as flags.</td>
+                        <td>CMP &lt;op1&gt;, &lt;op2&gt;</td>
+                        <td>CMP r0, r1</td>
+                        <td>Compara os valores de r0 e r1, atualizando as flags de acordo.</td>
+                    </tr>
+                    <tr>
+                        <td>JMP</td>
+                        <td>Salta para uma etiqueta especificada no código.</td>
+                        <td>JMP &lt;etiqueta&gt;</td>
+                        <td>JMP inicio</td>
+                        <td>O fluxo de execução será transferido para a linha marcada com a etiqueta "inicio".</td>
+                    </tr>
+                    <tr>
+                        <td>JE</td>
+                        <td>Salta para uma etiqueta se a comparação anterior for igual.</td>
+                        <td>JE &lt;etiqueta&gt;</td>
+                        <td>JE sucesso</td>
+                        <td>Se a última comparação resultou em igualdade, salta para a etiqueta "sucesso".</td>
+                    </tr>
+                    <tr>
+                        <td>JNE</td>
+                        <td>Salta para uma etiqueta se a comparação anterior não for igual.</td>
+                        <td>JNE &lt;etiqueta&gt;</td>
+                        <td>JNE erro</td>
+                        <td>Se a última comparação não resultou em igualdade, salta para a etiqueta "erro".</td>
+                    </tr>
+                    <tr>
+                        <td>JG</td>
+                        <td>Salta para uma etiqueta se a comparação anterior for maior.</td>
+                        <td>JG &lt;etiqueta&gt;</td>
+                        <td>JG maior</td>
+                        <td>Se a última comparação indicou que o primeiro valor é maior, salta para a etiqueta "maior".</td>
+                    </tr>
+                    <tr>
+                        <td>JL</td>
+                        <td>Salta para uma etiqueta se a comparação anterior for menor.</td>
+                        <td>JL &lt;etiqueta&gt;</td>
+                        <td>JL menor</td>
+                        <td>Se a última comparação indicou que o primeiro valor é menor, salta para a etiqueta "menor".</td>
+                    </tr>
+                    <tr>
+                        <td>JGE</td>
+                        <td>Salta para uma etiqueta se a comparação anterior for maior ou igual.</td>
+                        <td>JGE &lt;etiqueta&gt;</td>
+                        <td>JGE sucesso</td>
+                        <td>Se a última comparação indicou que o primeiro valor é maior ou igual, salta para a etiqueta "sucesso".</td>
+                    </tr>
+                    <tr>
+                        <td>JLE</td>
+                        <td>Salta para uma etiqueta se a comparação anterior for menor ou igual.</td>
+                        <td>JLE &lt;etiqueta&gt;</td>
+                        <td>JLE erro</td>
+                        <td>Se a última comparação indicou que o primeiro valor é menor ou igual, salta para a etiqueta "erro".</td>
+                    </tr>
+                    <tr>
+                        <td>JZ</td>
+                        <td>Salta para uma etiqueta se a comparação anterior resultou em zero.</td>
+                        <td>JZ &lt;etiqueta&gt;</td>
+                        <td>JZ igual</td>
+                        <td>Se a última comparação resultou em zero, salta para a etiqueta "igual".</td>
+                    </tr>
+                    <tr>
+                        <td>JNZ</td>
+                        <td>Salta para uma etiqueta se a comparação anterior não resultou em zero.</td>
+                        <td>JNZ &lt;etiqueta&gt;</td>
+                        <td>JNZ diferente</td>
+                        <td>Se a última comparação não resultou em zero, salta para a etiqueta "diferente".</td>
+                    </tr>
+                    <tr>
+                        <td>JC</td>
+                        <td>Salta para uma etiqueta se a flag de carry estiver setada.</td>
+                        <td>JC &lt;etiqueta&gt;</td>
+                        <td>JC carry</td>
+                        <td>Se a flag de carry estiver setada, salta para a etiqueta "carry".</td>
+                    </tr>
+                    <tr>
+                        <td>JNC</td>
+                        <td>Salta para uma etiqueta se a flag de carry não estiver setada.</td>
+                        <td>JNC &lt;etiqueta&gt;</td>
+                        <td>JNC semCarry</td>
+                        <td>Se a flag de carry não estiver setada, salta para a etiqueta "semCarry".</td>
+                    </tr>
+                    <tr>
+                        <td>JO</td>
+                        <td>Salta para uma etiqueta se a flag de overflow estiver setada.</td>
+                        <td>JO &lt;etiqueta&gt;</td>
+                        <td>JO overflow</td>
+                        <td>Se a flag de overflow estiver setada, salta para a etiqueta "overflow".</td>
+                    </tr>
+                    <tr>
+                        <td>JNO</td>
+                        <td>Salta para uma etiqueta se a flag de overflow não estiver setada.</td>
+                        <td>JNO &lt;etiqueta&gt;</td>
+                        <td>JNO semOverflow</td>
+                        <td>Se a flag de overflow não estiver setada, salta para a etiqueta "semOverflow".</td>
+                    </tr>
+                    <tr>
+                        <td>JB</td>
+                        <td>Salta para uma etiqueta se a comparação anterior for menor (usando a flag de carry).</td>
+                        <td>JB &lt;etiqueta&gt;</td>
+                        <td>JB menor</td>
+                        <td>Se a última comparação indicou que o primeiro valor é menor, salta para a etiqueta "menor".</td>
+                    </tr>
+                    <tr>
+                        <td>JBE</td>
+                        <td>Salta para uma etiqueta se a comparação anterior for menor ou igual (usando a flag de carry).</td>
+                        <td>JBE &lt;etiqueta&gt;</td>
+                        <td>JBE menorOuIgual</td>
+                        <td>Se a última comparação indicou que o primeiro valor é menor ou igual, salta para a etiqueta "menorOuIgual".</td>
+                    </tr>
+                    <tr>
+                        <td>JA</td>
+                        <td>Salta para uma etiqueta se a comparação anterior for maior (usando a flag de carry).</td>
+                        <td>JA &lt;etiqueta&gt;</td>
+                        <td>JA maior</td>
+                        <td>Se a última comparação indicou que o primeiro valor é maior, salta para a etiqueta "maior".</td>
+                    </tr>
+                    <tr>
+                        <td>JAE</td>
+                        <td>Salta para uma etiqueta se a comparação anterior for maior ou igual (usando a flag de carry).</td>
+                        <td>JAE &lt;etiqueta&gt;</td>
+                        <td>JAE maiorOuIgual</td>
+                        <td>Se a última comparação indicou que o primeiro valor é maior ou igual, salta para a etiqueta "maiorOuIgual".</td>
+                    </tr>
+                    <tr>
+                        <td>CALL</td>
+                        <td>Chama uma sub-rotina e armazena o endereço de retorno na pilha.</td>
+                        <td>CALL &lt;etiqueta&gt;</td>
+                        <td>CALL subRotina</td>
+                        <td>O fluxo de execução será transferido para a linha marcada com a etiqueta "subRotina".</td>
+                    </tr>
+                    <tr>
+                        <td>RET</td>
+                        <td>Retorna da sub-rotina para o endereço armazenado na pilha.</td>
+                        <td>RET</td>
+                        <td>RET</td>
+                        <td>O fluxo de execução retornará para o endereço armazenado na pilha.</td>
+                    </tr>
+                    <tr>
+                        <td>PUSH</td>
+                        <td>Coloca um valor na pilha.</td>
+                        <td>PUSH &lt;valor&gt;</td>
+                        <td>PUSH r0</td>
+                        <td>O valor contido em r0 será colocado na pilha.</td>
+                    </tr>
+                    <tr>
+                        <td>POP</td>
+                        <td>Remove um valor da pilha e o armazena em um registrador.</td>
+                        <td>POP &lt;destino&gt;</td>
+                        <td>POP r0</td>
+                        <td>O valor no topo da pilha será removido e armazenado em r0.</td>
+                    </tr>
+                    <tr>
+                        <td>DUP</td>
+                        <td>Duplica o valor no topo da pilha.</td>
+                        <td>DUP</td>
+                        <td>DUP</td>
+                        <td>O valor no topo da pilha será duplicado.</td>
+                    </tr>
+                    <tr>
+                        <td>SWAP</td>
+                        <td>Troca os dois valores no topo da pilha.</td>
+                        <td>SWAP</td>
+                        <td>SWAP</td>
+                        <td>Os dois valores no topo da pilha serão trocados.</td>
+                    </tr>
+                    <tr>
+                        <td>ROT</td>
+                        <td>Rotaciona os três valores no topo da pilha.</td>
+                        <td>ROT</td>
+                        <td>ROT</td>
+                        <td>Os três valores no topo da pilha serão rotacionados.</td>
+                    </tr>
+                    <tr>
+                        <td>SETMATSIZE</td>
+                        <td>Define o tamanho das matrizes para operações SIMD.</td>
+                        <td>SETMATSIZE &lt;tamanho&gt;</td>
+                        <td>SETMATSIZE 4</td>
+                        <td>Define o tamanho da matriz para 4 elementos.</td>
+                    </tr>
+                    <tr>
+                        <td>VADD</td>
+                        <td>Adiciona dois vetores e armazena o resultado em um vetor de destino.</td>
+                        <td>VADD &lt;v_dest&gt;, &lt;v_src1&gt;, &lt;v_src2&gt;</td>
+                        <td>VADD v0, v1, v2</td>
+                        <td>O vetor v1 será adicionado ao vetor v2 e o resultado será armazenado em v0.</td>
+                    </tr>
+                    <tr>
+                        <td>VMUL</td>
+                        <td>Multiplica dois vetores e armazena o resultado em um vetor de destino.</td>
+                        <td>VMUL &lt;v_dest&gt;, &lt;v_src1&gt;, &lt;v_src2&gt;</td>
+                        <td>VMUL v0, v1, v2</td>
+                        <td>O vetor v1 será multiplicado pelo vetor v2 e o resultado será armazenado em v0.</td>
+                    </tr>
+                    <tr>
+                        <td>VDIV</td>
+                        <td>Divide um vetor pelo outro e armazena o resultado em um vetor de destino.</td>
+                        <td>VDIV &lt;v_dest&gt;, &lt;v_src1&gt;, &lt;v_src2&gt;</td>
+                        <td>VDIV v0, v1, v2</td>
+                        <td>O vetor v1 será dividido pelo vetor v2 e o resultado será armazenado em v0.</td>
+                    </tr>
+                    <tr>
+                        <td>VLOAD</td>
+                        <td>Carrega um vetor da memória para um vetor de destino.</td>
+                        <td>VLOAD &lt;v_dest&gt;, [&lt;endereço&gt;]</td>
+                        <td>VLOAD v0, [10]</td>
+                        <td>O vetor armazenado no endereço 10 será carregado em v0.</td>
+                    </tr>
+                    <tr>
+                        <td>VSTORE</td>
+                        <td>Armazena um vetor de um registrador vetorial em um endereço específico da memória.</td>
+                        <td>VSTORE &lt;vsrc&gt;, [&lt;memAddr&gt;]</td>
+                        <td>VSTORE v0, [10]</td>
+                        <td>O vetor v0 será armazenado a partir do endereço 10 da memória, com cada elemento do vetor sendo salvo em endereços consecutivos.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="exemplos" class="docs-section">
+            <h2>Exemplos Práticos</h2>
+        
+            <h3>Exemplo 1: Movimentação de Dados</h3>
+            <pre><code>MOV r0, 10         ; Move 10 para r0
+MOV r1, 20         ; Move 20 para r1
+LOAD r2, [100]     ; Carrega o valor do endereço 100 para r2
+STORE [200], r1    ; Armazena o valor de r1 no endereço 200
+END                ; Mostrar que chegou ao final do programa</code></pre>
+            <p>Este exemplo mostra como mover valores para registradores, carregar um valor da memória e armazenar um valor na memória.</p>
+        
+            <h3>Exemplo 2: Operações Aritméticas</h3>
+            <pre><code>MOV r0, 5          ; Move 5 para r0
+MOV r1, 3          ; Move 3 para r1
+ADD r0, r1         ; Adiciona r1 a r0 (r0 = r0 + r1)
+SUB r0, r1         ; Subtrai r1 de r0 (r0 = r0 - r1)
+MUL r0, r1         ; Multiplica r0 por r1 (r0 = r0 * r1)
+DIV r0, r1         ; Divide r0 por r1 (r0 = r0 / r1)
+END                ; Mostrar que chegou ao final do programa                        </code></pre>
+            <p>Este exemplo ilustra como realizar operações aritméticas básicas: adição, subtração, multiplicação e divisão.</p>
+        
+            <h3>Exemplo 3: Operações Lógicas</h3>
+            <pre><code>MOV r0, 5          ; Move 5 para r0
+MOV r1, 3          ; Move 3 para r1
+AND r0, r1         ; Realiza AND entre r0 e r1
+OR r0, r1          ; Realiza OR entre r0 e r1
+XOR r0, r1         ; Realiza XOR entre r0 e r1
+NOT r0             ; Inverte os bits de r0
+CMP r0, r1         ; Compara r0 e r1 e atualiza as flags
+END                ; Mostrar que chegou ao final do programa                        </code></pre>
+            <p>Este exemplo demonstra o uso de operações lógicas e comparação de valores.</p>
+        
+            <h3>Exemplo 4: Saltos Condicionais</h3>
+            <pre><code>MOV r0, 5          ; Move 5 para r0
+MOV r1, 10         ; Move 10 para r1
+CMP r0, r1         ; Compara r0 e r1
+JGE maior          ; Salta para 'maior' se r0 >= r1
+JLE menor          ; Salta para 'menor' se r0 <= r1
+            ; Código para o caso de r0 < r1
+menor:
+MOV r2, 0      ; Move 0 para r2
+JMP fim        ; Salta para o fim
+maior:
+MOV r2, 1      ; Move 1 para r2
+fim:
+END                ; Mostrar que chegou ao final do programa</code></pre>
+            <p>Este exemplo mostra como usar instruções de comparação e salto condicional para alterar o fluxo de execução com base em condições.</p>
+        
+            <h3>Exemplo 5: Manipulação de Pilha</h3>
+            <pre><code>MOV r0, 5          ; Move 5 para r0
+PUSH r0            ; Coloca r0 na pilha
+DUP                 ; Duplica o valor no topo da pilha (agora temos 5, 5 na pilha)
+SWAP                ; Troca os dois valores no topo da pilha (ainda 5, 5)
+ROT                 ; Rotaciona os três valores no topo da pilha (agora temos 5, 5, 5)
+POP r1             ; Remove o valor do topo da pilha e armazena em r1 (r1 agora é 5)
+END                ; Mostrar que chegou ao final do programa</code></pre>
+            <p>Este exemplo ilustra como usar instruções de pilha para manipular valores, incluindo empilhar, desempilhar, duplicar, trocar e rotacionar valores.</p>
+        
+            <h3>Exemplo 6: Instruções SIMD</h3>
+            <pre><code>MOV [100], 1
+MOV [101], 2        ; Inicializa 2 na memória
+MOV [102], 3        ; Inicializa 3 na em memória
+MOV [103], 4        ; Inicializa 4 na em memória
+
+MOV [104], 2 
+MOV [105], 3
+MOV [106], 4
+MOV [107], 5
+
+; Carrega dois vetores de 4 elementos da memória
+VLOAD v0, [100]   ; Carrega primeiro vetor
+VLOAD v1, [104]   ; Carrega segundo vetor
+
+; Realiza operações vetoriais
+VADD v2, v0, v1   ; Soma os vetores elemento a elemento
+VMUL v3, v0, v1   ; Multiplica os vetores elemento a elemento
+
+; Armazena os resultados na memória (corrigindo a ordem dos argumentos)
+VSTORE v2, [108]  ; Armazena resultado da soma
+VSTORE v3, [112]  ; Armazena resultado da multiplicação
+END                ; Mostrar que chegou ao final do programa</code></pre>
+            <p>Este exemplo demonstra como usar instruções SIMD para operações vetoriais, incluindo carregamento, adição, multiplicação, divisão e armazenamento de vetores na memória.</p>
+        
+            <h3>Exemplo 7: Chamada e Retorno de Sub-rotinas</h3>
+            <pre><code>MOV r0, 5          ; Move 5 para r0
+CALL subRotina     ; Chama a sub-rotina 'subRotina'
+MOV r1, r0         ; Move o resultado de r0 para r1
+JMP fim            ; Salta para o fim
+subRotina:
+ADD r0, 10     ; Adiciona 10 a r0
+RET             ; Retorna da sub-rotina
+fim:
+END                ; Mostrar que chegou ao final do programa</code></pre>
+            <p>Este exemplo mostra como chamar uma sub-rotina, executar algumas operações dentro dela e retornar ao ponto de chamada, preservando o estado.</p>
+        
+            <h3>Exemplo 8: Combinando Diversas Instruções</h3>
+            <pre><code>MOV r0, 5          ; Move 5 para r0
+MOV r1, 10         ; Move 10 para r1
+ADD r0, r1         ; Adiciona r1 a r0 (r0 = 15)
+CMP r0, r1         ; Compara r0 e r1
+JGE maior          ; Salta para 'maior' se r0 >= r1
+MOV r2, 0          ; Se não, move 0 para r2
+JMP fim            ; Salta para o fim
+maior:
+MOV r2, 1          ; Se r0 >= r1, move 1 para r2
+fim:
+PUSH r2            ; Coloca o valor de r2 na pilha
+POP r3             ; Remove o valor do topo da pilha e armazena em r3
+END                ; Mostrar que chegou ao final do programa</code></pre>
+            <p>Este exemplo combina movimentação de dados, operações aritméticas, comparações, saltos condicionais e manipulação de pilha em um único fluxo de execução.</p>
+        </section>
+
+        <section id="faq" class="docs-section">
+            <h2>FAQ - Perguntas Frequentes</h2>
+        
+            <div class="faq-item">
+                <p><strong>Como posso saber se um comando é válido?</strong></p>
+                <p>Verifique a lista de comandos disponíveis na seção de exemplos e na documentação do simulador. Cada comando possui uma descrição e um exemplo de uso.</p>
+            </div>
+        
+            <div class="faq-item">
+                <p><strong>O que devo fazer se meu código não estiver funcionando?</strong></p>
+                <p>Primeiro, verifique se há erros de sintaxe ou se você está utilizando comandos inválidos. Utilize a seção de depuração para identificar onde o erro está ocorrendo. Se necessário, consulte a documentação para entender melhor os comandos.</p>
+            </div>
+        
+            <div class="faq-item">
+                <p><strong>Como posso adicionar breakpoints no meu código?</strong></p>
+                <p>Clique no número da linha correspondente onde deseja adicionar o breakpoint. O simulador não aceita breakpoints em linhas vazias ou que contenham apenas comentários. Quando um breakpoint é atingido, a execução do código é pausada nessa linha, permitindo que você inspecione o estado do programa. As linhas seguintes não serão executadas até que você continue a execução.</p>
+            </div>
+        
+            <div class="faq-item">
+                <p><strong>É possível executar código em diferentes larguras de bits?</strong></p>
+                <p>Sim, você pode selecionar a largura de bits desejada (8, 16 ou 32 bits) na seção de opções do simulador. Isso afetará como os dados são manipulados durante a execução do código.</p>
+            </div>
+        
+            <div class="faq-item">
+                <p><strong>Onde posso encontrar mais exemplos de código?</strong></p>
+                <p>Além da seção de exemplos práticos, você pode consultar a documentação do simulador, que contém exemplos adicionais e explicações detalhadas sobre o uso de cada comando.</p>
+            </div>
+        </section>
+
+        <section id="contribuicao" class="docs-section">
+            <h2>Contribuição</h2>
+            <p>Se você deseja contribuir com a documentação ou sugerir novos comandos, sinta-se à vontade para entrar em contato através do nosso <a class="link-git" href="https://github.com/MarlilsonM/Simulador_Assembly" target="_blank">repositório no GitHub</a>. Agradecemos qualquer feedback ou contribuição!</p>
+            
+            <h3>Como Contribuir</h3>
+            <p>Para contribuir com o projeto, siga estas etapas:</p>
+            <ol>
+                <li><strong>Fork o Repositório:</strong> Faça um fork do nosso repositório no GitHub para sua própria conta.</li>
+                <li><strong>Crie uma Nova Branch:</strong> Crie uma nova branch para sua contribuição. Use um nome descritivo que reflita a sua mudança, por exemplo, <code>adicionar-novo-comando</code>.</li>
+                <li><strong>Faça Suas Alterações:</strong> Realize as alterações desejadas na documentação ou no código.</li>
+                <li><strong>Teste Suas Alterações:</strong> Certifique-se de que suas alterações funcionam conforme o esperado e não quebram nada.</li>
+                <li><strong>Envie um Pull Request:</strong> Quando estiver satisfeito com suas alterações, envie um pull request para o repositório original. Descreva claramente as alterações que você fez e o motivo delas.</li>
+            </ol>
+        
+            <h3>Diretrizes de Contribuição</h3>
+            <p>Para garantir que sua contribuição seja aceita, siga estas diretrizes:</p>
+            <ul>
+                <li>Escreva um código limpo e bem documentado.</li>
+                <li>Adicione testes para novas funcionalidades sempre que possível.</li>
+                <li>Certifique-se de que a documentação esteja atualizada e clara.</li>
+                <li>Respeite as diretrizes de estilo do projeto.</li>
+            </ul>
+        
+            <h3>Feedback e Sugestões</h3>
+            <p>Se você tiver feedback ou sugestões sobre o projeto, sinta-se à vontade para abrir uma <a class="link-git" href="https://github.com/MarlilsonM/Simulador_Assembly/issues" target="_blank">issue</a> no GitHub. Apreciamos toda a ajuda e estamos sempre abertos a melhorias!</p>
+        </section>
+
+        </div>
+        <footer id="docs-footer">
+            <p>&copy; 2024 Meu Projeto. Todos os direitos reservados.</p>
+        </footer>
+    </main>
+    <script src="/scripts/components/active-menu.js"></script>
+    <script src="/scripts/components/theme-toggle.js"></script>
+</body>
+</html>

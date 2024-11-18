@@ -168,14 +168,24 @@ class SIMDInstructions {
      * @throws {Error} Se o endereço de memória for inválido.
      */
     vstore(args) {
+        // Desestrutura os argumentos
         const [vsrc, memAddr] = args;
+    
+        // Verifica se vsrc é um registrador válido
+        if (!this.interpreter.vectorRegisters[vsrc]) {
+            throw new Error(`Registrador vetorial inválido: ${vsrc}`);
+        }
+    
+        // Converte o endereço de memória
         const addr = this.parseMemoryAddress(memAddr);
         const size = this.interpreter.config.matrixSize;
-
+    
+        // Verifica se o endereço é válido
         if (addr < 0 || addr >= this.interpreter.memory.length - (size - 1)) {
             throw new Error(`Endereço de memória inválido: ${memAddr}`);
         }
-
+    
+        // Armazena os valores do registrador vetorial na memória
         for (let i = 0; i < size; i++) {
             const value = this.interpreter.vectorRegisters[vsrc][i];
             this.interpreter.memory[addr + i] = value;

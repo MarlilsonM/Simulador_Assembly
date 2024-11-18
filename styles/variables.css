@@ -3,19 +3,20 @@
     --primary-color: #171A21; /* Preto suave */
     --secondary-color: #2B2D31; /* Cinza escuro */
     --background-color: #F0F0F0; /* Branco muito suave */
+    --text-color-theme: #F8F8F8; /* Branco muito suave para texto */
     --text-color: #2C2F33; /* Texto em cinza escuro */
     --primary-color-button: #9B59B6; /* Azul claro */
     --secondary-color-button: #5C636A; /* Cinza médio */
-    --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
     --font-family: 'Arial', sans-serif; /* Fonte limpa */
-    --font-size-base: 1rem;
-    --font-size-small: 0.875rem;
-    --font-size-large: 1.25rem;
-    --line-height-base: 1.6;
-    --spacing-small: 0.5rem;
-    --spacing-medium: 1rem;
-    --spacing-large: 1.5rem;
-    --transition-speed: 0.3s;
+    --font-size-base: 1rem; /* Tamanho da fonte base */
+    --font-size-small: 0.875rem; /* Tamanho da fonte pequena */
+    --font-size-large: 1.25rem; /* Tamanho da fonte grande */
+    --line-height-base: 1.6; /* Altura da linha base */
+    --spacing-small: 0.5rem; /* Espaçamento pequeno */
+    --spacing-medium: 1rem; /* Espaçamento médio */
+    --spacing-large: 1.5rem; /* Espaçamento grande */
+    --transition-speed: 0.3s; /* Velocidade da transição */
     --scrollbar-track-color: #E0E0E0; /* Cinza claro */
     --scrollbar-thumb-color: #4B9CD3; /* Azul claro */
     --address-color: #4B9CD3; /* Azul claro */
@@ -40,6 +41,7 @@
     /* Cores do Modo Escuro */
     --background-color: #2C2F33; /* Cinza escuro (fundo) */
     --hover-background-color: #23272A; /* Cinza mais escuro para hover */
+    --text-color-theme: #23272A;
     --text-color: #FFFFFF; /* Branco */
     --primary-color: #171A21; /* Azul do Discord */
     --scrollbar-track-color: #2C2F33; /* Fundo da barra de rolagem */

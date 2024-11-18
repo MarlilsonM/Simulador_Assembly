@@ -1,0 +1,213 @@
+/* CSS atualizado para comportamento responsivo da sidebar */
+
+#docs-page {
+    display: flex;
+    flex-direction: row; /* Flexbox em coluna */
+    height: 100vh; /* Altura total da viewport */
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos da sidebar */
+.sidebar {
+    display: flex;
+    flex-direction:column; /* Flexbox em coluna */
+    text-align:start;
+    background-color: var(--primary-color);
+    color: white;
+    width: 250px;
+    height: 100vh; /* Sidebar ocupa toda a altura da viewport */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    box-sizing: border-box;
+    transition: left 0.3s ease;
+    z-index: 1000; /* Fica acima do conteúdo */
+    position: relative;
+}
+
+.sidebar.open {
+    left: 0; /* Mostra a sidebar */
+}
+
+.sidebar-button {
+    display: block;
+    text-align: start;            /* Permite que o botão tenha padding e margin */
+    padding: 10px 20px;              /* Padding para o botão */
+    margin: 5px 0;                   /* Margem vertical entre os botões */
+    background-color: transparent; /* Cor de fundo do botão */
+    color: white;                    /* Cor do texto */
+    text-decoration: none;           /* Remove o sublinhado */
+    border-radius: 5px;             /* Bordas arredondadas */
+    transition: background-color 0.3s; /* Transição suave para a cor de fundo */
+}
+
+.sidebar-menu,
+.nav {
+    list-style-type: none;  /* Remove os marcadores dos itens da lista */
+    padding: 0;             /* Remove o padding padrão */
+    margin: 0;              /* Remove a margem padrão */
+}
+
+.sidebar-menu li,
+.nav li {
+    margin: 0;              /* Remove a margem dos itens da lista */
+}
+
+.sidebar-button:hover {
+    background-color: var(--secondary-color); /* Cor de fundo ao passar o mouse */
+}
+
+/* Botão de menu */
+#menu-toggle {
+    display: none;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    z-index: 1001;
+}
+
+/* Botão de tema */
+.theme-group-docs {
+    position: absolute; /* Permite que o botão seja posicionado em relação à sidebar */
+    bottom: 20px; /* Distância do fundo da sidebar */
+    right: 20px; /* Distância da direita da sidebar */
+    display: flex; /* Para centralizar o conteúdo, se necessário */
+}
+
+.theme-toggle {
+    /* Estilos adicionais para o botão, se necessário */
+    background: var(--primary-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.theme-toggle:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Conteúdo principal */
+#docs-main {
+    flex: 1; /* O conteúdo principal ocupa o espaço restante */
+    transition: margin-left 0.3s;
+    background-color: var(--background-color);
+    overflow-y: auto;              /* Permite rolagem vertical se o conteúdo exceder a altura */
+    overflow-x: hidden;            /* Remove a rolagem horizontal */
+}
+
+#docs-container {
+    padding: 0 40px;
+}
+/* Estilos para o footer */
+#docs-footer {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;           /* Centraliza o texto */
+    padding: 10px;               /* Padding vertical */
+    height: 50px;                /* Altura fixa para o footer */
+    width: 100%;                 /* Largura total */
+    flex-shrink: 0; /* Impede que o footer encolha */
+}
+
+/* Estilos para tabelas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ccc;
+}
+
+table th {
+    background: var(--primary-color-button);
+    color: var(--background-color);
+}
+
+table td {
+    background: var(--text-color-theme);
+    color: var(--text-color);
+}
+
+/* Estilos para blocos de código */
+pre {
+    background-color: var(--text-color-theme);
+    border: 1px solid #ddd;
+    padding: 10px;
+    overflow-x: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Visual interno de docs-main */
+.docs-section {
+    background-color: var(--text-color-theme);
+    border-radius: 10px;
+    padding: 0 5px;
+    box-shadow: var(--box-shadow);
+}
+.link-git {
+    color: #007bff; /* Cor do texto azul */
+    text-decoration: none; /* Remove o sublinhado padrão */
+    font-weight: bold; /* Deixa o texto em negrito */
+    border-radius: 4px; /* Bordas arredondadas */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transições suaves */
+}
+
+.link-git:hover {
+    background-color: rgba(0, 123, 255, 0.1); /* Cor de fundo leve ao passar o mouse */
+    color: #0056b3; /* Cor do texto ao passar o mouse */
+}
+
+.link-git:active {
+    color: #003d7a; /* Cor do texto ao clicar */
+}
+
+/* Estilos responsivos para telas menores */
+@media (max-width: 1024px) {
+    .sidebar {
+        transition: transform 0.3s ease; /* Transição suave */
+        position: absolute;
+        left: 30px; /* Posiciona à esquerda */
+        top: 0; /* Posiciona no topo */
+    }
+    
+    .sidebar.hidden {
+        display: none; /* Esconde a sidebar movendo-a para fora da tela */
+    }
+
+    #menu-toggle {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+}
+
+/* Adiciona um overlay para telas menores quando a sidebar está aberta */
+.sidebar.open::after {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}

@@ -93,22 +93,6 @@ O simulador suporta um amplo conjunto de instruções, incluindo:
 - *VLOAD* v_dest, [endereço]
 - *VSTORE* [endereço], v_src
 
-## Estrutura do Projeto
-
-- `index.html`: Página principal da interface do usuário
-- `styles/`: Estilos da interface
-  - `main.css`: Estilos principais
-- `scripts/`:
-  - `main.js`: Ponto de entrada principal
-  - `interpreter.js`: Núcleo do interpretador
-  - `debugger.js`: Funcionalidades de depuração
-  - `visualization.js`: Renderização gráfica
-  - `arithmeticInstructions.js`: Instruções aritméticas
-  - `dataMovementInstructions.js`: Instruções de movimentação de dados
-  - `logicalInstructions.js`: Instruções lógicas e de salto
-  - `stackInstructions.js`: Instruções de pilha
-  - `simdInstructions.js`: Instruções SIMD
-
 ## Contribuindo
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests para melhorar o simulador.
 
@@ -122,5 +106,9 @@ Link do site: https://marlilsonm.github.io/Simulador_Assembly/
 
 Agradecimentos
 
-- CodeMirror (https://codemirror.net/) pelo editor de código
+- **CodeMirror** (https://codemirror.net/): Uma biblioteca de editor de código que fornece uma interface rica e interativa para edição de código em diversas linguagens.
+
+- **Chart.js** (https://www.chartjs.org/): Uma biblioteca de visualização de dados que permite criar gráficos interativos e responsivos de maneira fácil e rápida.
+
+- **Split.js** (https://split.js.org/): Uma biblioteca leve para dividir a tela em painéis ajustáveis.
 - Todos os contribuidores que ajudaram a melhorar este projeto

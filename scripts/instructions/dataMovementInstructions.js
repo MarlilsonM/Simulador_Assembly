@@ -173,10 +173,17 @@ class DataMovementInstructions {
             throw new Error('STORE requer dois argumentos');
         }
     
-        const [src, address] = args;
+        const [address, src] = args;
+    
+        // Verifica se o endereço de memória está no formato correto
+        const memoryAddressMatch = address.match(/^\[(\d+)\]$/);
+        if (!memoryAddressMatch) {
+            throw new Error(`Endereço de memória inválido: ${address}`);
+        }
+    
+        const memoryAddress = parseInt(memoryAddressMatch[1], 10); // Extrai o número do endereço
     
         // Verifica se o endereço de memória é válido
-        const memoryAddress = this.parseMemoryAddress(address);
         if (memoryAddress < 0 || memoryAddress >= this.interpreter.memory.length) {
             throw new Error(`Endereço de memória inválido: ${memoryAddress}`);
         }
@@ -184,14 +191,18 @@ class DataMovementInstructions {
         // Se src é um registrador, obtém seu valor
         let value;
         if (this.interpreter.registers.hasOwnProperty(src)) {
-            value = this.interpreter.registers[src];
+            value = this.interpreter.registers[src]; // Captura o valor do registrador correto
         } else {
             // Se não for um registrador, trata como valor direto
-            value = this.parseValue(src);
-        }
+            value = this.parseValue(src); // Aqui, src deve ser um valor direto
+        }    
     
-        this.interpreter.memory[memoryAddress] = value;
+        // Armazena o valor na memória
+        this.interpreter.memory[memoryAddress] = value; // Armazenando o valor no endereço de memória correto
+        // Atualiza a interface do usuário da memória
         this.interpreter.updateMemoryUI();
+    
+        // Retorna informações sobre a operação
         return { instruction: 'STORE', args: [`[${memoryAddress}]`, src], result: value };
     }
 
@@ -202,6 +213,11 @@ class DataMovementInstructions {
      * @throws {Error} Se o valor for inválido.
      */
     parseValue(value) {
+        // Se for uma referência de memória, processa o endereço
+        if (typeof value === 'string' && value.startsWith('[') && value.endsWith(']')) {
+            return this.parseMemoryAddress(value); // Chama a função que analisa o endereço de memória
+        }
+
         // Se for um registrador, retorna o valor do registrador
         if (typeof value === 'string' && this.interpreter.registers.hasOwnProperty(value)) {
             return this.interpreter.registers[value];

@@ -122,7 +122,7 @@ O Simulador de Assembly é uma ferramenta educacional avançada que permite aos 
 Use o seletor de velocidade para ajustar a rapidez da execução contínua:
 - Lento: 1 instrução por segundo
 - Médio: 5 instruções por segundo
-- Rápido: 20 instruções por segundo
+- Rápido: 10 instruções por segundo
 
 ## Depuração
 - **Definindo Breakpoints**: Clique na margem esquerda do editor ao lado do número da linha.
