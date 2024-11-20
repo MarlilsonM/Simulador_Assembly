@@ -58,10 +58,9 @@
 }
 
 /* Botão de menu */
-#menu-toggle {
+#docs-menu-toggle {
     display: none;
     background-color: var(--primary-color);
-    color: white;
     border: none;
     padding: 10px;
     cursor: pointer;
@@ -116,24 +115,29 @@
 }
 
 /* Estilos para tabelas */
-table {
+.table-responsive {
+    overflow-x: auto; /* Permite rolagem horizontal */
+    -webkit-overflow-scrolling: touch; /* Para uma rolagem suave em dispositivos iOS */
+}
+
+.table-responsive table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
 }
 
-table th, table td {
+.table-responsive table th, table td {
     padding: 10px;
     text-align: left;
     border: 1px solid #ccc;
 }
 
-table th {
+.table-responsive table th {
     background: var(--primary-color-button);
     color: var(--background-color);
 }
 
-table td {
+.table-responsive table td {
     background: var(--text-color-theme);
     color: var(--text-color);
 }
@@ -174,25 +178,48 @@ pre {
 
 /* Estilos responsivos para telas menores */
 @media (max-width: 1024px) {
+    body {
+        font-size: var(--font-size-small);
+    }
     .sidebar {
-        transition: transform 0.3s ease; /* Transição suave */
+        transition: transform 0.3s ease, opacity 0.3s ease;
         position: absolute;
-        left: 30px; /* Posiciona à esquerda */
-        top: 0; /* Posiciona no topo */
+        left: 30px;
+        top: 0;
+        transform: translateX(-100%);
+        opacity: 0;
+        pointer-events: none;
     }
     
-    .sidebar.hidden {
-        display: none; /* Esconde a sidebar movendo-a para fora da tela */
+    .sidebar.visible {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
     }
 
-    #menu-toggle {
-        display: block;
+    #docs-menu-toggle {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #docs-chevron-icon {
+        filter: brightness(0) invert(1);
+    }
+
+    #docs-container {
+        padding: 20px;
     }
 }
 
 @media (max-width: 768px) {
     .sidebar {
         width: 200px;
+    }
+    #docs-container {
+        padding: 0;
     }
 }
 

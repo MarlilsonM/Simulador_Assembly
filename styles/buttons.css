@@ -9,8 +9,7 @@
 }
 
 .options-box .select-wrapper {
-    flex: 1;
-    max-width: 30%;
+    max-width: 50%;
 }
 
 /* Estilos padrão para texto e ícones */
@@ -20,19 +19,19 @@
 
 .control-group .icon {
     display: none;
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
 /* Botões e controles */
 button {
+    display: flex;
     font-size: var(--font-size-base);
     padding: var(--spacing-small) var(--spacing-medium);
     border-radius: 5px;
     border: none;
     cursor: pointer;
     transition: background-color var(--transition-speed), transform var(--transition-speed);
-    display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--spacing-small);
@@ -91,6 +90,7 @@ select {
 }
 
 .select-wrapper label {
+    text-align: right;
     color: var(--primary-color-button);
     font-weight: bold;
 }
