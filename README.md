@@ -4,6 +4,10 @@
 
 Link do formulário: https://forms.gle/wVjGriNhiwuKsXM8A
 
+## Site
+
+Link do site: https://marlilsonm.github.io/Simulador_Assembly/
+
 ## Visão Geral
 
 O Simulador Assembly é uma ferramenta educacional avançada que permite aos usuários escrever, executar e depurar programas em linguagem assembly. Este simulador oferece uma interface interativa com representação gráfica em tempo real dos estados dos registradores e da memória, além de suporte a operações SIMD (Single Instruction, Multiple Data).
@@ -102,11 +106,11 @@ Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull re
 
 ## Contato
 
-Antonio Marlilson - antoniomarlilson@gmail.com
+E-mail - antoniomarlilson@gmail.com
+
+LinkedIn - [Antonio Marlilson](https://www.linkedin.com/in/antonio-marlilson-9aab2a219/)
 
 Link do Projeto: https://github.com/MarlilsonM/Simulador_Assembly
-
-Link do site: https://marlilsonm.github.io/Simulador_Assembly/
 
 Agradecimentos
 
