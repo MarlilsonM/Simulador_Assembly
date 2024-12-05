@@ -59,6 +59,8 @@ O simulador suporta um amplo conjunto de instruções, incluindo:
 - *SUB* destino, fonte
 - *MUL* destino, fonte
 - *DIV* destino, fonte
+- *INC* destino
+- *DEC* destino
 
 **Instruções Lógicas**
 - *AND* destino, fonte

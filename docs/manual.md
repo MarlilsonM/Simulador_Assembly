@@ -64,6 +64,8 @@ O Simulador de Assembly é uma ferramenta educacional avançada que permite aos 
 - `SUB destino, fonte`: Subtrai o valor da fonte do destino.
 - `MUL destino, fonte`: Multiplica o destino pela fonte.
 - `DIV destino, fonte`: Divide o destino pela fonte.
+- `INC destino`: Incrementa o valor do destino.
+- `DEC destino`: Decrementa o valor do destino.
 
 ### Instruções Lógicas
 - `AND destino, fonte`: Realiza operação AND bit a bit.

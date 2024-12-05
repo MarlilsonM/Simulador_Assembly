@@ -63,7 +63,7 @@ END`);
         var wordList = [
             "NOP", "ADD", "SUB", "MUL", "DIV",
             "AND", "OR", "XOR", "NOT", "CMP",
-            "MOV", "LOAD", "STORE",
+            "MOV", "LOAD", "STORE", "INC", "DEC",
             "JMP", "JE", "JNE", "JG", "JGE",
             "JZ", "JNZ", "JC", "JNC", "JO",
             "JNO", "JL", "JLE", "JBE", "JA",

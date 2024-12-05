@@ -33,6 +33,8 @@ class ArithmeticInstructions {
             case 'AND': return this.and(args);
             case 'OR': return this.or(args);
             case 'XOR': return this.xor(args);
+            case 'INC': return this.inc(args);
+            case 'DEC': return this.dec(args);
             case 'NOT': return this.not(args);
             case 'CMP': return this.cmp(args);
             default:
@@ -224,6 +226,38 @@ class ArithmeticInstructions {
         this.interpreter.registers[dest] = result;
         this.updateFlags(result);
         return { instruction: 'XOR', args, result };
+    }
+
+    /**
+     * Executa a instrução de incremento.
+     * @param {Array} args - Argumentos da instrução (registrador a ser incrementado).
+     * @returns {Object} Resultado da operação de incremento.
+     */
+    inc(args) {
+        const [reg] = args;
+        this.validateRegister(reg);
+        const value = this.getRegisterValue(reg);
+        
+        const result = value + 1; // Incrementa o valor
+        this.interpreter.registers[reg] = result;
+        this.updateFlags(result);
+        return { instruction: 'INC', args, result };
+    }
+
+    /**
+     * Executa a instrução de decremento.
+     * @param {Array} args - Argumentos da instrução (registrador a ser decrementado).
+     * @returns {Object} Resultado da operação de decremento.
+     */
+    dec(args) {
+        const [reg] = args;
+        this.validateRegister(reg);
+        const value = this.getRegisterValue(reg);
+        
+        const result = value - 1; // Decrementa o valor
+        this.interpreter.registers[reg] = result;
+        this.updateFlags(result);
+        return { instruction: 'DEC', args, result };
     }
 
     /**

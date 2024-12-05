@@ -138,6 +138,20 @@
                             <td>O resultado da operação XOR entre r0 e r1 será armazenado em r0.</td>
                         </tr>
                         <tr>
+                            <td>INC</td>
+                            <td>Incrementa o valor de um registrador em 1.</td>
+                            <td>INC &lt;registrador&gt;</td>
+                            <td>INC r0</td>
+                            <td>O valor de r0 será incrementado em 1.</td>
+                        </tr>
+                        <tr>
+                            <td>DEC</td>
+                            <td>Decrementa o valor de um registrador em 1.</td>
+                            <td>DEC &lt;registrador&gt;</td>
+                            <td>DEC r0</td>
+                            <td>O valor de r0 será decrementado em 1.</td>
+                        </tr>
+                        <tr>
                             <td>NOT</td>
                             <td>Inverte os bits do valor em um registrador.</td>
                             <td>NOT &lt;destino&gt;</td>
@@ -372,6 +386,7 @@
             <h3>Exemplo 1: Movimentação de Dados</h3>
             <pre><code>MOV r0, 10         ; Move 10 para r0
 MOV r1, 20         ; Move 20 para r1
+INC r1             ; Incrementa r1 em 1
 LOAD r2, [100]     ; Carrega o valor do endereço 100 para r2
 STORE [200], r1    ; Armazena o valor de r1 no endereço 200
 END                ; Mostrar que chegou ao final do programa</code></pre>
@@ -384,6 +399,7 @@ ADD r0, r1         ; Adiciona r1 a r0 (r0 = r0 + r1)
 SUB r0, r1         ; Subtrai r1 de r0 (r0 = r0 - r1)
 MUL r0, r1         ; Multiplica r0 por r1 (r0 = r0 * r1)
 DIV r0, r1         ; Divide r0 por r1 (r0 = r0 / r1)
+DEC r0             ; Decrementa r0 em 1
 END                ; Mostrar que chegou ao final do programa                        </code></pre>
             <p>Este exemplo ilustra como realizar operações aritméticas básicas: adição, subtração, multiplicação e divisão.</p>
         

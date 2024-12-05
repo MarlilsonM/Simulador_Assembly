@@ -455,6 +455,8 @@ class Interpreter {
             AND: 2,
             OR: 2,
             XOR: 2,
+            INC: 1,
+            DEC: 1,
             NOT: 1,
             CMP: 2,
             JMP: 1,
@@ -523,6 +525,8 @@ class Interpreter {
                 case 'AND':
                 case 'OR':
                 case 'XOR':
+                case 'INC':
+                case 'DEC':
                 case 'NOT':
                 case 'CMP':
                     result = this.arithmetic.execute(instruction, args);
