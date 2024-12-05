@@ -36,8 +36,8 @@ class StackInstructions {
     }
 
     /**
-     * Executa a instrução PUSH para empilhar um valor do registrador na pilha.
-     * @param {Array} args - Argumentos da instrução (registrador de origem).
+     * Executa a instrução PUSH para empilhar um valor do registrador ou um valor literal na pilha.
+     * @param {Array} args - Argumentos da instrução (registrador de origem ou valor literal).
      * @returns {Object} Resultado da operação PUSH.
      * @throws {Error} Se o registrador for inválido ou se ocorrer um overflow na pilha.
      */
@@ -46,8 +46,19 @@ class StackInstructions {
             throw new Error('PUSH requer um argumento');
         }
         const [src] = args;
-        if (!this.interpreter.registers.hasOwnProperty(src)) {
-            throw new Error(`Registrador inválido: ${src}`);
+
+        let value;
+
+        // Verifica se o argumento é um registrador
+        if (this.interpreter.registers.hasOwnProperty(src)) {
+            value = this.interpreter.registers[src]; // Obtém o valor do registrador
+        } else {
+            // Tenta converter o argumento em um número
+            const parsedValue = parseInt(src, 10);
+            if (isNaN(parsedValue)) {
+                throw new Error(`Argumento inválido: ${src}. Deve ser um registrador ou um valor numérico.`);
+            }
+            value = parsedValue; // Usa o valor literal
         }
 
         if (this.interpreter.registers['SP'] <= 0) {
@@ -56,14 +67,14 @@ class StackInstructions {
 
         this.interpreter.registers['SP']--;
         const sp = this.interpreter.registers['SP'];
-        this.interpreter.memory[sp] = this.interpreter.registers[src];
+        this.interpreter.memory[sp] = value; // Empilha o valor
         this.interpreter.updateMemoryUI();
-        this.animatePush(this.interpreter.registers[src]); // Animação de PUSH
+        this.animatePush(value); // Animação de PUSH
 
         return { 
             instruction: 'PUSH', 
             args: [src], 
-            result: `${this.interpreter.registers[src]} empilhado em SP=${sp}` 
+            result: `${value} empilhado em SP=${sp}` 
         };
     }
 
