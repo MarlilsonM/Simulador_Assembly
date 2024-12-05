@@ -2,17 +2,16 @@
 
 /* Editor */
 #editor-panel {
-    flex: 7;
-    padding-bottom: 0px; 
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-bottom: 0px;
     background-color: var(--output-background-color);
     border-radius: 5px;
 }
 
-#editor-container, #debug-panel {
-    flex: 1 1 auto;
-}
-
 #editor-container {
+    flex: 1;
     background-color: var(--background-color);
     box-shadow: var(--box-shadow);
     padding: 0 0 var(--spacing-small) 0;
@@ -20,13 +19,21 @@
     background-color: var(--background-color);
 }
 
+.CodeMirror {
+    /* Set height, width, borders, and global font properties here */
+    font-family: monospace;
+    height: 560px;
+    color: black;
+    direction: ltr;
+    overflow: hidden;
+  }
+
 #debug-panel {
     background-color: var(--output-background-color);
     color: var(--output-text-color);
     border-radius: 5px;
     height: auto;
     padding-left: 5px;
-    max-height: 632px;
 }
 
 /* Saída */
@@ -137,16 +144,10 @@
 /* Visualizador */
 #visualization {
     max-width: 100%;
-    background-color: var(--output-background-color);
     border-radius: 12px;
     box-shadow: var(--box-shadow);
-    padding: 0 var(--spacing-medium);
     margin: 0 auto;
     margin-bottom: 0;
-}
-
-.visualization-title {
-    text-align: center;
 }
 
 .visualization-section {
@@ -170,4 +171,23 @@
     height: 400px !important; /* Altura total do canvas, mas pode ser ajustada */
     max-height: 100%; /* Garante que não exceda a altura do contêiner */
     display: block; /* Garante que o elemento seja um bloco */
+}
+
+/* Registradores */
+.registers-debug-panel {
+    height: 230px;
+    margin-bottom: 10px;
+}
+
+.registers-debug-panel h3 {
+    margin: 0;
+}
+
+/* Memória */
+.botton-debug-panel {
+    display: flex;
+}
+
+.botton-debug-panel h3 {
+    text-align: center;
 }

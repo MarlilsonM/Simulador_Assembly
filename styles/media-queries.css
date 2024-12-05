@@ -1,23 +1,43 @@
 /* Responsividade para tablets e dispositivos menores */
 /* Laptops */
 @media (max-width: 1280px) {
+    * {
+        box-sizing: border-box;
+    }
     #controls {
         font-size: var(--font-size-small);
     }
     .control-group {
         gap: var(--spacing-small);
     }
-
     button {
         font-size: var(--font-size-small);
         padding: 0.5rem 0.625rem;
     }
+    /*Estilos do split*/
+    .split {
+        display: flex;
+        flex-direction: column !important;
+        width: 100%;
+    }
+    .tab-button {
+        font-size: var(--font-size-small);
+    }
+    #editor-panel, 
+    #debug-panel {
+        width: 100% !important;
+        flex: 1 1 100%;
+    }
+    .CodeMirror {
+        height: 400px;
+    }
+
+    #data-content, #stack-list {
+        max-height: 410px !important;
+    }
 }
 
 @media (max-width: 1024px) {
-    * {
-        box-sizing: border-box;
-    }
     body {
         margin: 0 !important;
         overflow-x: hidden;
@@ -26,13 +46,6 @@
 
     #options-btn {
         display: block;
-    }
-
-    /*Estilos do split*/
-    .split {
-        display: flex;
-        flex-direction: column !important;
-        width: 100%;
     }
 
     /* Layout principal */
@@ -195,9 +208,11 @@
         width: 100% !important ; /* Largura total do canvas */
         height: 100% !important; /* Altura total do canvas, mas pode ser ajustada */
     }
-
-    .visualization-title {
-        text-align:start ;
+    #data-content, #stack-list {
+        max-height: 290px !important;
+    }
+    footer {
+        margin-bottom: 3.75rem;
     }
 }
 
@@ -283,6 +298,15 @@
     .options-box .select-wrapper {
         width: 100%;
         max-width: 100%;
+    }
+    .botton-debug-panel {
+        display: block;
+    }
+    #data-content, #stack-list {
+        max-height: 160px !important;
+    }
+    .CodeMirror {
+        height: 300px;
     }
 }
 

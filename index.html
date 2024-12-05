@@ -88,122 +88,123 @@
             
                 <div id="debug-panel" role="complementary" aria-label="Painel de depuração">
                     <h2>Painel de Debug</h2>
-    
-                    <!-- Botões de Abas para Registradores -->
-                    <div id="tab-buttons-registers">
-                        <button class="tab-button active" onclick="openTab(event, 'registers')">Registradores</button>
-                        <button class="tab-button" onclick="openTab(event, 'vector-registers')">Registradores Vetoriais</button>
-                    </div>
-    
-                    <div id="tab-registers" class="tab-content active">
-                        <div id="registers">
-                            <h3>Registradores / Flags</h3>
+
+                    <div class="registers-debug-panel">
+                        <!-- Botões de Abas para Registradores -->
+                        <div id="tab-buttons-registers">
+                            <button class="tab-button active" onclick="openTab(event, 'registers')">Registradores</button>
+                            <button class="tab-button" onclick="openTab(event, 'vector-registers')">Registradores Vetoriais</button>
+                        </div>
+        
+                        <div id="tab-registers" class="tab-content active">
+                            <div id="registers">
+                                <h3>Registradores / Flags</h3>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">r0</th>
+                                            <th scope="col">r1</th>
+                                            <th scope="col">r2</th>
+                                            <th scope="col">r3</th>
+                                            <th scope="col">r4</th>
+                                            <th scope="col">r5</th>
+                                            <th scope="col">r6</th>
+                                            <th scope="col">SP</th>
+                                            <th scope="col">flag-Z</th>
+                                            <th scope="col">flag-F</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td id="reg-r0">00</td>
+                                            <td id="reg-r1">00</td>
+                                            <td id="reg-r2">00</td>
+                                            <td id="reg-r3">00</td>
+                                            <td id="reg-r4">00</td>
+                                            <td id="reg-r5">00</td>
+                                            <td id="reg-r6">00</td>
+                                            <td id="reg-SP" class="sp-register">00</td>
+                                            <td id="flag-Z">FALSE</td>
+                                            <td id="flag-F">FALSE</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="tab-vector-registers" class="tab-content">
+                            <h3>Registradores Vetoriais</h3>
                             <table>
-                                <thead>
-                                    <tr>
-                                        <th scope="col">r0</th>
-                                        <th scope="col">r1</th>
-                                        <th scope="col">r2</th>
-                                        <th scope="col">r3</th>
-                                        <th scope="col">r4</th>
-                                        <th scope="col">r5</th>
-                                        <th scope="col">r6</th>
-                                        <th scope="col">SP</th>
-                                        <th scope="col">flag-Z</th>
-                                        <th scope="col">flag-F</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td id="reg-r0">00</td>
-                                        <td id="reg-r1">00</td>
-                                        <td id="reg-r2">00</td>
-                                        <td id="reg-r3">00</td>
-                                        <td id="reg-r4">00</td>
-                                        <td id="reg-r5">00</td>
-                                        <td id="reg-r6">00</td>
-                                        <td id="reg-SP" class="sp-register">00</td>
-                                        <td id="flag-Z">FALSE</td>
-                                        <td id="flag-F">FALSE</td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <th>v0</th>
+                                    <th>v1</th>
+                                    <th>v2</th>
+                                    <th>v3</th>
+                                </tr>
+                                <tr>
+                                    <td id="vreg-v0"></td>
+                                    <td id="vreg-v1"></td>
+                                    <td id="vreg-v2"></td>
+                                    <td id="vreg-v3"></td>
+                                </tr>
                             </table>
                         </div>
+
                     </div>
-                    <div id="tab-vector-registers" class="tab-content">
-                        <h3>Registradores Vetoriais</h3>
-                        <table>
-                            <tr>
-                                <th>v0</th>
-                                <th>v1</th>
-                                <th>v2</th>
-                                <th>v3</th>
-                            </tr>
-                            <tr>
-                                <td id="vreg-v0"></td>
-                                <td id="vreg-v1"></td>
-                                <td id="vreg-v2"></td>
-                                <td id="vreg-v3"></td>
-                            </tr>
-                        </table>
-                    </div>
-    
-                    <!-- Botões de Abas para Memória -->
-                    <div id="tab-buttons-memory">
-                        <button class="tab-button active" onclick="openMemoryTab(event, 'instructions')">Instruções</button>
-                        <button class="tab-button" onclick="openMemoryTab(event, 'data')">Memória</button>
-                        <button class="tab-button" onclick="openMemoryTab(event, 'stack')">Pilha</button>
-                    </div>
-    
-                    <div id="tab-memory" class="tab-content active">
-                        <div id="instructions" class="memory-section">
-                            <h3>Instruções</h3>
-                            <div id="instructions-content"></div>
+
+                    <div class="botton-debug-panel">
+                        <section id="visualization">                        
+                            <!-- Botões de Abas para Visualização -->
+                            <div id="tab-buttons-visualization">
+                                <button class="tab-button active" onclick="openVisualizationTab(event, 'execution-registers')">Registradores</button>
+                                <button class="tab-button" onclick="openVisualizationTab(event, 'execution-vector-registers')">Registradores Vetoriais</button>
+                                <button class="tab-button" onclick="openVisualizationTab(event, 'execution-sp')">Stack Pointer</button>
+                            </div>
+                        
+                            <!-- Conteúdo das Abas de Visualização -->
+                            <div id="tab-visualization" class="tab-content active">
+                                <div id="execution-registers" class="visualization-section">
+                                    <h3>Visualização Gráfica dos Registradores</h3>
+                                    <div class="chart-container">
+                                        <canvas id="execution-canvas-registers" aria-label="Visualização gráfica dos registradores"></canvas>
+                                    </div>
+                                </div>
+                                <div id="execution-vector-registers" class="visualization-section" style="display:none;">
+                                    <h3>Visualização Gráfica dos Registradores Vetoriais</h3>
+                                    <div class="chart-container">
+                                        <canvas id="execution-canvas-vector-registers" aria-label="Visualização gráfica dos registradores vetoriais"></canvas>
+                                    </div>
+                                </div>
+                                <div id="execution-sp" class="visualization-section" style="display:none;">
+                                    <h3>Visualização Gráfica do Stack Pointer</h3>
+                                    <div class="chart-container">
+                                        <canvas id="execution-canvas-sp" aria-label="Visualização gráfica do Stack Pointer"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="memory">
+                            <!-- Botões de Abas para Memória -->
+                            <div id="tab-buttons-memory">
+                                <button class="tab-button active" onclick="openMemoryTab(event, 'data')">Memória</button>
+                                <button class="tab-button" onclick="openMemoryTab(event, 'stack')">Pilha</button>
+                            </div>
+            
+                            <div id="tab-memory" class="tab-content active">
+                                <div id="data" class="memory-section">
+                                    <h3>Memória</h3>
+                                    <div id="data-content"></div>
+                                </div>
+                                <div id="stack" class="memory-section" style="display:none;">
+                                    <h3>Pilha</h3>
+                                    <ul id="stack-list" aria-label="Conteúdo da pilha"></ul>
+                                </div>
+                            </div>
                         </div>
-                        <div id="data" class="memory-section" style="display:none;">
-                            <h3>Memória</h3>
-                            <div id="data-content"></div>
-                        </div>
-                        <div id="stack" class="memory-section" style="display:none;">
-                            <h3>Pilha</h3>
-                            <ul id="stack-list" aria-label="Conteúdo da pilha"></ul>
-                        </div>
+
                     </div>
                 </div>
             </div>
-
-            <section id="visualization">
-                <h2 class="visualization-title">Visualização da Execução</h2>
-            
-                <!-- Botões de Abas para Visualização -->
-                <div id="tab-buttons-visualization">
-                    <button class="tab-button active" onclick="openVisualizationTab(event, 'execution-registers')">Registradores</button>
-                    <button class="tab-button" onclick="openVisualizationTab(event, 'execution-vector-registers')">Registradores Vetoriais</button>
-                    <button class="tab-button" onclick="openVisualizationTab(event, 'execution-sp')">Stack Pointer</button>
-                </div>
-            
-                <!-- Conteúdo das Abas de Visualização -->
-                <div id="tab-visualization" class="tab-content active">
-                    <div id="execution-registers" class="visualization-section">
-                        <h3>Visualização Gráfica dos Registradores</h3>
-                        <div class="chart-container">
-                            <canvas id="execution-canvas-registers" aria-label="Visualização gráfica dos registradores"></canvas>
-                        </div>
-                    </div>
-                    <div id="execution-vector-registers" class="visualization-section" style="display:none;">
-                        <h3>Visualização Gráfica dos Registradores Vetoriais</h3>
-                        <div class="chart-container">
-                            <canvas id="execution-canvas-vector-registers" aria-label="Visualização gráfica dos registradores vetoriais"></canvas>
-                        </div>
-                    </div>
-                    <div id="execution-sp" class="visualization-section" style="display:none;">
-                        <h3>Visualização Gráfica do Stack Pointer</h3>
-                        <div class="chart-container">
-                            <canvas id="execution-canvas-sp" aria-label="Visualização gráfica do Stack Pointer"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </section>
     </main>
 

@@ -140,34 +140,9 @@ class Interpreter {
      * Atualiza a interface do usuário para exibir o conteúdo da memória.
      */
     updateMemoryUI() {
-        const instructionsContent = document.getElementById('instructions-content');
         const dataContent = document.getElementById('data-content');
 
-        if (instructionsContent && dataContent) {
-            // Seção de Instruções
-            let instructionsHtml = '';
-            for (let i = 0; i < this.totalLines; i++) {
-                const instruction = this.memory[i];
-                if (!instruction) continue; // Pula instruções undefined ou null
-
-                if (typeof instruction === 'object' && instruction.type === 'label') {
-                    instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction label">${instruction.name}:</span></div>`;
-                } else if (typeof instruction === 'string') {
-                    if (instruction === 'END' || instruction === 'END:' || 
-                        instruction === '.END' || instruction === 'HALT') {
-                        instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction end">${instruction}</span></div>`;
-                        break;
-                    }
-                    const parts = instruction.split(' ');
-                    const opcode = parts[0];
-                    const args = parts.slice(1).join(' ');
-                    instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction"><span class="opcode">${opcode}</span> <span class="args">${args}</span></span></div>`;
-                } else {
-                    // Se não for uma string, apenas exibe o valor
-                    instructionsHtml += `<div class="instruction-line"><span class="line-number">[${i}]</span> <span class="instruction">${instruction}</span></div>`;
-                }
-            }
-            instructionsContent.innerHTML = instructionsHtml;
+        if (dataContent) {
             // Seção de Dados
             let dataHtml = '';
             let hasData = false;

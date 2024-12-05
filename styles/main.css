@@ -17,8 +17,6 @@
 body {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    min-height: 100vh;
     font-family: var(--font-family);
     font-size: var(--font-size-base);
     line-height: var(--line-height-base);
@@ -31,7 +29,6 @@ body {
 }
 
 footer {
-    margin-top: auto; /* Faz com que o footer fique sempre na parte inferior */
     width: 100%; /* Largura total */
     text-align: center; /* Centraliza o texto */
 }

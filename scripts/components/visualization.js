@@ -34,7 +34,7 @@ class Visualization {
         this.chartRegisters = null;
         this.chartSP = null;
         this.history = [];
-        this.maxHistoryPoints = 50;
+        this.maxHistoryPoints = 20;
         this.initialSP = this.interpreter.registers.SP;
         
         this.setupInteractiveEvents();
@@ -413,33 +413,6 @@ class Visualization {
             border-radius: 4px;
             margin-top: 8px;
         `;
-    
-        if (legendRegisters) {
-            legendRegisters.innerHTML = `
-                <div class="legend-item" style="${legendStyle}">
-                    <span class="legend-color" style="background: rgba(0, 123, 255, 0.7)"></span>
-                    <span>Valores dos Registradores</span>
-                </div>
-            `;
-        }
-
-        if (legendVectorRegisters) {
-            legendVectorRegisters.innerHTML = `
-                <div class="legend-item" style="${legendStyle}">
-                    <span class="legend-color" style="background: rgba(100, 150, 200, 0.7)"></span>
-                    <span>Valores dos Registradores Vetoriais</span>
-                </div>
-            `;
-        }
-    
-        if (legendSP) {
-            legendSP.innerHTML = `
-                <div class="legend-item" style="${legendStyle}">
-                    <span class="legend-color" style="background: rgba(255, 159, 64, 0.7)"></span>
-                    <span>Mudança no Stack Pointer (SP)</span>
-                </div>
-            `;
-        }
     }
 }
 
