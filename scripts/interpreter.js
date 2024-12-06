@@ -171,8 +171,6 @@ class Interpreter {
         } else {
             this.maxValue = (1 << bitWidth) - 1; // Para outras larguras de bits, calcula normalmente
         }
-    
-        console.log(`Largura de bits configurada para ${bitWidth} bits. O valor máximo é ${this.maxValue}`);
     }
     
 
@@ -180,12 +178,9 @@ class Interpreter {
     applyBitMask(value) {
         // Verifica se o valor é maior que o valor máximo permitido para 8 bits (255)
         if (value > this.maxValue) {
-            console.log(`Valor antes da máscara de bits: ${value}`);
             let maskedValue = value & this.maxValue;  // Aplica a máscara de bits para 8 bits
-            console.log(`Valor após a máscara de bits: ${maskedValue}`);
             return maskedValue;
         } else {
-            console.log(`Valor dentro do limite de bits: ${value}`);
             return value; // Retorna o valor sem alteração se já estiver dentro do limite
         }
     }
@@ -206,26 +201,22 @@ class Interpreter {
     parseValue(value) {
         // Verifica se o valor é uma string
         if (typeof value === 'string') {
-            console.log(`Valor recebido: ${value}`); // Log do valor recebido
     
             // Verifica se a string representa um número em hexadecimal
             if (value.startsWith('0x')) {
                 const result = parseInt(value, 16);
-                console.log(`Valor hexadecimal detectado. Convertendo '${value}' para decimal: ${result}`); // Log da conversão hexadecimal
                 return this.applyBitMask(result); // Aplica a máscara após a conversão
             } 
     
             // Verifica se a string representa um número em binário
             else if (value.startsWith('0b')) {
                 const result = parseInt(value.substring(2), 2); // Remove '0b' e converte para decimal
-                console.log(`Valor binário detectado. Convertendo '${value}' para decimal: ${result}`); // Log correto
                 return this.applyBitMask(result); // Aplica a máscara após a conversão
             }
     
             // Verifica se a string representa um número decimal
             else if (!isNaN(value)) {
                 const result = parseInt(value, 10);
-                console.log(`Valor decimal detectado. Convertendo '${value}' para decimal: ${result}`); // Log da conversão decimal
                 return this.applyBitMask(result); // Aplica a máscara após a conversão
             }
         } else {
@@ -584,7 +575,6 @@ class Interpreter {
         try {
             // Converte os argumentos para valores numéricos
             const parsedArgs = args.map(arg => this.parseValue(arg));
-            console.log(parsedArgs);
 
             let result;
             switch (instruction.toUpperCase()) {

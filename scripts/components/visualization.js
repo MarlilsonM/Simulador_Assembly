@@ -139,10 +139,19 @@ class Visualization {
                             font: { weight: 'bold' }
                         },
                         ticks: {
+                            callback: function(value) {
+                                return `${value}`; // Exibe o valor do SP em decimal
+                            },
                             color: textColor,
-                            font: { weight: 'bold' }
+                            font: {
+                                weight: 'bold'
+                            },
+                            min: 0, // Garante que o eixo Y comece do zero
+                            stepSize: 1, // Garante que os valores sejam inteiros (sem valores intermediários)
                         },
-                        grid: { color: gridColor }
+                        grid: {
+                            color: gridColor
+                        }
                     },
                     x: {
                         title: {
@@ -236,12 +245,14 @@ class Visualization {
                         },
                         ticks: {
                             callback: function(value) {
-                                return `${value}`;
+                                return `${value}`; // Exibe o valor do SP em decimal
                             },
                             color: textColor,
                             font: {
                                 weight: 'bold'
-                            }
+                            },
+                            min: 0, // Garante que o eixo Y comece do zero
+                            stepSize: 1, // Garante que os valores sejam inteiros (sem valores intermediários)
                         },
                         grid: {
                             color: gridColor
@@ -295,7 +306,7 @@ class Visualization {
      * Exibe valores em formato hexadecimal e indica aumentos/diminuições.
      */
     updateSPChart() {
-        const spData = this.history.map(h => this.initialSP - h.values.SP);
+        const spData = this.history.map(h => h.values.SP);
         const labels = this.history.map((_, index) => index);
         const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
     
@@ -315,8 +326,12 @@ class Visualization {
                     label: 'Stack Pointer (mudança)',
                     data: spData,
                     borderColor: isDarkMode ? 'rgba(255, 159, 64, 1)' : 'rgba(255 , 159, 64, 0.8)',
-                    backgroundColor: isDarkMode ? 'rgba(255, 159, 64, 0.3)' : 'rgba(255, 159, 64, 0.2)',
-                    fill: true
+                    fill: true,
+                    pointRadius: 5,  // Tamanho do ponto
+                    pointHoverRadius: 8,  // Tamanho do ponto quando hover
+                    pointHoverBackgroundColor: 'rgba(255, 0, 0, 1)',  // Cor do ponto quando hover
+                    pointHoverBorderColor: 'rgba(255, 0, 0, 1)',  // Borda do ponto quando hover
+                    hitRadius: 50, // Aumenta a área de detecção para o hover
                 }]
             },
             options: {
@@ -333,7 +348,7 @@ class Visualization {
                         },
                         ticks: {
                             callback: function(value) {
-                                return value > 0 ? `-0x${value.toString(16).toUpperCase()}` : `+0x${(-value).toString(16).toUpperCase()}`;
+                                return `${value}`; // Exibe o valor do SP em decimal
                             },
                             color: textColor,
                             font: {
@@ -378,8 +393,8 @@ class Visualization {
                             label: function(context) {
                                 const value = context.raw;
                                 return value > 0 
-                                    ? `SP diminuiu: 0x${value.toString(16).toUpperCase()}` 
-                                    : `SP aumentou: 0x${(-value).toString(16).toUpperCase()}`;
+                                    ? `SP diminuiu: ${value}` 
+                                    : `SP aumentou: ${(-value)}`;
                             }
                         },
                         backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
