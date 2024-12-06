@@ -44,7 +44,7 @@ END`);
         clearTimeout(autocompleteTimeout); // Limpa o timeout anterior
         autocompleteTimeout = setTimeout(() => {
             CodeMirror.commands.autocomplete(cm); // Aciona a função de autocompletar
-        }, 300); // Ajuste o tempo conforme necessário
+        }, 500); // Ajuste o tempo conforme necessário
     });
 
     // Adiciona um evento de toque para acionar o autocompletar
@@ -71,7 +71,9 @@ END`);
             "CALL", "RET",
             "PUSH", "POP", "DUP", "SWAP", "ROT", 
             "VADD", "VMUL", "VDIV", "VLOAD", "VSTORE",
-            "SETMATSIZE"
+            "SETMATSIZE", "END",
+            "r0", "r1", "r2", "r3", "r4", "r5", "r6",
+            "v0", "v1", "v2", "v3",
         ];
         var cursor = cm.getCursor();
         var token = cm.getTokenAt(cursor);

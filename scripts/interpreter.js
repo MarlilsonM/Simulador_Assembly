@@ -50,6 +50,7 @@ class Interpreter {
         this.currentInstruction = 0; // Instrução atual a ser executada
         this.running = false; // Flag para verificar se o interpretador está em execução
         this.bitWidth = 8; // Padrão para 8 bits
+        this.setBitWidth(this.bitWidth);  // Chama setBitWidth para atualizar maxValue
 
         // Instâncias dos módulos de instruções
         this.arithmetic = new ArithmeticInstructions(this);
@@ -57,8 +58,6 @@ class Interpreter {
         this.dataMovement = new DataMovementInstructions(this);
         this.stack = new StackInstructions(this);
         this.simd = new SIMDInstructions(this);
-
-
     }
 
     /**
@@ -165,8 +164,78 @@ class Interpreter {
      */
     setBitWidth(bitWidth) {
         this.bitWidth = bitWidth;
-        this.maxValue = (1 << bitWidth) - 1; // Calcula o valor máximo para a largura de bits
+        
+        // Verifica a largura de bits e define o valor máximo corretamente
+        if (bitWidth === 32) {
+            this.maxValue = 4294967295; // Para 32 bits, o valor máximo é 0xFFFFFFFF (4294967295)
+        } else {
+            this.maxValue = (1 << bitWidth) - 1; // Para outras larguras de bits, calcula normalmente
+        }
+    
+        console.log(`Largura de bits configurada para ${bitWidth} bits. O valor máximo é ${this.maxValue}`);
     }
+    
+
+
+    applyBitMask(value) {
+        // Verifica se o valor é maior que o valor máximo permitido para 8 bits (255)
+        if (value > this.maxValue) {
+            console.log(`Valor antes da máscara de bits: ${value}`);
+            let maskedValue = value & this.maxValue;  // Aplica a máscara de bits para 8 bits
+            console.log(`Valor após a máscara de bits: ${maskedValue}`);
+            return maskedValue;
+        } else {
+            console.log(`Valor dentro do limite de bits: ${value}`);
+            return value; // Retorna o valor sem alteração se já estiver dentro do limite
+        }
+    }
+    
+    
+    
+
+    /**
+     * Converte um valor de string para um número, se aplicável.
+     * Esta função verifica se o valor fornecido é uma string que representa um número em
+     * diferentes bases (hexadecimal, binário ou decimal) e o converte para um número.
+     * Se o valor não for uma string ou não representar um número, a função retorna o valor original.
+     * @param {string|any} value - O valor a ser convertido. Pode ser uma string representando um número
+     *                             ou qualquer outro tipo de valor.
+     * @returns {number|any} - Retorna o valor convertido para um número se for uma string representando
+     *                         um número; caso contrário, retorna o valor original.
+     */
+    parseValue(value) {
+        // Verifica se o valor é uma string
+        if (typeof value === 'string') {
+            console.log(`Valor recebido: ${value}`); // Log do valor recebido
+    
+            // Verifica se a string representa um número em hexadecimal
+            if (value.startsWith('0x')) {
+                const result = parseInt(value, 16);
+                console.log(`Valor hexadecimal detectado. Convertendo '${value}' para decimal: ${result}`); // Log da conversão hexadecimal
+                return this.applyBitMask(result); // Aplica a máscara após a conversão
+            } 
+    
+            // Verifica se a string representa um número em binário
+            else if (value.startsWith('0b')) {
+                const result = parseInt(value.substring(2), 2); // Remove '0b' e converte para decimal
+                console.log(`Valor binário detectado. Convertendo '${value}' para decimal: ${result}`); // Log correto
+                return this.applyBitMask(result); // Aplica a máscara após a conversão
+            }
+    
+            // Verifica se a string representa um número decimal
+            else if (!isNaN(value)) {
+                const result = parseInt(value, 10);
+                console.log(`Valor decimal detectado. Convertendo '${value}' para decimal: ${result}`); // Log da conversão decimal
+                return this.applyBitMask(result); // Aplica a máscara após a conversão
+            }
+        } else {
+            console.log(`Valor não é uma string, retornando: ${value}`); // Log se o valor não for string
+        }
+    
+        // Se não for uma string representando um número, retorna o valor original
+        return value;
+    }    
+       
 
     /**
      * Carrega um programa assembly na memória do interpretador.
@@ -513,6 +582,10 @@ class Interpreter {
      */
     executeInstruction(instruction, args) {
         try {
+            // Converte os argumentos para valores numéricos
+            const parsedArgs = args.map(arg => this.parseValue(arg));
+            console.log(parsedArgs);
+
             let result;
             switch (instruction.toUpperCase()) {
                 case 'NOP':
@@ -529,12 +602,12 @@ class Interpreter {
                 case 'DEC':
                 case 'NOT':
                 case 'CMP':
-                    result = this.arithmetic.execute(instruction, args);
+                    result = this.arithmetic.execute(instruction, parsedArgs);
                     break;
                 case 'MOV':
                 case 'LOAD':
                 case 'STORE':
-                    result = this.dataMovement.execute(instruction, args);
+                    result = this.dataMovement.execute(instruction, parsedArgs);
                     break;
                 case 'JMP':
                 case 'JE':
@@ -555,21 +628,21 @@ class Interpreter {
                 case 'JB':
                 case 'CALL':
                 case 'RET':
-                    result = this.logical.execute(instruction, args);
+                    result = this.logical.execute(instruction, parsedArgs);
                     break;
                 case 'PUSH':
                 case 'POP':
                 case 'DUP':
                 case 'SWAP':
                 case 'ROT':
-                    result = this.stack.execute(instruction, args);
+                    result = this.stack.execute(instruction, parsedArgs);
                     break;
                 case 'VADD':
                 case 'VMUL':
                 case 'VDIV':
                 case 'VLOAD':
                 case 'VSTORE':
-                    result = this.simd.execute(instruction, args);
+                    result = this.simd.execute(instruction, parsedArgs);
                     break;
                 case 'SETMATSIZE':
                     const size = parseInt(args[0]);
@@ -594,7 +667,7 @@ class Interpreter {
                 : result; // Se não for um objeto ou não tiver a propriedade 'result', use o próprio result
 
                 // Atualiza a saída com a linha atual, combinando a instrução e o resultado
-                this.updateOutput(`Executada instrução: ${instruction} ${args.join(', ')} = ${resultValue}`, 'info', this.currentInstruction + 1);
+                this.updateOutput(`Executada instrução: ${instruction} ${parsedArgs.join(', ')} = ${resultValue}`, 'info', this.currentInstruction + 1);
             }
     
             return result; // Retorna o resultado em vez de true

@@ -11,8 +11,16 @@
 }
 
 /* Ajustes adicionais para o modo escuro */
-[data-theme="dark"] .CodeMirror .cm-comment {
-    color: #a0a0a0; /* Cor dos comentários no modo escuro */
+[data-theme="dark"] .CodeMirror .cm-keyword {
+    color: #00B8D9; /* Cor dos comentários no modo escuro */
+}
+
+[data-theme="dark"] .CodeMirror .cm-number {
+    color: white; /* Cor dos comentários no modo escuro */
+}
+
+[data-theme="dark"] .CodeMirror .cm-variable {
+    color: #FF6347; /* Cor dos comentários no modo escuro */
 }
 
 [data-theme="dark"] .CodeMirror .cm-string {

@@ -34,7 +34,7 @@ class Visualization {
         this.chartRegisters = null;
         this.chartSP = null;
         this.history = [];
-        this.maxHistoryPoints = 20;
+        this.maxHistoryPoints = 50;
         this.initialSP = this.interpreter.registers.SP;
         
         this.setupInteractiveEvents();
@@ -228,7 +228,7 @@ class Visualization {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Valor (Hexadecimal)',
+                            text: 'Valor (Decimal)',
                             color: textColor,
                             font: {
                                 weight: 'bold'
@@ -236,7 +236,7 @@ class Visualization {
                         },
                         ticks: {
                             callback: function(value) {
-                                return '0x' + value.toString(16).toUpperCase();
+                                return `${value}`;
                             },
                             color: textColor,
                             font: {
@@ -271,8 +271,9 @@ class Visualization {
                             label: function(context) {
                                 const value = context.raw;
                                 return [
-                                    `Hex: 0x${value.toString(16).toUpperCase()}`,
-                                    `Dec: ${value}`
+                                    `Hex: 0x${value.toString(16).toUpperCase()}`,   // Exibe em Hexadecimal
+                                    `Dec: ${value}`,                                // Exibe em Decimal
+                                    `Bin: 0b${value.toString(2).padStart(4, '0')}`  // Exibe em Binário (com 4 bits)
                                 ];
                             }
                         },
