@@ -1,9 +1,5 @@
 # Simulador Assembly
 
-## Formulário
-
-Link do formulário: https://forms.gle/wVjGriNhiwuKsXM8A
-
 ## Site
 
 Link do site: https://marlilsonm.github.io/Simulador_Assembly/
